@@ -1,28 +1,44 @@
 <%- include("partials/header") %>
 <%- include("partials/nav") %>
 
-<h1 class="section-header">
-    <%= id ? "Edit Milestone" : "Record New Milestone" %>
-</h1>
+<h1 class="section-header"><%= mode === "edit" ? "Edit Milestone" : "Add Milestone" %></h1>
 
 <div class="card">
-    <form method="POST" action="/milestones/save">
 
-        <input type="hidden" name="id" value="<%= id %>">
+    <form action="/milestones/save" method="POST" class="form-layout">
 
-        <label>Participant ID</label>
-        <input type="number" name="participant_id">
+        <% if (mode === "edit") { %>
+            <input type="hidden" name="OriginalEmail" value="<%= milestone.ParticipantEmail %>">
+            <input type="hidden" name="OriginalDate" value="<%= milestone.MilestoneDate %>">
+        <% } %>
 
-        <label>Milestone Title</label>
-        <input type="text" name="milestone_title">
+        <div class="form-group">
+            <label>Participant Email</label>
+            <input type="email" name="ParticipantEmail"
+                   value="<%= milestone ? milestone.ParticipantEmail : '' %>" required>
+        </div>
 
-        <label>Date Achieved</label>
-        <input type="date" name="milestone_date">
+        <div class="form-group">
+            <label>Milestone Title</label>
+            <input type="text" name="MilestoneTitle"
+                   value="<%= milestone ? milestone.MilestoneTitle : '' %>" required>
+        </div>
 
-        <button class="btn btn-primary" type="submit">
-            Save Milestone
-        </button>
+        <div class="form-group">
+            <label>Milestone Date</label>
+            <input type="text" name="MilestoneDate"
+                   value="<%= milestone ? milestone.MilestoneDate : '' %>" required>
+        </div>
+
+        <div class="form-actions">
+            <button class="btn btn-primary">
+                <%= mode === "edit" ? "Save Changes" : "Add Milestone" %>
+            </button>
+            <a class="btn btn-secondary" href="/milestones">Cancel</a>
+        </div>
+
     </form>
+
 </div>
 
 <%- include("partials/footer") %>

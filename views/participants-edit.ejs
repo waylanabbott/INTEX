@@ -1,31 +1,80 @@
 <%- include("partials/header") %>
 <%- include("partials/nav") %>
 
-<h1 class="section-header">
-    <%= id ? "Edit Participant" : "Add Participant" %>
-</h1>
+<h1 class="section-header"><%= mode === "edit" ? "Edit Participant" : "Add Participant" %></h1>
 
 <div class="card">
-    <form method="POST" action="/participants/save">
 
-        <input type="hidden" name="id" value="<%= id %>">
+    <form action="/participants/save" method="POST" class="form-layout">
 
-        <label>Name</label>
-        <input type="text" name="name" placeholder="Participant name">
+        <% if (mode === "edit") { %>
+            <input type="hidden" name="OriginalEmail" value="<%= participant.ParticipantEmail %>">
+        <% } %>
 
-        <label>Email</label>
-        <input type="email" name="email" placeholder="Email">
+        <div class="form-group">
+            <label>Email</label>
+            <input type="email" name="ParticipantEmail" 
+                   value="<%= participant ? participant.ParticipantEmail : '' %>" required>
+        </div>
 
-        <label>Age</label>
-        <input type="number" name="age">
+        <div class="form-group">
+            <label>First Name</label>
+            <input type="text" name="ParticipantFirstName" 
+                   value="<%= participant ? participant.ParticipantFirstName : '' %>" required>
+        </div>
 
-        <label>Demographic Group</label>
-        <input type="text" name="demographic">
+        <div class="form-group">
+            <label>Last Name</label>
+            <input type="text" name="ParticipantLastName" 
+                   value="<%= participant ? participant.ParticipantLastName : '' %>" required>
+        </div>
 
-        <button class="btn btn-primary" type="submit">
-            Save Participant
-        </button>
+        <div class="form-group">
+            <label>DOB</label>
+            <input type="text" name="ParticipantDOB" 
+                   value="<%= participant ? participant.ParticipantDOB : '' %>">
+        </div>
+
+        <div class="form-group">
+            <label>Role</label>
+            <input type="text" name="ParticipantRole" 
+                   value="<%= participant ? participant.ParticipantRole : '' %>">
+        </div>
+
+        <div class="form-group">
+            <label>Phone</label>
+            <input type="text" name="ParticipantPhone" 
+                   value="<%= participant ? participant.ParticipantPhone : '' %>">
+        </div>
+
+        <div class="form-group">
+            <label>City</label>
+            <input type="text" name="ParticipantCity" 
+                   value="<%= participant ? participant.ParticipantCity : '' %>">
+        </div>
+
+        <div class="form-group">
+            <label>State</label>
+            <input type="text" name="ParticipantState" 
+                   value="<%= participant ? participant.ParticipantState : '' %>">
+        </div>
+
+        <div class="form-group">
+            <label>Zip</label>
+            <input type="text" name="ParticipantZip" 
+                   value="<%= participant ? participant.ParticipantZip : '' %>">
+        </div>
+
+        <div class="form-actions">
+            <button class="btn btn-primary" type="submit">
+                <%= mode === "edit" ? "Save Changes" : "Add Participant" %>
+            </button>
+
+            <a class="btn btn-secondary" href="/participants">Cancel</a>
+        </div>
+
     </form>
+
 </div>
 
 <%- include("partials/footer") %>

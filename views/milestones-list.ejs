@@ -4,11 +4,53 @@
 <h1 class="section-header">Milestones</h1>
 
 <div class="card">
-    <p>This page will list all milestone achievements.</p>
+
+    <% if (milestones.length > 0) { %>
+
+        <table class="styled-table">
+            <thead>
+                <tr>
+                    <th>Participant Email</th>
+                    <th>Title</th>
+                    <th>Date</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+
+            <tbody>
+                <% milestones.forEach(m => { %>
+                    <tr>
+                        <td><%= m.ParticipantEmail %></td>
+                        <td><%= m.MilestoneTitle %></td>
+                        <td><%= m.MilestoneDate %></td>
+
+                        <td>
+                            <a class="btn btn-secondary btn-small" 
+                               href="/milestones/edit/<%= m.ParticipantEmail %>/<%= m.MilestoneDate %>">
+                                Edit
+                            </a>
+
+                            <% if (user.level === "M") { %>
+                                <form action="/milestones/delete/<%= m.ParticipantEmail %>/<%= m.MilestoneDate %>" 
+                                      method="POST" style="display:inline;">
+                                    <button class="btn btn-danger btn-small"
+                                            onclick="return confirm('Delete milestone?');">
+                                        Delete
+                                    </button>
+                                </form>
+                            <% } %>
+                        </td>
+                    </tr>
+                <% }) %>
+            </tbody>
+        </table>
+
+    <% } else { %>
+        <p>No milestones recorded.</p>
+    <% } %>
+
 </div>
 
-<% if (user.level === "M") { %>
-    <a class="btn btn-primary" href="/milestones/edit">Add Milestone</a>
-<% } %>
+<a class="btn btn-primary" href="/milestones/edit">Add Milestone</a>
 
 <%- include("partials/footer") %>

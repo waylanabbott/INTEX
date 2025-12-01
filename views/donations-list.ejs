@@ -4,11 +4,53 @@
 <h1 class="section-header">Donations</h1>
 
 <div class="card">
-    <p>This page will show donation records once DB is connected.</p>
+
+    <% if (donations.length > 0) { %>
+
+        <table class="styled-table">
+            <thead>
+                <tr>
+                    <th>Participant Email</th>
+                    <th>Donation Date</th>
+                    <th>Amount</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+
+            <tbody>
+                <% donations.forEach(d => { %>
+                    <tr>
+                        <td><%= d.ParticipantEmail %></td>
+                        <td><%= d.DonationDate %></td>
+                        <td>$<%= d.DonationAmount %></td>
+
+                        <td>
+                            <a class="btn btn-secondary btn-small" 
+                               href="/donations/edit/<%= d.ParticipantEmail %>/<%= d.DonationDate %>">
+                                Edit
+                            </a>
+
+                            <% if (user.level === "M") { %>
+                                <form action="/donations/delete/<%= d.ParticipantEmail %>/<%= d.DonationDate %>" 
+                                      method="POST" style="display:inline;">
+                                    <button class="btn btn-danger btn-small"
+                                            onclick="return confirm('Delete donation?');">
+                                        Delete
+                                    </button>
+                                </form>
+                            <% } %>
+                        </td>
+                    </tr>
+                <% }) %>
+            </tbody>
+        </table>
+
+    <% } else { %>
+        <p>No donations recorded.</p>
+    <% } %>
+
 </div>
 
-<% if (user.level === "M") { %>
-    <a class="btn btn-primary" href="/donations/edit">Add Donation</a>
-<% } %>
+<a class="btn btn-primary" href="/donations/edit">Add Donation</a>
 
 <%- include("partials/footer") %>

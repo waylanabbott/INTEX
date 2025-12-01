@@ -4,11 +4,65 @@
 <h1 class="section-header">Participants</h1>
 
 <div class="card">
-    <p>This will display all participants once the database is connected.</p>
+
+    <% if (participants && participants.length > 0) { %>
+
+        <table class="styled-table">
+            <thead>
+                <tr>
+                    <th>Email</th>
+                    <th>First Name</th>
+                    <th>Last Name</th>
+                    <th>DOB</th>
+                    <th>Role</th>
+                    <th>Phone</th>
+                    <th>City</th>
+                    <th>State</th>
+                    <th>Zip</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+
+            <tbody>
+            <% participants.forEach(p => { %>
+                <tr>
+                    <td><%= p.ParticipantEmail %></td>
+                    <td><%= p.ParticipantFirstName %></td>
+                    <td><%= p.ParticipantLastName %></td>
+                    <td><%= p.ParticipantDOB %></td>
+                    <td><%= p.ParticipantRole %></td>
+                    <td><%= p.ParticipantPhone %></td>
+                    <td><%= p.ParticipantCity %></td>
+                    <td><%= p.ParticipantState %></td>
+                    <td><%= p.ParticipantZip %></td>
+
+                    <td>
+                        <a class="btn btn-secondary btn-small" href="/participants/edit/<%= p.ParticipantEmail %>">Edit</a>
+
+                        <% if (user.level === "M") { %>
+                            <form action="/participants/delete/<%= p.ParticipantEmail %>" 
+                                  method="POST" 
+                                  style="display:inline;">
+                                <button class="btn btn-danger btn-small"
+                                        onclick="return confirm('Delete this participant?');">
+                                    Delete
+                                </button>
+                            </form>
+                        <% } %>
+                    </td>
+                </tr>
+            <% }) %>
+            </tbody>
+        </table>
+
+    <% } else { %>
+        <p>No participants found.</p>
+    <% } %>
+
 </div>
 
 <% if (user.level === "M") { %>
-    <a class="btn btn-primary" href="/participants/edit">Add Participant</a>
+    <a href="/participants/edit" class="btn btn-primary">Add Participant</a>
 <% } %>
 
 <%- include("partials/footer") %>

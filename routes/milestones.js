@@ -1,30 +1,117 @@
 const express = require("express");
 const router = express.Router();
+const db = require("../db");
 const { requireLogin, requireManager } = require("./auth");
 
-// LIST
-router.get("/", requireLogin, (req, res) => {
-    res.render("milestones-list", { user: req.session });
+// -----------------------------------------------------
+// LIST MILESTONES
+// -----------------------------------------------------
+router.get("/", requireLogin, async (req, res) => {
+    try {
+        const milestones = await db("Milestones_3NF").select("*");
+
+        res.render("milestones-list", {
+            user: req.session,
+            milestones
+        });
+    } catch (err) {
+        console.error("Error loading milestones:", err);
+        res.status(500).send("Error loading milestones");
+    }
 });
 
-// ADD NEW
+// -----------------------------------------------------
+// ADD
+// -----------------------------------------------------
 router.get("/edit", requireLogin, (req, res) => {
-    res.render("milestones-edit", { id: null, user: req.session });
+    res.render("milestones-edit", {
+        mode: "create",
+        milestone: null,
+        user: req.session
+    });
 });
 
-// EDIT EXISTING
-router.get("/edit/:id", requireLogin, (req, res) => {
-    res.render("milestones-edit", { id: req.params.id, user: req.session });
+// -----------------------------------------------------
+// EDIT
+// -----------------------------------------------------
+router.get("/edit/:email/:date", requireLogin, async (req, res) => {
+    const { email, date } = req.params;
+
+    try {
+        const milestone = await db("Milestones_3NF")
+            .where("ParticipantEmail", email)
+            .andWhere("MilestoneDate", date)
+            .first();
+
+        if (!milestone) return res.status(404).send("Milestone not found");
+
+        res.render("milestones-edit", {
+            mode: "edit",
+            milestone,
+            user: req.session
+        });
+    } catch (err) {
+        console.error("Error loading milestone:", err);
+        res.status(500).send("Error loading milestone");
+    }
 });
 
+// -----------------------------------------------------
 // SAVE
-router.post("/save", requireManager, (req, res) => {
-    res.redirect("/milestones");
+// -----------------------------------------------------
+router.post("/save", requireManager, async (req, res) => {
+    try {
+        const {
+            OriginalEmail,
+            OriginalDate,
+            ParticipantEmail,
+            MilestoneTitle,
+            MilestoneDate
+        } = req.body;
+
+        if (OriginalEmail) {
+            // UPDATE
+            await db("Milestones_3NF")
+                .where("ParticipantEmail", OriginalEmail)
+                .andWhere("MilestoneDate", OriginalDate)
+                .update({
+                    ParticipantEmail,
+                    MilestoneTitle,
+                    MilestoneDate
+                });
+        } else {
+            // INSERT
+            await db("Milestones_3NF").insert({
+                ParticipantEmail,
+                MilestoneTitle,
+                MilestoneDate
+            });
+        }
+
+        res.redirect("/milestones");
+    } catch (err) {
+        console.error("Error saving milestone:", err);
+        res.status(500).send("Error saving milestone");
+    }
 });
 
+// -----------------------------------------------------
 // DELETE
-router.post("/delete/:id", requireManager, (req, res) => {
-    res.redirect("/milestones");
+// -----------------------------------------------------
+router.post("/delete/:email/:date", requireManager, async (req, res) => {
+    const { email, date } = req.params;
+
+    try {
+        await db("Milestones_3NF")
+            .where("ParticipantEmail", email)
+            .andWhere("MilestoneDate", date)
+            .del();
+
+        res.redirect("/milestones");
+    } catch (err) {
+        console.error("Error deleting milestone:", err);
+        res.status(500).send("Error deleting milestone");
+    }
 });
 
 module.exports = router;
