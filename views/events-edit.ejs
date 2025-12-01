@@ -1,0 +1,31 @@
+<%- include("partials/header") %>
+<%- include("partials/nav") %>
+
+<h1 class="section-header">
+    <%= id ? "Edit Event" : "Add Event" %>
+</h1>
+
+<div class="card">
+    <form method="POST" action="/events/save">
+
+        <input type="hidden" name="id" value="<%= id %>">
+
+        <label>Event Name</label>
+        <input type="text" name="event_name">
+
+        <label>Event Type</label>
+        <input type="text" name="event_type">
+
+        <label>Date</label>
+        <input type="date" name="event_date">
+
+        <label>Description</label>
+        <textarea name="description"></textarea>
+
+        <button class="btn btn-primary" type="submit">
+            Save Event
+        </button>
+    </form>
+</div>
+
+<%- include("partials/footer") %>

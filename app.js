@@ -4,25 +4,46 @@ const session = require("express-session");
 const path = require("path");
 
 const app = express();
+const PORT = process.env.PORT || 3300;
 
-// Basic middleware
-app.use(express.urlencoded({ extended: true }));
-app.use(express.json());
-app.use(express.static("public"));
-
+// EJS + static files
 app.set("view engine", "ejs");
-app.set("views", path.join(__dirname, "views"));
+app.use(express.urlencoded({ extended: true }));
+app.use(express.static(path.join(__dirname, "public")));
 
 // Session
 app.use(
-  session({
-    secret: process.env.SESSION_SECRET || "fallback-secret-key",
-    resave: false,
-    saveUninitialized: false,
-  })
+    session({
+        secret: process.env.SESSION_SECRET || "temp-secret-key",
+        resave: false,
+        saveUninitialized: false,
+    })
 );
 
-// Routes
+// -------------------------
+// AUTH HELPERS
+// -------------------------
+function requireLogin(req, res, next) {
+    if (!req.session.isLoggedIn) return res.redirect("/login");
+    next();
+}
+
+function requireManager(req, res, next) {
+    if (req.session.level !== "M") {
+        return res.status(403).send("Forbidden: Managers only");
+    }
+    next();
+}
+
+// Make user available in nav
+app.use((req, res, next) => {
+    res.locals.user = req.session;
+    next();
+});
+
+// -------------------------
+// ROUTES
+// -------------------------
 app.use("/", require("./routes/auth"));
 app.use("/participants", require("./routes/participants"));
 app.use("/events", require("./routes/events"));
@@ -31,24 +52,24 @@ app.use("/milestones", require("./routes/milestones"));
 app.use("/donations", require("./routes/donations"));
 app.use("/dashboard", require("./routes/dashboard"));
 
-// Root route
+// -------------------------
+// HOME PAGE
+// -------------------------
 app.get("/", (req, res) => {
-  if (req.session.isLoggedIn) {
-    return res.render("index", {
-      username: req.session.username,
-      userLevel: req.session.level,
-    });
-  }
-  res.redirect("/login");
+    if (!req.session.isLoggedIn) return res.redirect("/login");
+    res.render("landing");
 });
 
-// IS 404 requirement
-app.get("/tea", (req, res) => {
-  res.status(418).send("I'm a teapot ☕");
+// -------------------------
+// 418 Teapot route (required for IS 404)
+// -------------------------
+app.get("/teapot", (req, res) => {
+    res.status(418).send("I'm a teapot ☕");
 });
 
-// Start server
-const PORT = process.env.PORT || 3000;
+// -------------------------
+// START SERVER
+// -------------------------
 app.listen(PORT, () => {
-  console.log(`INTEX project running on port ${PORT}`);
+    console.log(`Ella Rises app running at http://localhost:${PORT}`);
 });

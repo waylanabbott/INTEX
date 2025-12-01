@@ -1,0 +1,38 @@
+<nav class="navbar">
+    <div class="nav-left">
+        <img src="/img/logo.png" alt="Ella Rises Logo" class="logo">
+        <a href="/">Home</a>
+        <a href="/dashboard">Dashboard</a>
+        <a href="/participants">Participants</a>
+        <a href="/events">Events</a>
+        <a href="/surveys">Surveys</a>
+        <a href="/milestones">Milestones</a>
+        <a href="/donations">Donations</a>
+    </div>
+
+    <div class="nav-right">
+        <% if (user) { %>
+            <span class="welcome">Hello, <%= user.username %></span>
+            <a class="btn btn-secondary" href="/logout">Logout</a>
+        <% } %>
+    </div>
+</nav>
+
+<style>
+    .logo {
+        height: 48px;
+        margin-right: 1rem;
+        border-radius: 8px;
+    }
+
+    .welcome {
+        font-weight: 600;
+        margin-right: 1rem;
+        color: var(--charcoal);
+    }
+
+    .nav-left a {
+        margin-right: 1rem;
+        font-weight: 600;
+    }
+</style>

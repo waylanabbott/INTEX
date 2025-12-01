@@ -1,0 +1,14 @@
+<%- include("partials/header") %>
+<%- include("partials/nav") %>
+
+<h1 class="section-header">Participants</h1>
+
+<div class="card">
+    <p>This will display all participants once the database is connected.</p>
+</div>
+
+<% if (user.level === "M") { %>
+    <a class="btn btn-primary" href="/participants/edit">Add Participant</a>
+<% } %>
+
+<%- include("partials/footer") %>

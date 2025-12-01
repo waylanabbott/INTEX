@@ -1,0 +1,14 @@
+<%- include("partials/header") %>
+<%- include("partials/nav") %>
+
+<h1 class="section-header">Milestones</h1>
+
+<div class="card">
+    <p>This page will list all milestone achievements.</p>
+</div>
+
+<% if (user.level === "M") { %>
+    <a class="btn btn-primary" href="/milestones/edit">Add Milestone</a>
+<% } %>
+
+<%- include("partials/footer") %>

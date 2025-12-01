@@ -1,0 +1,34 @@
+<%- include("partials/header") %>
+<%- include("partials/nav") %>
+
+<h1 class="section-header">
+    <%= id ? "Edit Survey" : "Add Survey Response" %>
+</h1>
+
+<div class="card">
+    <form method="POST" action="/surveys/save">
+
+        <input type="hidden" name="id" value="<%= id %>">
+
+        <label>Participant ID</label>
+        <input type="number" name="participant_id">
+
+        <label>Event ID</label>
+        <input type="number" name="event_id">
+
+        <label>Satisfaction (1–5)</label>
+        <input type="number" name="satisfaction" min="1" max="5">
+
+        <label>Usefulness (1–5)</label>
+        <input type="number" name="usefulness" min="1" max="5">
+
+        <label>Recommend Score (0–10)</label>
+        <input type="number" name="recommend" min="0" max="10">
+
+        <button class="btn btn-primary" type="submit">
+            Save Survey
+        </button>
+    </form>
+</div>
+
+<%- include("partials/footer") %>

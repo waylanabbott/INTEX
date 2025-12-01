@@ -1,0 +1,14 @@
+<%- include("partials/header") %>
+<%- include("partials/nav") %>
+
+<h1 class="section-header">Donations</h1>
+
+<div class="card">
+    <p>This page will show donation records once DB is connected.</p>
+</div>
+
+<% if (user.level === "M") { %>
+    <a class="btn btn-primary" href="/donations/edit">Add Donation</a>
+<% } %>
+
+<%- include("partials/footer") %>
