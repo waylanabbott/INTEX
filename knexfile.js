@@ -2,6 +2,31 @@
 // Make sure to set these variables in your .env file
 require('dotenv').config(); 
 
+const express = require("express");
+
+const session = require("express-session");
+
+let path = require("path");
+
+let bodyParser = require("body-parser");
+
+let app = express();
+
+app.set("view engine", "ejs");
+app.use(express.urlencoded({extended: true}));
+
+const port = process.env.PORT || 3000;
+
+app.use(
+  session(
+      {
+  secret: process.env.SESSION_SECRET || 'fallback-secret-key',
+  resave: false,
+  saveUninitialized: false,
+      }
+  )
+);
+
 module.exports = {
   // --- Development Configuration ---
 development: {
@@ -36,3 +61,20 @@ production: {
     }
 }
 };
+
+app.get("/", (req, res) => {
+  if (req.session.isLoggedIn) {
+      const username = req.session.username
+      const userLevel = req.session.level
+      res.render('index', {username : username, userLevel : userLevel})
+  }
+  else {
+      res.render("login", { error_message: "" });
+  }
+});
+
+
+
+app.listen(port, () => {
+  console.log(`INTEX project running on port ${port}`);
+});
