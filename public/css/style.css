@@ -271,3 +271,92 @@ body.login-bg {
     gap: 1rem;
     justify-content: center;
 }
+
+.site-header {
+    background: var(--pink-light);
+    padding: 0.8rem 2rem;
+    border-bottom: 3px solid var(--pink-mid);
+}
+
+.logo-img {
+    height: 55px;
+}
+
+/* ----------------------------------------------------
+   NAVIGATION BAR
+---------------------------------------------------- */
+
+.navbar {
+    background-color: var(--pink-light);
+    padding: 0.8rem 2rem;
+    border-bottom: 3px solid var(--pink-mid);
+
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+}
+
+/* Left section (logo + links) */
+.nav-left {
+    display: flex;
+    align-items: center;
+    gap: 1.2rem;
+}
+
+/* Navigation links */
+.nav-left a {
+    font-weight: 600;
+    color: var(--charcoal);
+    text-decoration: none;
+    transition: color 0.2s ease;
+}
+
+.nav-left a:hover {
+    color: var(--berry);
+}
+
+/* Logo */
+.logo {
+    height: 50px;
+    margin-right: 1rem;
+}
+
+/* Right side: welcome + logout */
+.nav-right {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+
+.welcome {
+    font-weight: 600;
+    color: var(--charcoal);
+}
+
+/* Logout button (brand-styled) */
+.logout-btn {
+    background: var(--sage);
+    padding: 0.5rem 1.1rem;
+    border-radius: 8px;
+    color: white !important;
+    font-weight: 600;
+    text-decoration: none;
+    transition: background 0.2s ease;
+}
+
+.logout-btn:hover {
+    background: #829f84;
+}
+
+/* Responsive */
+@media (max-width: 900px) {
+    .navbar {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .nav-left {
+        flex-wrap: wrap;
+    }
+}
