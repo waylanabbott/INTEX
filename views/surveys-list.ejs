@@ -57,8 +57,8 @@
 
                         <% if (user.level === "M") { %>
                             <form action="/surveys/delete/<%= s.SurveyID %>"
-                                  method="POST"
-                                  style="display:inline;">
+                                method="POST"
+                                style="display:inline;">
                                 <button class="btn btn-danger btn-small"
                                         onclick="return confirm('Delete survey?');">
                                     Delete

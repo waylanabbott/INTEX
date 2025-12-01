@@ -9,8 +9,18 @@
 
         <% if (mode === "edit") { %>
             <input type="hidden" name="OriginalEmail" value="<%= donation.ParticipantEmail %>">
-            <input type="hidden" name="OriginalDate" value="<%= donation.DonationDate %>">
+            <input type="hidden" name="OriginalDate" value="<%= donation['Donation Date'] %>">
         <% } %>
+
+        <% 
+            const editDate = (donation && donation["Donation Date"] !== "UNKNOWN_DATE")
+                ? donation["Donation Date"]
+                : "";
+
+            const editAmt = donation 
+                ? (donation["Donation Amount"] || "").replace("$", "").trim()
+                : "";
+        %>
 
         <div class="form-group">
             <label>Participant Email</label>
@@ -21,13 +31,13 @@
         <div class="form-group">
             <label>Donation Date</label>
             <input type="text" name="DonationDate"
-                   value="<%= donation ? donation.DonationDate : '' %>" required>
+                   value="<%= editDate %>" required>
         </div>
 
         <div class="form-group">
             <label>Donation Amount</label>
             <input type="number" step="0.01" name="DonationAmount"
-                   value="<%= donation ? donation.DonationAmount : '' %>" required>
+                   value="<%= editAmt %>" required>
         </div>
 
         <div class="form-actions">

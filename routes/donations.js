@@ -3,9 +3,7 @@ const router = express.Router();
 const db = require("../db");
 const { requireLogin, requireManager } = require("./auth");
 
-// -----------------------------------------------------
 // LIST DONATIONS
-// -----------------------------------------------------
 router.get("/", requireLogin, async (req, res) => {
     try {
         const donations = await db("Donations_3NF").select("*");
@@ -20,9 +18,7 @@ router.get("/", requireLogin, async (req, res) => {
     }
 });
 
-// -----------------------------------------------------
 // ADD DONATION
-// -----------------------------------------------------
 router.get("/edit", requireLogin, (req, res) => {
     res.render("donations-edit", {
         mode: "create",
@@ -31,16 +27,14 @@ router.get("/edit", requireLogin, (req, res) => {
     });
 });
 
-// -----------------------------------------------------
 // EDIT DONATION
-// -----------------------------------------------------
 router.get("/edit/:email/:date", requireLogin, async (req, res) => {
     const { email, date } = req.params;
 
     try {
         const donation = await db("Donations_3NF")
             .where("ParticipantEmail", email)
-            .andWhere("DonationDate", date)
+            .andWhere("Donation Date", date)
             .first();
 
         if (!donation) return res.status(404).send("Donation not found");
@@ -56,9 +50,7 @@ router.get("/edit/:email/:date", requireLogin, async (req, res) => {
     }
 });
 
-// -----------------------------------------------------
 // SAVE DONATION
-// -----------------------------------------------------
 router.post("/save", requireManager, async (req, res) => {
     try {
         const {
@@ -69,22 +61,25 @@ router.post("/save", requireManager, async (req, res) => {
             DonationAmount
         } = req.body;
 
+        // Strip leading '$'
+        const cleanAmount = DonationAmount.replace("$", "").trim();
+
         if (OriginalEmail) {
             // UPDATE
             await db("Donations_3NF")
                 .where("ParticipantEmail", OriginalEmail)
-                .andWhere("DonationDate", OriginalDate)
+                .andWhere("Donation Date", OriginalDate)
                 .update({
                     ParticipantEmail,
-                    DonationDate,
-                    DonationAmount
+                    "Donation Date": DonationDate,
+                    "Donation Amount": cleanAmount
                 });
         } else {
             // INSERT
             await db("Donations_3NF").insert({
                 ParticipantEmail,
-                DonationDate,
-                DonationAmount
+                "Donation Date": DonationDate,
+                "Donation Amount": cleanAmount
             });
         }
 
@@ -95,16 +90,14 @@ router.post("/save", requireManager, async (req, res) => {
     }
 });
 
-// -----------------------------------------------------
 // DELETE DONATION
-// -----------------------------------------------------
 router.post("/delete/:email/:date", requireManager, async (req, res) => {
     const { email, date } = req.params;
 
     try {
         await db("Donations_3NF")
             .where("ParticipantEmail", email)
-            .andWhere("DonationDate", date)
+            .andWhere("Donation Date", date)
             .del();
 
         res.redirect("/donations");
