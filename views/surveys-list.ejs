@@ -1,0 +1,14 @@
+<%- include("partials/header") %>
+<%- include("partials/nav") %>
+
+<h1 class="section-header">Surveys</h1>
+
+<div class="card">
+    <p>This will display survey results once DB is hooked up.</p>
+</div>
+
+<% if (user.level === "M") { %>
+    <a class="btn btn-primary" href="/surveys/edit">Add Survey</a>
+<% } %>
+
+<%- include("partials/footer") %>

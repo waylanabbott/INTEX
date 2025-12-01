@@ -1,0 +1,14 @@
+<%- include("partials/header") %>
+<%- include("partials/nav") %>
+
+<h1 class="section-header">Events</h1>
+
+<div class="card">
+    <p>This will display all events once linked to the database.</p>
+</div>
+
+<% if (user.level === "M") { %>
+    <a class="btn btn-primary" href="/events/edit">Add Event</a>
+<% } %>
+
+<%- include("partials/footer") %>

@@ -1,0 +1,28 @@
+<%- include("partials/header") %>
+<%- include("partials/nav") %>
+
+<h1 class="section-header">
+    <%= id ? "Edit Milestone" : "Record New Milestone" %>
+</h1>
+
+<div class="card">
+    <form method="POST" action="/milestones/save">
+
+        <input type="hidden" name="id" value="<%= id %>">
+
+        <label>Participant ID</label>
+        <input type="number" name="participant_id">
+
+        <label>Milestone Title</label>
+        <input type="text" name="milestone_title">
+
+        <label>Date Achieved</label>
+        <input type="date" name="milestone_date">
+
+        <button class="btn btn-primary" type="submit">
+            Save Milestone
+        </button>
+    </form>
+</div>
+
+<%- include("partials/footer") %>

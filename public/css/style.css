@@ -1,0 +1,234 @@
+/* ----------------------------------------------------
+   ELLA RISES — GLOBAL BRAND STYLING
+---------------------------------------------------- */
+
+/* Load Google Fonts */
+@import url('https://fonts.googleapis.com/css2?family=DM+Serif+Display&family=Montserrat:wght@300;400;500;600;700&display=swap');
+
+/* ----------------------------------------------------
+   ROOT VARIABLES (BRAND COLORS)
+---------------------------------------------------- */
+:root {
+    --blue: #99B7C6;
+    --lavender: #978EC4;
+    --offwhite: #F9F5EA;
+    --pink-light: #FFDBD1;
+    --pink-mid: #F9AFB1;
+    --sage: #9AB59D;
+    --charcoal: #3A3F3B;
+    --coral: #F4B092;
+    --berry: #CE325B;
+
+    --font-serif: 'DM Serif Display', serif;
+    --font-body: 'Montserrat', sans-serif;
+}
+
+/* ----------------------------------------------------
+   GLOBAL RESET
+---------------------------------------------------- */
+body {
+    background: var(--offwhite) !important;
+    margin: 0;
+    padding: 0;
+    font-family: var(--font-body);
+    color: var(--charcoal);
+}
+
+h1, h2, h3, h4 {
+    font-family: var(--font-serif);
+    color: var(--charcoal);
+}
+
+/* Remove bootstrap primary color */
+.text-primary,
+.bg-primary,
+.border-primary {
+    color: var(--berry) !important;
+    background-color: var(--pink-light) !important;
+    border-color: var(--berry) !important;
+}
+
+/* ----------------------------------------------------
+   LINKS
+---------------------------------------------------- */
+a {
+    color: var(--lavender) !important;
+    font-weight: 500;
+}
+a:hover {
+    color: var(--berry) !important;
+    text-decoration: underline;
+}
+
+/* ----------------------------------------------------
+   NAVIGATION
+---------------------------------------------------- */
+.navbar {
+    background-color: var(--pink-light) !important;
+    padding: 1rem 2rem;
+    border-bottom: 3px solid var(--pink-mid);
+}
+
+.navbar a {
+    font-weight: 600;
+    color: var(--charcoal) !important;
+}
+
+.navbar a:hover {
+    color: var(--berry) !important;
+}
+
+/* ----------------------------------------------------
+   BUTTONS — TOTAL BOOTSTRAP OVERRIDE
+---------------------------------------------------- */
+
+.btn,
+button {
+    font-weight: 600 !important;
+    border-radius: 8px !important;
+    padding: 0.6rem 1.2rem !important;
+    border: none !important;
+}
+
+/* Pink Primary Button */
+.btn-primary,
+.btn-primary:hover,
+.btn-primary:active,
+.btn-primary:focus,
+.btn-primary:visited,
+.btn-primary:focus-visible,
+.btn-primary:disabled {
+    background-color: var(--berry) !important;
+    border-color: var(--berry) !important;
+    color: white !important;
+}
+
+/* Secondary Sage Button */
+.btn-secondary,
+.btn-secondary:hover,
+.btn-secondary:active,
+.btn-secondary:focus,
+.btn-secondary:visited,
+.btn-secondary:focus-visible,
+.btn-secondary:disabled {
+    background-color: var(--sage) !important;
+    border-color: var(--sage) !important;
+    color: white !important;
+}
+
+/* Light Button */
+.btn-light,
+.btn-light:hover {
+    background: var(--pink-light) !important;
+    color: var(--charcoal) !important;
+}
+
+/* ----------------------------------------------------
+   FORMS
+---------------------------------------------------- */
+label {
+    font-weight: 600;
+}
+
+input, select, textarea {
+    width: 100%;
+    padding: 0.75rem;
+    border-radius: 6px;
+    border: 1px solid var(--blue) !important;
+    background: white !important;
+}
+
+input:focus, select:focus, textarea:focus {
+    outline: none !important;
+    border-color: var(--lavender) !important;
+    box-shadow: 0 0 4px rgba(151, 142, 196, 0.5) !important;
+}
+
+/* Remove Bootstrap blue autofill */
+input:-webkit-autofill {
+    box-shadow: 0 0 0px 1000px white inset !important;
+}
+
+/* ----------------------------------------------------
+   CARDS
+---------------------------------------------------- */
+.card {
+    background: white !important;
+    border-radius: 12px !important;
+    padding: 1.5rem !important;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08) !important;
+    margin: 1rem 0 !important;
+}
+
+/* ----------------------------------------------------
+   TABLES
+---------------------------------------------------- */
+table {
+    width: 100% !important;
+    border-collapse: collapse !important;
+}
+
+table thead {
+    background-color: var(--pink-light) !important;
+}
+
+table th, table td {
+    padding: 0.75rem !important;
+    border-bottom: 1px solid #ddd !important;
+}
+
+table tbody tr:hover {
+    background: var(--pink-light) !important;
+}
+
+/* ----------------------------------------------------
+   SECTION HEADERS
+---------------------------------------------------- */
+.section-header {
+    font-family: var(--font-serif);
+    font-size: 2rem;
+    border-left: 6px solid var(--lavender);
+    padding-left: 1rem;
+}
+
+/* ----------------------------------------------------
+   FOOTER
+---------------------------------------------------- */
+.footer {
+    margin-top: 2rem;
+    background: var(--charcoal) !important;
+    color: white !important;
+    padding: 1.5rem;
+    text-align: center;
+}
+
+/* ----------------------------------------------------
+   LOGIN PAGE FIX (removes Bootstrap blue)
+---------------------------------------------------- */
+
+body.login-bg {
+    background: linear-gradient(135deg, var(--pink-light), var(--lavender)) !important;
+}
+
+.login-card {
+    background: #ffffff !important;
+    border-radius: 1rem !important;
+    box-shadow: 0 20px 40px rgba(0,0,0,0.15) !important;
+    padding: 2.5rem !important;
+}
+
+.login-title {
+    font-family: var(--font-serif);
+    font-size: 1.7rem;
+    color: var(--charcoal);
+}
+/* ----------------------------------------------------
+   LOGIN BACKGROUND — PINK ➜ LAVENDER GRADIENT
+---------------------------------------------------- */
+.login-background {
+    background: linear-gradient(135deg, var(--pink-light), var(--lavender)) !important;
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
