@@ -1,31 +1,69 @@
 <%- include("partials/header") %>
 <%- include("partials/nav") %>
 
-<h1 class="section-header">
-    <%= id ? "Edit Event" : "Add Event" %>
-</h1>
+<h1 class="section-header"><%= mode === "edit" ? "Edit Event Occurrence" : "Add Event Occurrence" %></h1>
 
 <div class="card">
-    <form method="POST" action="/events/save">
 
-        <input type="hidden" name="id" value="<%= id %>">
+    <form action="/events/save" method="POST" class="form-layout">
 
-        <label>Event Name</label>
-        <input type="text" name="event_name">
+        <% if (mode === "edit") { %>
+            <input type="hidden" name="EventOccurrenceID" value="<%= event.EventOccurrenceID %>">
+        <% } %>
 
-        <label>Event Type</label>
-        <input type="text" name="event_type">
+        <div class="form-group">
+            <label for="EventName">Event Template</label>
+            <select id="EventName" name="EventName" required>
+                <option value="">-- Select Event --</option>
+                <% templates.forEach(t => { %>
+                    <option value="<%= t.EventName %>"
+                        <%= event && event.EventName === t.EventName ? "selected" : "" %>>
+                        <%= t.EventName %> (<%= t.EventType %>)
+                    </option>
+                <% }) %>
+            </select>
+        </div>
 
-        <label>Date</label>
-        <input type="date" name="event_date">
+        <div class="form-group">
+            <label for="EventDateTimeStart">Start Date & Time</label>
+            <input type="text" id="EventDateTimeStart" name="EventDateTimeStart"
+                   value="<%= event ? event.EventDateTimeStart : '' %>" required>
+        </div>
 
-        <label>Description</label>
-        <textarea name="description"></textarea>
+        <div class="form-group">
+            <label for="EventDateTimeEnd">End Date & Time</label>
+            <input type="text" id="EventDateTimeEnd" name="EventDateTimeEnd"
+                   value="<%= event ? event.EventDateTimeEnd : '' %>">
+        </div>
 
-        <button class="btn btn-primary" type="submit">
-            Save Event
-        </button>
+        <div class="form-group">
+            <label for="EventLocation">Location</label>
+            <input type="text" id="EventLocation" name="EventLocation"
+                   value="<%= event ? event.EventLocation : '' %>">
+        </div>
+
+        <div class="form-group">
+            <label for="EventCapacity">Capacity</label>
+            <input type="number" id="EventCapacity" name="EventCapacity"
+                   value="<%= event ? event.EventCapacity : '' %>">
+        </div>
+
+        <div class="form-group">
+            <label for="EventRegistrationDeadline">Registration Deadline</label>
+            <input type="text" id="EventRegistrationDeadline" name="EventRegistrationDeadline"
+                   value="<%= event ? event.EventRegistrationDeadline : '' %>">
+        </div>
+
+        <div class="form-actions">
+            <button type="submit" class="btn btn-primary">
+                <%= mode === "edit" ? "Save Changes" : "Create Event Occurrence" %>
+            </button>
+
+            <a class="btn btn-secondary" href="/events">Cancel</a>
+        </div>
+
     </form>
+
 </div>
 
 <%- include("partials/footer") %>

@@ -1,28 +1,44 @@
 <%- include("partials/header") %>
 <%- include("partials/nav") %>
 
-<h1 class="section-header">
-    <%= id ? "Edit Donation" : "Add Donation" %>
-</h1>
+<h1 class="section-header"><%= mode === "edit" ? "Edit Donation" : "Add Donation" %></h1>
 
 <div class="card">
-    <form method="POST" action="/donations/save">
 
-        <input type="hidden" name="id" value="<%= id %>">
+    <form action="/donations/save" method="POST" class="form-layout">
 
-        <label>Donor Name</label>
-        <input type="text" name="donor_name">
+        <% if (mode === "edit") { %>
+            <input type="hidden" name="OriginalEmail" value="<%= donation.ParticipantEmail %>">
+            <input type="hidden" name="OriginalDate" value="<%= donation.DonationDate %>">
+        <% } %>
 
-        <label>Amount</label>
-        <input type="number" step="0.01" name="amount">
+        <div class="form-group">
+            <label>Participant Email</label>
+            <input type="email" name="ParticipantEmail"
+                   value="<%= donation ? donation.ParticipantEmail : '' %>" required>
+        </div>
 
-        <label>Date</label>
-        <input type="date" name="donation_date">
+        <div class="form-group">
+            <label>Donation Date</label>
+            <input type="text" name="DonationDate"
+                   value="<%= donation ? donation.DonationDate : '' %>" required>
+        </div>
 
-        <button class="btn btn-primary" type="submit">
-            Save Donation
-        </button>
+        <div class="form-group">
+            <label>Donation Amount</label>
+            <input type="number" step="0.01" name="DonationAmount"
+                   value="<%= donation ? donation.DonationAmount : '' %>" required>
+        </div>
+
+        <div class="form-actions">
+            <button class="btn btn-primary">
+                <%= mode === "edit" ? "Save Donation" : "Add Donation" %>
+            </button>
+            <a class="btn btn-secondary" href="/donations">Cancel</a>
+        </div>
+
     </form>
+
 </div>
 
 <%- include("partials/footer") %>

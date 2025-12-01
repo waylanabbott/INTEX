@@ -1,30 +1,117 @@
 const express = require("express");
 const router = express.Router();
+const db = require("../db");
 const { requireLogin, requireManager } = require("./auth");
 
-// LIST
-router.get("/", requireLogin, (req, res) => {
-    res.render("donations-list", { user: req.session });
+// -----------------------------------------------------
+// LIST DONATIONS
+// -----------------------------------------------------
+router.get("/", requireLogin, async (req, res) => {
+    try {
+        const donations = await db("Donations_3NF").select("*");
+
+        res.render("donations-list", {
+            user: req.session,
+            donations
+        });
+    } catch (err) {
+        console.error("Error loading donations:", err);
+        res.status(500).send("Error loading donations");
+    }
 });
 
-// ADD NEW
+// -----------------------------------------------------
+// ADD DONATION
+// -----------------------------------------------------
 router.get("/edit", requireLogin, (req, res) => {
-    res.render("donations-edit", { id: null, user: req.session });
+    res.render("donations-edit", {
+        mode: "create",
+        donation: null,
+        user: req.session
+    });
 });
 
-// EDIT EXISTING
-router.get("/edit/:id", requireLogin, (req, res) => {
-    res.render("donations-edit", { id: req.params.id, user: req.session });
+// -----------------------------------------------------
+// EDIT DONATION
+// -----------------------------------------------------
+router.get("/edit/:email/:date", requireLogin, async (req, res) => {
+    const { email, date } = req.params;
+
+    try {
+        const donation = await db("Donations_3NF")
+            .where("ParticipantEmail", email)
+            .andWhere("DonationDate", date)
+            .first();
+
+        if (!donation) return res.status(404).send("Donation not found");
+
+        res.render("donations-edit", {
+            mode: "edit",
+            donation,
+            user: req.session
+        });
+    } catch (err) {
+        console.error("Error loading donation:", err);
+        res.status(500).send("Error loading donation");
+    }
 });
 
-// SAVE
-router.post("/save", requireManager, (req, res) => {
-    res.redirect("/donations");
+// -----------------------------------------------------
+// SAVE DONATION
+// -----------------------------------------------------
+router.post("/save", requireManager, async (req, res) => {
+    try {
+        const {
+            OriginalEmail,
+            OriginalDate,
+            ParticipantEmail,
+            DonationDate,
+            DonationAmount
+        } = req.body;
+
+        if (OriginalEmail) {
+            // UPDATE
+            await db("Donations_3NF")
+                .where("ParticipantEmail", OriginalEmail)
+                .andWhere("DonationDate", OriginalDate)
+                .update({
+                    ParticipantEmail,
+                    DonationDate,
+                    DonationAmount
+                });
+        } else {
+            // INSERT
+            await db("Donations_3NF").insert({
+                ParticipantEmail,
+                DonationDate,
+                DonationAmount
+            });
+        }
+
+        res.redirect("/donations");
+    } catch (err) {
+        console.error("Error saving donation:", err);
+        res.status(500).send("Error saving donation");
+    }
 });
 
-// DELETE
-router.post("/delete/:id", requireManager, (req, res) => {
-    res.redirect("/donations");
+// -----------------------------------------------------
+// DELETE DONATION
+// -----------------------------------------------------
+router.post("/delete/:email/:date", requireManager, async (req, res) => {
+    const { email, date } = req.params;
+
+    try {
+        await db("Donations_3NF")
+            .where("ParticipantEmail", email)
+            .andWhere("DonationDate", date)
+            .del();
+
+        res.redirect("/donations");
+    } catch (err) {
+        console.error("Error deleting donation:", err);
+        res.status(500).send("Error deleting donation");
+    }
 });
 
 module.exports = router;

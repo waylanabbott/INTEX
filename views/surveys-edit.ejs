@@ -1,33 +1,70 @@
 <%- include("partials/header") %>
 <%- include("partials/nav") %>
 
-<h1 class="section-header">
-    <%= id ? "Edit Survey" : "Add Survey Response" %>
-</h1>
+<h1 class="section-header"><%= mode === "edit" ? "Edit Survey" : "Add Survey" %></h1>
 
 <div class="card">
-    <form method="POST" action="/surveys/save">
 
-        <input type="hidden" name="id" value="<%= id %>">
+    <form action="/surveys/save" method="POST" class="form-layout">
 
-        <label>Participant ID</label>
-        <input type="number" name="participant_id">
+        <% if (mode === "edit") { %>
+            <input type="hidden" name="SurveyID" value="<%= survey.SurveyID %>">
+        <% } %>
 
-        <label>Event ID</label>
-        <input type="number" name="event_id">
+        <div class="form-group">
+            <label>Participant Email</label>
+            <input type="email" name="ParticipantEmail"
+                   value="<%= survey ? survey.ParticipantEmail : '' %>" required>
+        </div>
 
-        <label>Satisfaction (1–5)</label>
-        <input type="number" name="satisfaction" min="1" max="5">
+        <div class="form-group">
+            <label>Event Name</label>
+            <input type="text" name="EventName"
+                   value="<%= survey ? survey.EventName : '' %>" required>
+        </div>
 
-        <label>Usefulness (1–5)</label>
-        <input type="number" name="usefulness" min="1" max="5">
+        <div class="form-group">
+            <label>Event Occurrence ID</label>
+            <input type="number" name="EventOccurrenceID"
+                   value="<%= survey ? survey.EventOccurrenceID : '' %>" required>
+        </div>
 
-        <label>Recommend Score (0–10)</label>
-        <input type="number" name="recommend" min="0" max="10">
+        <div class="form-group">
+            <label>Survey Date</label>
+            <input type="text" name="SurveyDate"
+                   value="<%= survey ? survey.SurveyDate : '' %>" required>
+        </div>
 
-        <button class="btn btn-primary" type="submit">
-            Save Survey
-        </button>
+        <div class="form-group">
+            <label>Satisfaction Score</label>
+            <input type="number" name="SatisfactionScore"
+                   value="<%= survey ? survey.SatisfactionScore : '' %>" required>
+        </div>
+
+        <div class="form-group">
+            <label>Learning Score</label>
+            <input type="number" name="LearningScore"
+                   value="<%= survey ? survey.LearningScore : '' %>" required>
+        </div>
+
+        <div class="form-group">
+            <label>Confidence Score</label>
+            <input type="number" name="ConfidenceScore"
+                   value="<%= survey ? survey.ConfidenceScore : '' %>" required>
+        </div>
+
+        <div class="form-group">
+            <label>Comments</label>
+            <textarea name="Comments"><%= survey ? survey.Comments : '' %></textarea>
+        </div>
+
+        <div class="form-actions">
+            <button class="btn btn-primary">
+                <%= mode === "edit" ? "Save" : "Add Survey" %>
+            </button>
+            <a class="btn btn-secondary" href="/surveys">Cancel</a>
+        </div>
+
     </form>
 </div>
 

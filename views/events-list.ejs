@@ -4,11 +4,67 @@
 <h1 class="section-header">Events</h1>
 
 <div class="card">
-    <p>This will display all events once linked to the database.</p>
+
+    <% if (events && events.length > 0) { %>
+
+        <table class="styled-table">
+            <thead>
+            <tr>
+                <th>Occurrence ID</th>
+                <th>Event Name</th>
+                <th>Event Type</th>
+                <th>Description</th>
+                <th>Recurrence</th>
+                <th>Default Capacity</th>
+                <th>Start</th>
+                <th>End</th>
+                <th>Location</th>
+                <th>Capacity</th>
+                <th>Deadline</th>
+                <th>Actions</th>
+            </tr>
+            </thead>
+
+            <tbody>
+            <% events.forEach(e => { %>
+                <tr>
+                    <td><%= e.EventOccurrenceID %></td>
+                    <td><%= e.EventName %></td>
+                    <td><%= e.EventType %></td>
+                    <td><%= e.EventDescription %></td>
+                    <td><%= e.EventRecurrencePattern %></td>
+                    <td><%= e.EventDefaultCapacity %></td>
+                    <td><%= e.EventDateTimeStart %></td>
+                    <td><%= e.EventDateTimeEnd %></td>
+                    <td><%= e.EventLocation %></td>
+                    <td><%= e.EventCapacity %></td>
+                    <td><%= e.EventRegistrationDeadline %></td>
+
+                    <td>
+                        <a class="btn btn-secondary btn-small" href="/events/edit/<%= e.EventOccurrenceID %>">Edit</a>
+
+                        <% if (user && user.level === "M") { %>
+                            <form action="/events/delete/<%= e.EventOccurrenceID %>" method="POST" style="display:inline;">
+                                <button type="submit" class="btn btn-danger btn-small"
+                                        onclick="return confirm('Delete this event occurrence?');">
+                                    Delete
+                                </button>
+                            </form>
+                        <% } %>
+                    </td>
+                </tr>
+            <% }) %>
+            </tbody>
+        </table>
+
+    <% } else { %>
+        <p>No events have been added yet.</p>
+    <% } %>
+
 </div>
 
-<% if (user.level === "M") { %>
-    <a class="btn btn-primary" href="/events/edit">Add Event</a>
+<% if (user && user.level === "M") { %>
+    <a class="btn btn-primary" href="/events/edit">Add Event Occurrence</a>
 <% } %>
 
 <%- include("partials/footer") %>

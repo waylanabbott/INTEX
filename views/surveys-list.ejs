@@ -4,11 +4,63 @@
 <h1 class="section-header">Surveys</h1>
 
 <div class="card">
-    <p>This will display survey results once DB is hooked up.</p>
+
+    <% if (surveys && surveys.length > 0) { %>
+
+        <table class="styled-table">
+            <thead>
+                <tr>
+                    <th>Email</th>
+                    <th>Event Name</th>
+                    <th>Occurrence ID</th>
+                    <th>Date</th>
+                    <th>Satisfaction</th>
+                    <th>Learning</th>
+                    <th>Confidence</th>
+                    <th>Comments</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+
+            <tbody>
+            <% surveys.forEach(s => { %>
+                <tr>
+                    <td><%= s.ParticipantEmail %></td>
+                    <td><%= s.EventName %></td>
+                    <td><%= s.EventOccurrenceID %></td>
+                    <td><%= s.SurveyDate %></td>
+                    <td><%= s.SatisfactionScore %></td>
+                    <td><%= s.LearningScore %></td>
+                    <td><%= s.ConfidenceScore %></td>
+                    <td><%= s.Comments %></td>
+
+                    <td>
+                        <a class="btn btn-secondary btn-small" href="/surveys/edit/<%= s.SurveyID %>">Edit</a>
+
+                        <% if (user.level === "M") { %>
+                            <form action="/surveys/delete/<%= s.SurveyID %>" 
+                                  method="POST" 
+                                  style="display:inline;">
+                                <button class="btn btn-danger btn-small"
+                                        onclick="return confirm('Delete survey?');">
+                                    Delete
+                                </button>
+                            </form>
+                        <% } %>
+                    </td>
+                </tr>
+            <% }) %>
+            </tbody>
+        </table>
+
+    <% } else { %>
+        <p>No surveys recorded.</p>
+    <% } %>
+
 </div>
 
 <% if (user.level === "M") { %>
-    <a class="btn btn-primary" href="/surveys/edit">Add Survey</a>
+    <a href="/surveys/edit" class="btn btn-primary">Add Survey</a>
 <% } %>
 
 <%- include("partials/footer") %>
