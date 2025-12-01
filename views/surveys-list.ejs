@@ -12,11 +12,13 @@
                 <tr>
                     <th>Email</th>
                     <th>Event Name</th>
-                    <th>Occurrence ID</th>
-                    <th>Date</th>
+                    <th>Start</th>
                     <th>Satisfaction</th>
-                    <th>Learning</th>
-                    <th>Confidence</th>
+                    <th>Usefulness</th>
+                    <th>Instructor</th>
+                    <th>Recommend</th>
+                    <th>Overall</th>
+                    <th>NPS</th>
                     <th>Comments</th>
                     <th>Actions</th>
                 </tr>
@@ -27,19 +29,35 @@
                 <tr>
                     <td><%= s.ParticipantEmail %></td>
                     <td><%= s.EventName %></td>
-                    <td><%= s.EventOccurrenceID %></td>
-                    <td><%= s.SurveyDate %></td>
-                    <td><%= s.SatisfactionScore %></td>
-                    <td><%= s.LearningScore %></td>
-                    <td><%= s.ConfidenceScore %></td>
-                    <td><%= s.Comments %></td>
+                    <td><%= s.EventDateTimeStart %></td>
+                    <td><%= s.SurveySatisfactionScore %></td>
+                    <td><%= s.SurveyUsefulnessScore %></td>
+                    <td><%= s.SurveyInstructorScore %></td>
+                    <td><%= s.SurveyRecommendationScore %></td>
+                    <td><%= s.SurveyOverallScore %></td>
+                    <td><%= s.SurveyNPSBucket %></td>
 
+                    <!-- COMMENTS COLUMN -->
                     <td>
-                        <a class="btn btn-secondary btn-small" href="/surveys/edit/<%= s.SurveyID %>">Edit</a>
+                        <% if (s.SurveyComments && s.SurveyComments.length > 0) { %>
+                            <button class="btn btn-small btn-secondary"
+                                    onclick='showComment(<%- JSON.stringify(s.SurveyComments) %>)'>
+                                View
+                            </button>
+                        <% } else { %>
+                            <span>No comments</span>
+                        <% } %>
+                    </td>
+
+                    <!-- ACTIONS -->
+                    <td>
+                        <a class="btn btn-secondary btn-small" href="/surveys/edit/<%= s.SurveyID %>">
+                            Edit
+                        </a>
 
                         <% if (user.level === "M") { %>
-                            <form action="/surveys/delete/<%= s.SurveyID %>" 
-                                  method="POST" 
+                            <form action="/surveys/delete/<%= s.SurveyID %>"
+                                  method="POST"
                                   style="display:inline;">
                                 <button class="btn btn-danger btn-small"
                                         onclick="return confirm('Delete survey?');">
@@ -62,5 +80,25 @@
 <% if (user.level === "M") { %>
     <a href="/surveys/edit" class="btn btn-primary">Add Survey</a>
 <% } %>
+
+<!-- MODAL FOR COMMENT VIEW -->
+<div id="commentModal" class="modal-overlay" style="display:none;">
+    <div class="modal-content">
+        <h2>Survey Comment</h2>
+        <p id="commentText"></p>
+        <button class="btn btn-primary" onclick="closeComment()">Close</button>
+    </div>
+</div>
+
+<script>
+    function showComment(text) {
+        document.getElementById("commentText").innerText = text;
+        document.getElementById("commentModal").style.display = "flex";
+    }
+
+    function closeComment() {
+        document.getElementById("commentModal").style.display = "none";
+    }
+</script>
 
 <%- include("partials/footer") %>

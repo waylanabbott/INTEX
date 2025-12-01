@@ -24,38 +24,50 @@
         </div>
 
         <div class="form-group">
-            <label>Event Occurrence ID</label>
-            <input type="number" name="EventOccurrenceID"
-                   value="<%= survey ? survey.EventOccurrenceID : '' %>" required>
-        </div>
-
-        <div class="form-group">
-            <label>Survey Date</label>
-            <input type="text" name="SurveyDate"
-                   value="<%= survey ? survey.SurveyDate : '' %>" required>
+            <label>Event Start (Date/Time)</label>
+            <input type="text" name="EventDateTimeStart"
+                   value="<%= survey ? survey.EventDateTimeStart : '' %>">
         </div>
 
         <div class="form-group">
             <label>Satisfaction Score</label>
-            <input type="number" name="SatisfactionScore"
-                   value="<%= survey ? survey.SatisfactionScore : '' %>" required>
+            <input type="number" name="SurveySatisfactionScore"
+                   value="<%= survey ? survey.SurveySatisfactionScore : '' %>">
         </div>
 
         <div class="form-group">
-            <label>Learning Score</label>
-            <input type="number" name="LearningScore"
-                   value="<%= survey ? survey.LearningScore : '' %>" required>
+            <label>Usefulness Score</label>
+            <input type="number" name="SurveyUsefulnessScore"
+                   value="<%= survey ? survey.SurveyUsefulnessScore : '' %>">
         </div>
 
         <div class="form-group">
-            <label>Confidence Score</label>
-            <input type="number" name="ConfidenceScore"
-                   value="<%= survey ? survey.ConfidenceScore : '' %>" required>
+            <label>Instructor Score</label>
+            <input type="number" name="SurveyInstructorScore"
+                   value="<%= survey ? survey.SurveyInstructorScore : '' %>">
+        </div>
+
+        <div class="form-group">
+            <label>Recommendation Score</label>
+            <input type="number" name="SurveyRecommendationScore"
+                   value="<%= survey ? survey.SurveyRecommendationScore : '' %>">
+        </div>
+
+        <div class="form-group">
+            <label>Overall Score</label>
+            <input type="number" name="SurveyOverallScore"
+                   value="<%= survey ? survey.SurveyOverallScore : '' %>">
+        </div>
+
+        <div class="form-group">
+            <label>NPS Bucket</label>
+            <input type="text" name="SurveyNPSBucket"
+                   value="<%= survey ? survey.SurveyNPSBucket : '' %>">
         </div>
 
         <div class="form-group">
             <label>Comments</label>
-            <textarea name="Comments"><%= survey ? survey.Comments : '' %></textarea>
+            <textarea name="SurveyComments"><%= survey ? survey.SurveyComments : '' %></textarea>
         </div>
 
         <div class="form-actions">

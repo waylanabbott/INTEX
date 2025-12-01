@@ -40,7 +40,7 @@ router.get("/edit/:email/:date", requireLogin, async (req, res) => {
     try {
         const milestone = await db("Milestones_3NF")
             .where("ParticipantEmail", email)
-            .andWhere("MilestoneDate", date)
+            .andWhere("Milestone Date", date)
             .first();
 
         if (!milestone) return res.status(404).send("Milestone not found");
@@ -73,18 +73,18 @@ router.post("/save", requireManager, async (req, res) => {
             // UPDATE
             await db("Milestones_3NF")
                 .where("ParticipantEmail", OriginalEmail)
-                .andWhere("MilestoneDate", OriginalDate)
+                .andWhere("Milestone Date", OriginalDate)
                 .update({
                     ParticipantEmail,
-                    MilestoneTitle,
-                    MilestoneDate
+                    "Milestone Title": MilestoneTitle,
+                    "Milestone Date": MilestoneDate
                 });
         } else {
             // INSERT
             await db("Milestones_3NF").insert({
                 ParticipantEmail,
-                MilestoneTitle,
-                MilestoneDate
+                "Milestone Title": MilestoneTitle,
+                "Milestone Date": MilestoneDate
             });
         }
 
@@ -104,7 +104,7 @@ router.post("/delete/:email/:date", requireManager, async (req, res) => {
     try {
         await db("Milestones_3NF")
             .where("ParticipantEmail", email)
-            .andWhere("MilestoneDate", date)
+            .andWhere("Milestone Date", date)
             .del();
 
         res.redirect("/milestones");

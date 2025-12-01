@@ -21,9 +21,9 @@ router.get("/", requireLogin, async (req, res) => {
 });
 
 // -----------------------------------------------------
-// ADD NEW SURVEY
+// ADD NEW
 // -----------------------------------------------------
-router.get("/edit", requireLogin, async (req, res) => {
+router.get("/edit", requireLogin, (req, res) => {
     res.render("surveys-edit", {
         mode: "create",
         survey: null,
@@ -32,25 +32,24 @@ router.get("/edit", requireLogin, async (req, res) => {
 });
 
 // -----------------------------------------------------
-// EDIT EXISTING SURVEY
+// EDIT (by SurveyID)
 // -----------------------------------------------------
 router.get("/edit/:id", requireLogin, async (req, res) => {
-    const id = req.params.id;
+    const { id } = req.params;
 
     try {
         const survey = await db("Surveys_3NF")
             .where("SurveyID", id)
             .first();
 
-        if (!survey) {
-            return res.status(404).send("Survey not found");
-        }
+        if (!survey) return res.status(404).send("Survey not found");
 
         res.render("surveys-edit", {
             mode: "edit",
             survey,
             user: req.session
         });
+
     } catch (err) {
         console.error("Error loading survey:", err);
         res.status(500).send("Error loading survey");
@@ -58,7 +57,7 @@ router.get("/edit/:id", requireLogin, async (req, res) => {
 });
 
 // -----------------------------------------------------
-// SAVE SURVEY (CREATE OR UPDATE)
+// SAVE (CREATE OR UPDATE)
 // -----------------------------------------------------
 router.post("/save", requireManager, async (req, res) => {
     try {
@@ -66,43 +65,41 @@ router.post("/save", requireManager, async (req, res) => {
             SurveyID,
             ParticipantEmail,
             EventName,
-            EventOccurrenceID,
-            SurveyDate,
-            SatisfactionScore,
-            LearningScore,
-            ConfidenceScore,
-            Comments
+            EventDateTimeStart,
+            SurveySatisfactionScore,
+            SurveyUsefulnessScore,
+            SurveyInstructorScore,
+            SurveyRecommendationScore,
+            SurveyOverallScore,
+            SurveyNPSBucket,
+            SurveyComments
         } = req.body;
+
+        const data = {
+            ParticipantEmail,
+            EventName,
+            EventDateTimeStart,
+            SurveySatisfactionScore,
+            SurveyUsefulnessScore,
+            SurveyInstructorScore,
+            SurveyRecommendationScore,
+            SurveyOverallScore,
+            SurveyNPSBucket,
+            SurveyComments
+        };
 
         if (SurveyID && SurveyID.trim() !== "") {
             // UPDATE
             await db("Surveys_3NF")
                 .where("SurveyID", SurveyID)
-                .update({
-                    ParticipantEmail,
-                    EventName,
-                    EventOccurrenceID,
-                    SurveyDate,
-                    SatisfactionScore,
-                    LearningScore,
-                    ConfidenceScore,
-                    Comments
-                });
+                .update(data);
         } else {
             // INSERT
-            await db("Surveys_3NF").insert({
-                ParticipantEmail,
-                EventName,
-                EventOccurrenceID,
-                SurveyDate,
-                SatisfactionScore,
-                LearningScore,
-                ConfidenceScore,
-                Comments
-            });
+            await db("Surveys_3NF").insert(data);
         }
 
         res.redirect("/surveys");
+
     } catch (err) {
         console.error("Error saving survey:", err);
         res.status(500).send("Error saving survey");
@@ -113,7 +110,7 @@ router.post("/save", requireManager, async (req, res) => {
 // DELETE SURVEY
 // -----------------------------------------------------
 router.post("/delete/:id", requireManager, async (req, res) => {
-    const id = req.params.id;
+    const { id } = req.params;
 
     try {
         await db("Surveys_3NF")
@@ -121,6 +118,7 @@ router.post("/delete/:id", requireManager, async (req, res) => {
             .del();
 
         res.redirect("/surveys");
+
     } catch (err) {
         console.error("Error deleting survey:", err);
         res.status(500).send("Error deleting survey");

@@ -21,17 +21,17 @@
                 <% milestones.forEach(m => { %>
                     <tr>
                         <td><%= m.ParticipantEmail %></td>
-                        <td><%= m.MilestoneTitle %></td>
-                        <td><%= m.MilestoneDate %></td>
+                        <td><%= m["Milestone Title"] %></td>
+                        <td><%= m["Milestone Date"] %></td>
 
                         <td>
                             <a class="btn btn-secondary btn-small" 
-                               href="/milestones/edit/<%= m.ParticipantEmail %>/<%= m.MilestoneDate %>">
+                               href="/milestones/edit/<%= m.ParticipantEmail %>/<%= encodeURIComponent(m["Milestone Date"]) %>">
                                 Edit
                             </a>
 
                             <% if (user.level === "M") { %>
-                                <form action="/milestones/delete/<%= m.ParticipantEmail %>/<%= m.MilestoneDate %>" 
+                                <form action="/milestones/delete/<%= m.ParticipantEmail %>/<%= encodeURIComponent(m["Milestone Date"]) %>" 
                                       method="POST" style="display:inline;">
                                     <button class="btn btn-danger btn-small"
                                             onclick="return confirm('Delete milestone?');">
