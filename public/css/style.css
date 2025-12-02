@@ -324,6 +324,19 @@ body.login-bg {
     margin-bottom: 2rem;
     color: var(--charcoal);
 }
+.login-card form {
+    width: 100%;
+}
+
+.login-card .form-group {
+    width: 100%;
+}
+
+.login-card input {
+    width: 100%;
+    box-sizing: border-box; /* ensures padding does NOT change width */
+}
+
 
 /* ----------------------------------------------------
    MODAL
