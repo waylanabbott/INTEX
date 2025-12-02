@@ -1,13 +1,6 @@
 const express = require("express");
 const router = express.Router();
-
-// ---------------------------------------------
-// TEMPORARY HARDCODED USERS FOR DEVELOPMENT
-// ---------------------------------------------
-const tempUsers = [
-    { username: "admin", password: "admin123", level: "M" }, // Manager
-    { username: "user", password: "user123", level: "U" }    // Common User
-];
+const knex = require("../db"); // <-- Make sure this matches your folder structure
 
 // ---------------------------------------------
 // LOGIN PAGE
@@ -17,25 +10,40 @@ router.get("/login", (req, res) => {
 });
 
 // ---------------------------------------------
-// LOGIN POST - TEMP AUTH
+// LOGIN POST - DATABASE AUTH
 // ---------------------------------------------
-router.post("/login", (req, res) => {
+router.post("/login", async (req, res) => {
     const { username, password } = req.body;
 
-    const foundUser = tempUsers.find(
-        u => u.username === username && u.password === password
-    );
+    try {
+        // Look up user in database
+        const user = await knex("users")
+            .where({ username })
+            .first();
 
-    if (!foundUser) {
-        return res.render("login", { error_message: "Invalid username or password" });
+        if (!user) {
+            return res.render("login", { error_message: "Invalid username or password" });
+        }
+
+        // TEMP: Plain-text comparison (update to bcrypt later)
+        if (password !== user.password) {
+            return res.render("login", { error_message: "Invalid username or password" });
+        }
+
+        // Save session in a clean structure
+        req.session.isLoggedIn = true;
+        req.session.user = {
+            username: user.username,
+            level: user.level,
+            email: user.email
+        };
+
+        res.redirect("/");
+
+    } catch (err) {
+        console.error("Login error:", err);
+        res.render("login", { error_message: "An error occurred logging in." });
     }
-
-    // Save session
-    req.session.isLoggedIn = true;
-    req.session.username = foundUser.username;
-    req.session.level = foundUser.level;
-
-    res.redirect("/");
 });
 
 // ---------------------------------------------
@@ -59,7 +67,7 @@ function requireLogin(req, res, next) {
 // MIDDLEWARE: REQUIRE MANAGER
 // ---------------------------------------------
 function requireManager(req, res, next) {
-    if (req.session.level !== "M") {
+    if (!req.session.user || req.session.user.level !== "M") {
         return res.status(403).send("Forbidden: Managers only");
     }
     next();
@@ -68,6 +76,6 @@ function requireManager(req, res, next) {
 // ---------------------------------------------
 // EXPORTS
 // ---------------------------------------------
-module.exports = router;                // login/logout routes
+module.exports = router;
 module.exports.requireLogin = requireLogin;
 module.exports.requireManager = requireManager;

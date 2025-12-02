@@ -1,14 +1,20 @@
 const express = require("express");
 const router = express.Router();
-const db = require("../db");          // <-- ADDED (safe)
+const db = require("../db");          
 const { requireLogin } = require("./auth");
 
-// Dashboard home
+// -----------------------------------------------------
+// DASHBOARD HOME
+// -----------------------------------------------------
 router.get("/", requireLogin, async (req, res) => {
-    // You can add stats later like:
-    // const participantCount = await db("Participants_3NF").count("ParticipantID");
+    
+    // Optional stats (example)
+    // const participantCount = await db("Participants_3NF").count("* as count");
 
-    res.render("dashboard");
+    res.render("dashboard", {
+        user: req.session.user   // ✅ FIXED
+        // participantCount: participantCount[0].count   // example future use
+    });
 });
 
 module.exports = router;

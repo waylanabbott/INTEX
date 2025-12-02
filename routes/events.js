@@ -26,7 +26,7 @@ router.get("/", requireLogin, async (req, res) => {
       .orderBy("eo.EventDateTimeStart", "asc");
 
     res.render("events-list", {
-      user: req.session,
+      user: req.session.user,   // ✅ FIXED
       events
     });
   } catch (err) {
@@ -36,7 +36,7 @@ router.get("/", requireLogin, async (req, res) => {
 });
 
 // -----------------------------------------------------
-// ADD NEW EVENT OCCURRENCE
+// ADD NEW EVENT OCCURRENCE (Manager Only)
 // -----------------------------------------------------
 router.get("/edit", requireManager, async (req, res) => {
   try {
@@ -45,7 +45,7 @@ router.get("/edit", requireManager, async (req, res) => {
       .orderBy("EventName", "asc");
 
     res.render("events-edit", {
-      user: req.session,
+      user: req.session.user,   // ✅ FIXED
       mode: "create",
       event: null,
       templates
@@ -57,7 +57,7 @@ router.get("/edit", requireManager, async (req, res) => {
 });
 
 // -----------------------------------------------------
-// EDIT EXISTING EVENT OCCURRENCE
+// EDIT EXISTING EVENT OCCURRENCE (Manager Only)
 // -----------------------------------------------------
 router.get("/edit/:id", requireManager, async (req, res) => {
   const id = req.params.id;
@@ -76,7 +76,7 @@ router.get("/edit/:id", requireManager, async (req, res) => {
       .orderBy("EventName", "asc");
 
     res.render("events-edit", {
-      user: req.session,
+      user: req.session.user,   // ✅ FIXED
       mode: "edit",
       event,
       templates
@@ -134,7 +134,7 @@ router.post("/save", requireManager, async (req, res) => {
 });
 
 // -----------------------------------------------------
-// DELETE EVENT OCCURRENCE
+// DELETE EVENT OCCURRENCE (Manager Only)
 // -----------------------------------------------------
 router.post("/delete/:id", requireManager, async (req, res) => {
   const id = req.params.id;

@@ -11,7 +11,7 @@ router.get("/", requireLogin, async (req, res) => {
         const surveys = await db("Surveys_3NF").select("*");
 
         res.render("surveys-list", {
-            user: req.session,   // FIXED
+            user: req.session.user,   // ✅ FIXED
             surveys
         });
     } catch (err) {
@@ -27,7 +27,7 @@ router.get("/edit", requireManager, (req, res) => {
     res.render("surveys-edit", {
         mode: "create",
         survey: null,
-        user: req.session   // FIXED
+        user: req.session.user   // ✅ FIXED
     });
 });
 
@@ -47,7 +47,7 @@ router.get("/edit/:id", requireManager, async (req, res) => {
         res.render("surveys-edit", {
             mode: "edit",
             survey,
-            user: req.session   // FIXED
+            user: req.session.user   // ✅ FIXED
         });
 
     } catch (err) {
@@ -55,6 +55,7 @@ router.get("/edit/:id", requireManager, async (req, res) => {
         res.status(500).send("Error loading survey");
     }
 });
+
 
 // -----------------------------------------------------
 // SAVE (CREATE OR UPDATE) — Manager Only

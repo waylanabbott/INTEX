@@ -11,7 +11,7 @@ router.get("/", requireLogin, async (req, res) => {
         const participants = await db("Participants_3NF").select("*");
 
         res.render("participants-list", {
-            user: req.session,   // gives EJS access to level
+            user: req.session.user,   // ✅ FIXED
             participants
         });
     } catch (err) {
@@ -27,9 +27,9 @@ router.get("/edit", requireManager, (req, res) => {
     res.render("participants-edit", {
         mode: "create",
         participant: null,
-        user: req.session
+        user: req.session.user   // ✅ FIXED
     });
-});
+}); 
 
 // -----------------------------------------------------
 // EDIT PARTICIPANT (Manager Only)
@@ -49,7 +49,7 @@ router.get("/edit/:email", requireManager, async (req, res) => {
         res.render("participants-edit", {
             mode: "edit",
             participant,
-            user: req.session
+            user: req.session.user   // ✅ FIXED
         });
 
     } catch (err) {
