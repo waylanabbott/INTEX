@@ -454,3 +454,9 @@ td {
     align-items: center;
     gap: 0.4rem;
 }
+
+.button-right {
+    display: flex;
+    justify-content: flex-end;
+    margin-bottom: 1rem;
+  }

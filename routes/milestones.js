@@ -23,7 +23,7 @@ router.get("/", requireLogin, async (req, res) => {
 // -----------------------------------------------------
 // ADD
 // -----------------------------------------------------
-router.get("/edit", requireLogin, (req, res) => {
+router.get("/edit", requireManager, (req, res) => {
     res.render("milestones-edit", {
         mode: "create",
         milestone: null,
@@ -34,27 +34,26 @@ router.get("/edit", requireLogin, (req, res) => {
 // -----------------------------------------------------
 // EDIT
 // -----------------------------------------------------
-router.get("/edit/:email/:date", requireLogin, async (req, res) => {
+router.get("/edit/:email/:date", requireManager, async (req, res) => {
     const { email, date } = req.params;
-
     try {
         const milestone = await db("Milestones_3NF")
-            .where("ParticipantEmail", email)
-            .andWhere("Milestone Date", date)
-            .first();
-
+        .where("ParticipantEmail", email)
+        .andWhere("Milestone Date", date)
+        .first();
+        
         if (!milestone) return res.status(404).send("Milestone not found");
-
+        
         res.render("milestones-edit", {
-            mode: "edit",
-            milestone,
-            user: req.session
+        mode: "edit",
+        milestone,
+        user: req.session
         });
     } catch (err) {
         console.error("Error loading milestone:", err);
         res.status(500).send("Error loading milestone");
     }
-});
+    });
 
 // -----------------------------------------------------
 // SAVE

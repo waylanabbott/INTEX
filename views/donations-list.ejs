@@ -2,7 +2,9 @@
 <%- include("partials/nav") %>
 
 <h1 class="section-header">Donations</h1>
-
+<div class="button-right">
+    <a class="btn btn-primary" href="/donations/edit">Add Donation</a>
+</div>
 <div class="card">
 
     <% if (donations.length > 0) { %>
@@ -14,7 +16,9 @@
                     <th>Participant Email</th>
                     <th>Donation Date</th>
                     <th>Amount</th>
+                    <% if (user.level === 'M') { %>
                     <th>Actions</th>
+                    <% } %>
                 </tr>
             </thead>
 
@@ -45,12 +49,15 @@
                         <td><%= displayAmt %></td>
 
                         <!-- FIXED ACTION BUTTON SPACING -->
+                        <% if (user.level === 'M') { %>
                         <td class="actions-column">
-
+                            <% } %>
+                            <% if (user.level === 'M') { %>
                             <a class="btn btn-secondary btn-small" 
                                href="/donations/edit/<%= d.ParticipantEmail %>/<%= d['Donation Date'] %>">
                                 Edit
                             </a>
+                            <% } %>
 
                             <% if (user.level === "M") { %>
                                 <form action="/donations/delete/<%= d.ParticipantEmail %>/<%= d['Donation Date'] %>" 
@@ -73,7 +80,5 @@
     <% } %>
 
 </div>
-
-<a class="btn btn-primary" href="/donations/edit">Add Donation</a>
 
 <%- include("partials/footer") %>

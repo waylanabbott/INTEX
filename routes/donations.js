@@ -19,36 +19,35 @@ router.get("/", requireLogin, async (req, res) => {
 });
 
 // ADD DONATION
-router.get("/edit", requireLogin, (req, res) => {
+router.get("/edit", requireManager, (req, res) => {
     res.render("donations-edit", {
         mode: "create",
         donation: null,
         user: req.session
     });
-});
+    });
 
 // EDIT DONATION
-router.get("/edit/:email/:date", requireLogin, async (req, res) => {
+router.get("/edit/:email/:date", requireManager, async (req, res) => {
     const { email, date } = req.params;
-
     try {
         const donation = await db("Donations_3NF")
-            .where("ParticipantEmail", email)
-            .andWhere("Donation Date", date)
-            .first();
-
+        .where("ParticipantEmail", email)
+        .andWhere("Donation Date", date)
+        .first();
+        
         if (!donation) return res.status(404).send("Donation not found");
-
+        
         res.render("donations-edit", {
-            mode: "edit",
-            donation,
-            user: req.session
+        mode: "edit",
+        donation,
+        user: req.session
         });
     } catch (err) {
         console.error("Error loading donation:", err);
         res.status(500).send("Error loading donation");
     }
-});
+    });
 
 // SAVE DONATION
 router.post("/save", requireManager, async (req, res) => {
