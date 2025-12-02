@@ -6,19 +6,37 @@ const { requireLogin, requireManager } = require("./auth");
 // -----------------------------------------------------
 // LIST PARTICIPANTS
 // -----------------------------------------------------
+// LIST PARTICIPANTS (with search)
 router.get("/", requireLogin, async (req, res) => {
     try {
-        const participants = await db("Participants_3NF").select("*");
-
-        res.render("participants-list", {
-            user: req.session.user,   // ✅ FIXED
-            participants
-        });
+      let query = db("Participants_3NF");
+      
+      // Filter by first name if provided
+      if (req.query.firstName) {
+        const firstNameTerm = `%${req.query.firstName}%`;
+        query = query.where("ParticipantFirstName", "like", firstNameTerm);
+      }
+      
+      // Filter by last name if provided
+      if (req.query.lastName) {
+        const lastNameTerm = `%${req.query.lastName}%`;
+        query = query.where("ParticipantLastName", "like", lastNameTerm);
+      }
+      
+      const participants = await query.select("*");
+      
+      res.render("participants-list", {
+        user: req.session,
+        participants,
+        firstName: req.query.firstName || "",
+        lastName: req.query.lastName || ""
+      });
     } catch (err) {
-        console.error("Error loading participants:", err);
-        res.status(500).send("Error loading participants");
+      console.error("Error loading participants:", err);
+      res.status(500).send("Error loading participants");
     }
-});
+  });
+  
 
 // -----------------------------------------------------
 // ADD PARTICIPANT (Manager Only)

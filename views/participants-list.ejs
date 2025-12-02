@@ -3,74 +3,104 @@
 
 <h1 class="section-header">Participants</h1>
 
+<% if (user.level === "M") { %>
+    <div class="button-right"></div>
+    <a href="/participants/edit" class="btn btn-primary">Add Participant</a>
+</div>
+  <% } %>
+
+
+<!-- SEARCH FORM -->
+<br><br><br>
+
+<form method="GET" action="/participants" style="margin-bottom: 1.5rem; display: flex; gap: 0.5rem;">
+    <input 
+      type="text" 
+      name="firstName" 
+      placeholder="First name..." 
+      value="<%= firstName %>"
+      class="form-control"
+    >
+    <input 
+      type="text" 
+      name="lastName" 
+      placeholder="Last name..." 
+      value="<%= lastName %>"
+      class="form-control"
+    >
+    <button type="submit" class="btn btn-primary">Search</button>
+    <a href="/participants" class="btn btn-secondary">Clear</a>
+  </form>
+  
+  <!-- RESULTS INFO (Optional) -->
+  <% if (firstName || lastName) { %>
+    <p style="margin-bottom: 1rem; font-size: 0.95rem; color: #666;">
+      Found <%= participants.length %> result(s)
+    </p>
+  <% } %>
+  
+
 <div class="card">
+  <% if (participants && participants.length > 0) { %>
 
-    <% if (participants && participants.length > 0) { %>
+    <table class="styled-table">
+      <thead>
+        <tr>
+          <th>Email</th>
+          <th>First Name</th>
+          <th>Last Name</th>
+          <th>DOB</th>
+          <th>Role</th>
+          <th>Phone</th>
+          <th>City</th>
+          <th>State</th>
+          <th>Zip</th>
 
-        <table class="styled-table">
-            <thead>
-                <tr>
-                    <th>Email</th>
-                    <th>First Name</th>
-                    <th>Last Name</th>
-                    <th>DOB</th>
-                    <th>Role</th>
-                    <th>Phone</th>
-                    <th>City</th>
-                    <th>State</th>
-                    <th>Zip</th>
+          <% if (user.level === "M") { %>
+            <th>Actions</th>
+          <% } %>
+        </tr>
+      </thead>
 
-                    <% if (user.level === "M") { %>
-                        <th>Actions</th>
-                    <% } %>
-                </tr>
-            </thead>
+      <tbody>
+      <% participants.forEach(p => { %>
+        <tr>
+          <td><%= p.ParticipantEmail %></td>
+          <td><%= p.ParticipantFirstName %></td>
+          <td><%= p.ParticipantLastName %></td>
+          <td><%= p.ParticipantDOB %></td>
+          <td><%= p.ParticipantRole %></td>
+          <td><%= p.ParticipantPhone %></td>
+          <td><%= p.ParticipantCity %></td>
+          <td><%= p.ParticipantState %></td>
+          <td><%= p.ParticipantZip %></td>
 
-            <tbody>
-            <% participants.forEach(p => { %>
-                <tr>
-                    <td><%= p.ParticipantEmail %></td>
-                    <td><%= p.ParticipantFirstName %></td>
-                    <td><%= p.ParticipantLastName %></td>
-                    <td><%= p.ParticipantDOB %></td>
-                    <td><%= p.ParticipantRole %></td>
-                    <td><%= p.ParticipantPhone %></td>
-                    <td><%= p.ParticipantCity %></td>
-                    <td><%= p.ParticipantState %></td>
-                    <td><%= p.ParticipantZip %></td>
+          <% if (user.level === "M") { %>
+            <td>
+              <div class="action-buttons">
+                <a class="btn btn-secondary btn-small" 
+                   href="/participants/edit/<%= p.ParticipantEmail %>">
+                  Edit
+                </a>
+          
+                <form action="/participants/delete/<%= p.ParticipantEmail %>" 
+                      method="POST">
+                  <button class="btn btn-danger btn-small">
+                    Delete
+                  </button>
+                </form>
+              </div>
+            </td>
+          <% } %>
+        </tr>
+      <% }) %>
+      </tbody>
+    </table>
 
-                    <% if (user.level === "M") { %>
-                        <td>
-                            <div class="action-buttons">
-                                <a class="btn btn-secondary btn-small" 
-                                   href="/participants/edit/<%= p.ParticipantEmail %>">
-                                    Edit
-                                </a>
-                        
-                                <form action="/participants/delete/<%= p.ParticipantEmail %>" 
-                                      method="POST">
-                                    <button class="btn btn-danger btn-small">
-                                        Delete
-                                    </button>
-                                </form>
-                            </div>
-                        </td>
-                        
-                    <% } %>
-
-                </tr>
-            <% }) %>
-            </tbody>
-        </table>
-
-    <% } else { %>
-        <p>No participants found.</p>
-    <% } %>
-
+  <% } else { %>
+    <p>No participants found.</p>
+  <% } %>
 </div>
 
-<% if (user.level === "M") { %>
-    <a href="/participants/edit" class="btn btn-primary">Add Participant</a>
-<% } %>
 
 <%- include("partials/footer") %>
