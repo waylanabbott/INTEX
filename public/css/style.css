@@ -398,24 +398,46 @@ td {
     gap: 0.75rem;
 }
 
-/* =========================================
-   SURVEY TABLE LAYOUT (only this one table)
-   ========================================= */
-
-/* Make the survey table wide and let it scroll horizontally if needed */
-.survey-table {
-    width: 100%;
-    min-width: 1200px;  /* enough room for all columns on one line */
+/* NPS dot styles just for the surveys table */
+.nps-cell {
+    text-align: center;
 }
 
-/* Keep every cell on a single line & vertically centered */
-.survey-table th,
-.survey-table td {
-    white-space: nowrap;
-    vertical-align: middle !important;
+.nps-dot {
+    display: inline-block;
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
 }
 
-/* Keep the actions column tidy */
-.survey-table td:last-child {
-    white-space: nowrap;
+/* Colors for NPS buckets */
+.nps-promoter {
+    background-color: #4CAF50;  /* green */
+}
+
+.nps-passive {
+    background-color: #FFC107;  /* yellow */
+}
+
+.nps-detractor {
+    background-color: #F44336;  /* red */
+}
+
+.nps-none {
+    color: #666;
+    font-size: 0.9rem;
+}
+
+/* Legend styling */
+.nps-legend {
+    margin-top: 0.75rem;
+    display: flex;
+    gap: 1.5rem;
+    font-size: 0.9rem;
+}
+
+.nps-legend span {
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
 }

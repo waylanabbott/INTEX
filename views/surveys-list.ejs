@@ -27,30 +27,39 @@
             <tbody>
 
             <% surveys.forEach(s => { 
-                 // Hide surveys missing satisfaction score
-                 if (!s.SurveySatisfactionScore) return;
+                 if (!s.SurveySatisfactionScore) return;    // HIDE EMPTY SURVEYS
             %>
 
                 <tr>
-                    <!-- EMAIL -->
-                    <td class="nowrap"><%= s.ParticipantEmail %></td>
+                    <td><%= s.ParticipantEmail %></td>
+                    <td><%= s.EventName %></td>
+                    <td><%= s.EventDateTimeStart %></td>
+                    <td><%= s.SurveySatisfactionScore %></td>
+                    <td><%= s.SurveyUsefulnessScore %></td>
+                    <td><%= s.SurveyInstructorScore %></td>
+                    <td><%= s.SurveyRecommendationScore %></td>
+                    <td><%= s.SurveyOverallScore %></td>
 
-                    <!-- EVENT -->
-                    <td class="nowrap"><%= s.EventName %></td>
+                    <!-- NPS AS COLOR DOT -->
+                    <td class="nps-cell">
+                        <% 
+                            const bucketRaw = (s.SurveyNPSBucket || "").trim();
+                            let bucket = bucketRaw.replace(/\s+/g, " "); // collapse any weird newlines
+                        %>
 
-                    <!-- START DATE -->
-                    <td class="nowrap"><%= s.EventDateTimeStart %></td>
+                        <% if (bucket === "Promoter") { %>
+                            <span class="nps-dot nps-promoter" title="Promoter"></span>
+                        <% } else if (bucket === "Passive") { %>
+                            <span class="nps-dot nps-passive" title="Passive"></span>
+                        <% } else if (bucket === "Detractor") { %>
+                            <span class="nps-dot nps-detractor" title="Detractor"></span>
+                        <% } else { %>
+                            <span class="nps-none">–</span>
+                        <% } %>
+                    </td>
 
-                    <!-- SCORES -->
-                    <td class="nowrap"><%= s.SurveySatisfactionScore %></td>
-                    <td class="nowrap"><%= s.SurveyUsefulnessScore %></td>
-                    <td class="nowrap"><%= s.SurveyInstructorScore %></td>
-                    <td class="nowrap"><%= s.SurveyRecommendationScore %></td>
-                    <td class="nowrap"><%= s.SurveyOverallScore %></td>
-                    <td class="nowrap"><%= s.SurveyNPSBucket %></td>
-
-                    <!-- COMMENTS -->
-                    <td class="nowrap">
+                    <!-- COMMENTS COLUMN -->
+                    <td>
                         <% if (s.SurveyComments && s.SurveyComments.length > 0) { %>
                             <button class="btn btn-small btn-secondary"
                                     data-comment="<%= s.SurveyComments.replace(/"/g, '&quot;') %>"
@@ -62,30 +71,31 @@
                         <% } %>
                     </td>
 
-                    <!-- ACTIONS -->
-                    <td class="nowrap actions-column">
-                        <a class="btn btn-secondary btn-small"
-                           href="/surveys/edit/<%= s.SurveyID %>">
-                            Edit
-                        </a>
+                    <!-- ACTIONS COLUMN -->
+                    <td class="actions-column">
+                        <a class="btn btn-secondary btn-small" href="/surveys/edit/<%= s.SurveyID %>">Edit</a>
 
                         <% if (user.level === "M") { %>
-                            <form action="/surveys/delete/<%= s.SurveyID %>"
-                                  method="POST"
-                                  style="display:inline;">
+                            <form action="/surveys/delete/<%= s.SurveyID %>" method="POST" style="display:inline;">
                                 <button class="btn btn-danger btn-small"
-                                        onclick="return confirm('Delete survey?');">
-                                    Delete
-                                </button>
+                                        onclick="return confirm('Delete survey?');">Delete</button>
                             </form>
                         <% } %>
                     </td>
+
                 </tr>
 
             <% }) %>
 
             </tbody>
         </table>
+
+        <!-- NPS LEGEND -->
+        <div class="nps-legend">
+            <span><span class="nps-dot nps-promoter"></span> Promoter</span>
+            <span><span class="nps-dot nps-passive"></span> Passive</span>
+            <span><span class="nps-dot nps-detractor"></span> Detractor</span>
+        </div>
 
     <% } else { %>
         <p>No surveys recorded.</p>
