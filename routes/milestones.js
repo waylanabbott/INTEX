@@ -11,7 +11,7 @@ router.get("/", requireLogin, async (req, res) => {
         const milestones = await db("Milestones_3NF").select("*");
 
         res.render("milestones-list", {
-            user: req.session,
+            user: req.session.user,   // ✅ FIXED
             milestones
         });
     } catch (err) {
@@ -21,42 +21,44 @@ router.get("/", requireLogin, async (req, res) => {
 });
 
 // -----------------------------------------------------
-// ADD
+// ADD MILESTONE (Manager Only)
 // -----------------------------------------------------
 router.get("/edit", requireManager, (req, res) => {
     res.render("milestones-edit", {
         mode: "create",
         milestone: null,
-        user: req.session
+        user: req.session.user   // ✅ FIXED
     });
 });
 
 // -----------------------------------------------------
-// EDIT
+// EDIT (Manager Only)
 // -----------------------------------------------------
 router.get("/edit/:email/:date", requireManager, async (req, res) => {
     const { email, date } = req.params;
+
     try {
         const milestone = await db("Milestones_3NF")
-        .where("ParticipantEmail", email)
-        .andWhere("Milestone Date", date)
-        .first();
-        
+            .where("ParticipantEmail", email)
+            .andWhere("MilestoneDate", date)   // ✅ FIXED column name
+            .first();
+
         if (!milestone) return res.status(404).send("Milestone not found");
-        
+
         res.render("milestones-edit", {
-        mode: "edit",
-        milestone,
-        user: req.session
+            mode: "edit",
+            milestone,
+            user: req.session.user   // ✅ FIXED
         });
+
     } catch (err) {
         console.error("Error loading milestone:", err);
         res.status(500).send("Error loading milestone");
     }
-    });
+});
 
 // -----------------------------------------------------
-// SAVE
+// SAVE (CREATE OR UPDATE — Manager Only)
 // -----------------------------------------------------
 router.post("/save", requireManager, async (req, res) => {
     try {
@@ -72,22 +74,23 @@ router.post("/save", requireManager, async (req, res) => {
             // UPDATE
             await db("Milestones_3NF")
                 .where("ParticipantEmail", OriginalEmail)
-                .andWhere("Milestone Date", OriginalDate)
+                .andWhere("MilestoneDate", OriginalDate)   // ✅ FIXED
                 .update({
                     ParticipantEmail,
-                    "Milestone Title": MilestoneTitle,
-                    "Milestone Date": MilestoneDate
+                    MilestoneTitle,
+                    MilestoneDate
                 });
         } else {
             // INSERT
             await db("Milestones_3NF").insert({
                 ParticipantEmail,
-                "Milestone Title": MilestoneTitle,
-                "Milestone Date": MilestoneDate
+                MilestoneTitle,
+                MilestoneDate
             });
         }
 
         res.redirect("/milestones");
+
     } catch (err) {
         console.error("Error saving milestone:", err);
         res.status(500).send("Error saving milestone");
@@ -95,7 +98,7 @@ router.post("/save", requireManager, async (req, res) => {
 });
 
 // -----------------------------------------------------
-// DELETE
+// DELETE (Manager Only)
 // -----------------------------------------------------
 router.post("/delete/:email/:date", requireManager, async (req, res) => {
     const { email, date } = req.params;
@@ -103,10 +106,11 @@ router.post("/delete/:email/:date", requireManager, async (req, res) => {
     try {
         await db("Milestones_3NF")
             .where("ParticipantEmail", email)
-            .andWhere("Milestone Date", date)
+            .andWhere("MilestoneDate", date)  // ✅ FIXED
             .del();
 
         res.redirect("/milestones");
+
     } catch (err) {
         console.error("Error deleting milestone:", err);
         res.status(500).send("Error deleting milestone");

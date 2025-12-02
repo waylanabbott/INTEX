@@ -29,15 +29,18 @@ function requireLogin(req, res, next) {
 }
 
 function requireManager(req, res, next) {
-    if (req.session.level !== "M") {
+    if (!req.session.user || req.session.user.level !== "M") {
         return res.status(403).send("Forbidden: Managers only");
     }
     next();
 }
 
-// Make user available in nav
+// -------------------------
+// MAKE USER AVAILABLE IN ALL EJS FILES
+// -------------------------
 app.use((req, res, next) => {
-    res.locals.user = req.session;
+    res.locals.user = req.session.user || null;
+    res.locals.isLoggedIn = req.session.isLoggedIn || false;
     next();
 });
 
@@ -61,7 +64,7 @@ app.get("/", (req, res) => {
 });
 
 // -------------------------
-// 418 Teapot route (required for IS 404)
+// 418 Teapot route
 // -------------------------
 app.get("/teapot", (req, res) => {
     res.status(418).send("I'm a teapot ☕");

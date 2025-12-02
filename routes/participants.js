@@ -45,9 +45,9 @@ router.get("/edit", requireManager, (req, res) => {
     res.render("participants-edit", {
         mode: "create",
         participant: null,
-        user: req.session
+        user: req.session.user   // ✅ FIXED
     });
-});
+}); 
 
 // -----------------------------------------------------
 // EDIT PARTICIPANT (Manager Only)
@@ -67,7 +67,7 @@ router.get("/edit/:email", requireManager, async (req, res) => {
         res.render("participants-edit", {
             mode: "edit",
             participant,
-            user: req.session
+            user: req.session.user   // ✅ FIXED
         });
 
     } catch (err) {
