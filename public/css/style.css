@@ -460,3 +460,9 @@ td {
     justify-content: flex-end;
     margin-bottom: 1rem;
   }
+
+  .action-buttons {
+    display: flex;
+    align-items: center;
+    gap: 0.6rem; /* tune this if needed */
+}

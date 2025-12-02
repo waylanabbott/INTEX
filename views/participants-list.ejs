@@ -19,7 +19,10 @@
                     <th>City</th>
                     <th>State</th>
                     <th>Zip</th>
-                    <th>Actions</th>
+
+                    <% if (user.level === "M") { %>
+                        <th>Actions</th>
+                    <% } %>
                 </tr>
             </thead>
 
@@ -36,20 +39,25 @@
                     <td><%= p.ParticipantState %></td>
                     <td><%= p.ParticipantZip %></td>
 
-                    <td>
-                        <a class="btn btn-secondary btn-small" href="/participants/edit/<%= p.ParticipantEmail %>">Edit</a>
+                    <% if (user.level === "M") { %>
+                        <td>
+                            <div class="action-buttons">
+                                <a class="btn btn-secondary btn-small" 
+                                   href="/participants/edit/<%= p.ParticipantEmail %>">
+                                    Edit
+                                </a>
+                        
+                                <form action="/participants/delete/<%= p.ParticipantEmail %>" 
+                                      method="POST">
+                                    <button class="btn btn-danger btn-small">
+                                        Delete
+                                    </button>
+                                </form>
+                            </div>
+                        </td>
+                        
+                    <% } %>
 
-                        <% if (user.level === "M") { %>
-                            <form action="/participants/delete/<%= p.ParticipantEmail %>" 
-                                  method="POST" 
-                                  style="display:inline;">
-                                <button class="btn btn-danger btn-small"
-                                        onclick="return confirm('Delete this participant?');">
-                                    Delete
-                                </button>
-                            </form>
-                        <% } %>
-                    </td>
                 </tr>
             <% }) %>
             </tbody>

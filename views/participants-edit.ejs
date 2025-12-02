@@ -1,7 +1,9 @@
 <%- include("partials/header") %>
 <%- include("partials/nav") %>
 
-<h1 class="section-header"><%= mode === "edit" ? "Edit Participant" : "Add Participant" %></h1>
+<h1 class="section-header">
+    <%= mode === "edit" ? "Edit Participant" : "Add Participant" %>
+</h1>
 
 <div class="card">
 
@@ -11,60 +13,108 @@
             <input type="hidden" name="OriginalEmail" value="<%= participant.ParticipantEmail %>">
         <% } %>
 
+        <!-- EMAIL --------------------------------------------------------- -->
         <div class="form-group">
-            <label>Email</label>
-            <input type="email" name="ParticipantEmail" 
-                value="<%= participant ? participant.ParticipantEmail : '' %>" required>
+            <label>Email <span class="required">*</span></label>
+            <input type="email"
+                   name="ParticipantEmail"
+                   required
+                   placeholder="email@example.com"
+                   value="<%= participant ? participant.ParticipantEmail : '' %>">
         </div>
 
+        <!-- FIRST NAME ----------------------------------------------------- -->
         <div class="form-group">
-            <label>First Name</label>
-            <input type="text" name="ParticipantFirstName" 
-                value="<%= participant ? participant.ParticipantFirstName : '' %>" required>
+            <label>First Name <span class="required">*</span></label>
+            <input type="text"
+                   name="ParticipantFirstName"
+                   required
+                   placeholder="First name"
+                   value="<%= participant ? participant.ParticipantFirstName : '' %>">
         </div>
 
+        <!-- LAST NAME ------------------------------------------------------ -->
         <div class="form-group">
-            <label>Last Name</label>
-            <input type="text" name="ParticipantLastName" 
-                value="<%= participant ? participant.ParticipantLastName : '' %>" required>
+            <label>Last Name <span class="required">*</span></label>
+            <input type="text"
+                   name="ParticipantLastName"
+                   required
+                   placeholder="Last name"
+                   value="<%= participant ? participant.ParticipantLastName : '' %>">
         </div>
 
+        <!-- DOB ------------------------------------------------------------ -->
+        <% 
+            let formattedDOB = "";
+            if (participant && participant.ParticipantDOB) {
+                try {
+                    formattedDOB = new Date(participant.ParticipantDOB).toISOString().split("T")[0];
+                } catch (e) {}
+            }
+        %>
+
         <div class="form-group">
-            <label>DOB</label>
-            <input type="text" name="ParticipantDOB" 
-                value="<%= participant ? participant.ParticipantDOB : '' %>">
+            <label>Date of Birth</label>
+            <input type="date"
+                   name="ParticipantDOB"
+                   value="<%= formattedDOB %>">
         </div>
 
+        <!-- ROLE ----------------------------------------------------------- -->
         <div class="form-group">
             <label>Role</label>
-            <input type="text" name="ParticipantRole" 
-                value="<%= participant ? participant.ParticipantRole : '' %>">
+            <select name="ParticipantRole">
+                <option value="">-- Select Role --</option>
+                <option value="Youth" <%= participant && participant.ParticipantRole === "Youth" ? "selected" : "" %>>Youth</option>
+                <option value="Parent" <%= participant && participant.ParticipantRole === "Parent" ? "selected" : "" %>>Parent</option>
+                <option value="Volunteer" <%= participant && participant.ParticipantRole === "Volunteer" ? "selected" : "" %>>Volunteer</option>
+                <option value="Other" <%= participant && participant.ParticipantRole === "Other" ? "selected" : "" %>>Other</option>
+            </select>
         </div>
 
+        <!-- PHONE ---------------------------------------------------------- -->
         <div class="form-group">
             <label>Phone</label>
-            <input type="text" name="ParticipantPhone" 
-                value="<%= participant ? participant.ParticipantPhone : '' %>">
+            <input type="tel"
+                   name="ParticipantPhone"
+                   placeholder="###-###-####"
+                   value="<%= participant ? participant.ParticipantPhone : '' %>">
         </div>
 
+        <!-- CITY ----------------------------------------------------------- -->
         <div class="form-group">
             <label>City</label>
-            <input type="text" name="ParticipantCity" 
-                value="<%= participant ? participant.ParticipantCity : '' %>">
+            <input type="text"
+                   name="ParticipantCity"
+                   placeholder="City"
+                   value="<%= participant ? participant.ParticipantCity : '' %>">
         </div>
 
+        <!-- STATE ---------------------------------------------------------- -->
         <div class="form-group">
             <label>State</label>
-            <input type="text" name="ParticipantState" 
-                value="<%= participant ? participant.ParticipantState : '' %>">
+            <select name="ParticipantState">
+                <option value="">-- Select State --</option>
+                <% 
+                    const states = ["UT","CA","AZ","NV","CO","ID","WA","OR","NM","TX","Other"];
+                    states.forEach(s => { 
+                %>
+                    <option value="<%= s %>" <%= participant && participant.ParticipantState === s ? "selected" : "" %>><%= s %></option>
+                <% }) %>
+            </select>
         </div>
 
+        <!-- ZIP ------------------------------------------------------------ -->
         <div class="form-group">
             <label>Zip</label>
-            <input type="text" name="ParticipantZip" 
-                value="<%= participant ? participant.ParticipantZip : '' %>">
+            <input type="text"
+                   name="ParticipantZip"
+                   placeholder="Zip code"
+                   maxlength="10"
+                   value="<%= participant ? participant.ParticipantZip : '' %>">
         </div>
 
+        <!-- ACTIONS -------------------------------------------------------- -->
         <div class="form-actions">
             <button class="btn btn-primary" type="submit">
                 <%= mode === "edit" ? "Save Changes" : "Add Participant" %>
@@ -78,3 +128,10 @@
 </div>
 
 <%- include("partials/footer") %>
+
+<style>
+    .required {
+        color: red;
+        font-weight: bold;
+    }
+</style>

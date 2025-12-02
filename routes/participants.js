@@ -11,7 +11,7 @@ router.get("/", requireLogin, async (req, res) => {
         const participants = await db("Participants_3NF").select("*");
 
         res.render("participants-list", {
-            user: req.session,
+            user: req.session,   // gives EJS access to level
             participants
         });
     } catch (err) {
@@ -21,9 +21,9 @@ router.get("/", requireLogin, async (req, res) => {
 });
 
 // -----------------------------------------------------
-// ADD PARTICIPANT
+// ADD PARTICIPANT (Manager Only)
 // -----------------------------------------------------
-router.get("/edit", requireLogin, (req, res) => {
+router.get("/edit", requireManager, (req, res) => {
     res.render("participants-edit", {
         mode: "create",
         participant: null,
@@ -32,9 +32,9 @@ router.get("/edit", requireLogin, (req, res) => {
 });
 
 // -----------------------------------------------------
-// EDIT PARTICIPANT
+// EDIT PARTICIPANT (Manager Only)
 // -----------------------------------------------------
-router.get("/edit/:email", requireLogin, async (req, res) => {
+router.get("/edit/:email", requireManager, async (req, res) => {
     const email = req.params.email;
 
     try {
@@ -51,6 +51,7 @@ router.get("/edit/:email", requireLogin, async (req, res) => {
             participant,
             user: req.session
         });
+
     } catch (err) {
         console.error("Error loading participant:", err);
         res.status(500).send("Error loading participant");
@@ -58,7 +59,7 @@ router.get("/edit/:email", requireLogin, async (req, res) => {
 });
 
 // -----------------------------------------------------
-// SAVE PARTICIPANT (CREATE OR UPDATE)
+// SAVE PARTICIPANT (CREATE OR UPDATE — Manager Only)
 // -----------------------------------------------------
 router.post("/save", requireManager, async (req, res) => {
     try {
@@ -75,37 +76,30 @@ router.post("/save", requireManager, async (req, res) => {
             ParticipantZip
         } = req.body;
 
+        const data = {
+            ParticipantEmail,
+            ParticipantFirstName,
+            ParticipantLastName,
+            ParticipantDOB,
+            ParticipantRole,
+            ParticipantPhone,
+            ParticipantCity,
+            ParticipantState,
+            ParticipantZip
+        };
+
         if (OriginalEmail) {
             // UPDATE
             await db("Participants_3NF")
                 .where("ParticipantEmail", OriginalEmail)
-                .update({
-                    ParticipantEmail,
-                    ParticipantFirstName,
-                    ParticipantLastName,
-                    ParticipantDOB,
-                    ParticipantRole,
-                    ParticipantPhone,
-                    ParticipantCity,
-                    ParticipantState,
-                    ParticipantZip
-                });
+                .update(data);
         } else {
             // INSERT
-            await db("Participants_3NF").insert({
-                ParticipantEmail,
-                ParticipantFirstName,
-                ParticipantLastName,
-                ParticipantDOB,
-                ParticipantRole,
-                ParticipantPhone,
-                ParticipantCity,
-                ParticipantState,
-                ParticipantZip
-            });
+            await db("Participants_3NF").insert(data);
         }
 
         res.redirect("/participants");
+
     } catch (err) {
         console.error("Error saving participant:", err);
         res.status(500).send("Error saving participant.");
@@ -113,7 +107,7 @@ router.post("/save", requireManager, async (req, res) => {
 });
 
 // -----------------------------------------------------
-// DELETE PARTICIPANT
+// DELETE PARTICIPANT (Manager Only)
 // -----------------------------------------------------
 router.post("/delete/:email", requireManager, async (req, res) => {
     const email = req.params.email;
@@ -124,6 +118,7 @@ router.post("/delete/:email", requireManager, async (req, res) => {
             .del();
 
         res.redirect("/participants");
+
     } catch (err) {
         console.error("Error deleting participant:", err);
         res.status(500).send("Error deleting participant.");
