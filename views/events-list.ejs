@@ -21,7 +21,9 @@
                 <th>Location</th>
                 <th>Capacity</th>
                 <th>Deadline</th>
+                <% if (user && user.level === "M") { %>
                 <th>Actions</th>
+                <% } %>
             </tr>
             </thead>
 
@@ -41,12 +43,15 @@
                     <td><%= e.EventRegistrationDeadline %></td>
 
                     <!-- FIXED ACTION SPACING -->
+                    <% if (user && user.level === "M") { %>
                     <td class="actions-column">
+                    <% } %>
+                        <% if (user && user.level === "M") { %>
                         <a class="btn btn-secondary btn-small" 
                            href="/events/edit/<%= e.EventOccurrenceID %>">
                             Edit
                         </a>
-
+                        <% } %>
                         <% if (user && user.level === "M") { %>
                             <form action="/events/delete/<%= e.EventOccurrenceID %>" 
                                   method="POST">

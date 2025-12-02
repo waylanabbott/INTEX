@@ -38,7 +38,7 @@ router.get("/", requireLogin, async (req, res) => {
 // -----------------------------------------------------
 // ADD NEW EVENT OCCURRENCE
 // -----------------------------------------------------
-router.get("/edit", requireLogin, async (req, res) => {
+router.get("/edit", requireManager, async (req, res) => {
   try {
     const templates = await db("EventTemplates_3NF")
       .select("*")
@@ -59,7 +59,7 @@ router.get("/edit", requireLogin, async (req, res) => {
 // -----------------------------------------------------
 // EDIT EXISTING EVENT OCCURRENCE
 // -----------------------------------------------------
-router.get("/edit/:id", requireLogin, async (req, res) => {
+router.get("/edit/:id", requireManager, async (req, res) => {
   const id = req.params.id;
 
   try {
