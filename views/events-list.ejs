@@ -40,12 +40,18 @@
                     <td><%= e.EventCapacity %></td>
                     <td><%= e.EventRegistrationDeadline %></td>
 
-                    <td>
-                        <a class="btn btn-secondary btn-small" href="/events/edit/<%= e.EventOccurrenceID %>">Edit</a>
+                    <!-- FIXED ACTION SPACING -->
+                    <td class="actions-column">
+                        <a class="btn btn-secondary btn-small" 
+                           href="/events/edit/<%= e.EventOccurrenceID %>">
+                            Edit
+                        </a>
 
                         <% if (user && user.level === "M") { %>
-                            <form action="/events/delete/<%= e.EventOccurrenceID %>" method="POST" style="display:inline;">
-                                <button type="submit" class="btn btn-danger btn-small"
+                            <form action="/events/delete/<%= e.EventOccurrenceID %>" 
+                                  method="POST">
+                                <button type="submit" 
+                                        class="btn btn-danger btn-small"
                                         onclick="return confirm('Delete this event occurrence?');">
                                     Delete
                                 </button>

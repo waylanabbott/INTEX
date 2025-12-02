@@ -22,14 +22,18 @@
                 <% donations.forEach(d => { %>
 
                     <% 
-                        // FORMAT DATE
+                        // FORMAT DATE (handle UNKNOWN_DATE)
                         const dateVal = (d["Donation Date"] && d["Donation Date"] !== "UNKNOWN_DATE")
                             ? d["Donation Date"]
                             : "";
 
-                        // FORMAT AMOUNT: strip '$' and convert
+                        // FORMAT AMOUNT: remove $, commas, spaces
                         let rawAmt = d["Donation Amount"] || "";
-                        rawAmt = rawAmt.replace("$", "").trim();
+                        rawAmt = rawAmt
+                                    .replace("$", "")
+                                    .replace(/,/g, "")   // <-- FIX FOR 1,000+
+                                    .trim();
+
                         const amtNum = Number(rawAmt);
                         const displayAmt = isNaN(amtNum) ? "" : "$" + amtNum.toFixed(2);
                     %>
@@ -40,6 +44,7 @@
                         <td><%= dateVal %></td>
                         <td><%= displayAmt %></td>
 
+                        <!-- FIXED ACTION BUTTON SPACING -->
                         <td class="actions-column">
 
                             <a class="btn btn-secondary btn-small" 
@@ -49,7 +54,7 @@
 
                             <% if (user.level === "M") { %>
                                 <form action="/donations/delete/<%= d.ParticipantEmail %>/<%= d['Donation Date'] %>" 
-                                      method="POST" style="display:inline;">
+                                      method="POST">
                                     <button class="btn btn-danger btn-small"
                                             onclick="return confirm('Delete donation?');">
                                         Delete

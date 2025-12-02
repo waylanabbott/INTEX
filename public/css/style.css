@@ -64,18 +64,74 @@ a:hover {
    NAVIGATION
 ---------------------------------------------------- */
 .navbar {
-    background-color: var(--pink-light) !important;
-    padding: 1rem 2rem;
+    background-color: var(--pink-light);
+    padding: 0.8rem 2rem;
     border-bottom: 3px solid var(--pink-mid);
+
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
 }
 
-.navbar a {
+/* Left section (logo + links) */
+.nav-left {
+    display: flex;
+    align-items: center;
+    gap: 1.2rem;
+}
+
+/* Navigation links */
+.nav-left a {
     font-weight: 600;
-    color: var(--charcoal) !important;
+    color: var(--charcoal);
+    text-decoration: none;
+    transition: color 0.2s ease;
+}
+.nav-left a:hover {
+    color: var(--berry);
 }
 
-.navbar a:hover {
-    color: var(--berry) !important;
+/* Logo */
+.logo {
+    height: 50px;
+    margin-right: 1rem;
+}
+
+/* Right side: welcome + logout */
+.nav-right {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+
+.welcome {
+    font-weight: 600;
+    color: var(--charcoal);
+}
+
+/* Logout button */
+.logout-btn {
+    background: var(--sage);
+    padding: 0.5rem 1.1rem;
+    border-radius: 8px;
+    color: white !important;
+    font-weight: 600;
+    text-decoration: none;
+}
+.logout-btn:hover {
+    background: #829f84;
+}
+
+/* Responsive nav */
+@media (max-width: 900px) {
+    .navbar {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+    .nav-left {
+        flex-wrap: wrap;
+    }
 }
 
 /* ----------------------------------------------------
@@ -94,31 +150,20 @@ button {
 .btn-primary,
 .btn-primary:hover,
 .btn-primary:active,
-.btn-primary:focus,
-.btn-primary:visited,
-.btn-primary:focus-visible,
-.btn-primary:disabled {
+.btn-primary:focus {
     background-color: var(--berry) !important;
     border-color: var(--berry) !important;
     color: white !important;
 }
 
 /* Secondary Sage Button */
-.btn-secondary,
-.btn-secondary:hover,
-.btn-secondary:active,
-.btn-secondary:focus,
-.btn-secondary:visited,
-.btn-secondary:focus-visible,
-.btn-secondary:disabled {
+.btn-secondary {
     background-color: var(--sage) !important;
-    border-color: var(--sage) !important;
     color: white !important;
 }
 
 /* Light Button */
-.btn-light,
-.btn-light:hover {
+.btn-light {
     background: var(--pink-light) !important;
     color: var(--charcoal) !important;
 }
@@ -144,7 +189,7 @@ input:focus, select:focus, textarea:focus {
     box-shadow: 0 0 4px rgba(151, 142, 196, 0.5) !important;
 }
 
-/* Remove Bootstrap blue autofill */
+/* Remove Chrome autofill blue */
 input:-webkit-autofill {
     box-shadow: 0 0 0px 1000px white inset !important;
 }
@@ -158,6 +203,9 @@ input:-webkit-autofill {
     padding: 1.5rem !important;
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08) !important;
     margin: 1rem 0 !important;
+
+    /* NEW: Fix surveys table overflow */
+    overflow-x: auto !important;
 }
 
 /* ----------------------------------------------------
@@ -182,6 +230,18 @@ table tbody tr:hover {
 }
 
 /* ----------------------------------------------------
+   ACTION BUTTON COLUMN FIX
+---------------------------------------------------- */
+.actions-column {
+    display: flex !important;
+    gap: 0.8rem !important;
+    align-items: center !important;
+}
+.actions-column form {
+    margin: 0 !important;
+}
+
+/* ----------------------------------------------------
    SECTION HEADERS
 ---------------------------------------------------- */
 .section-header {
@@ -203,9 +263,8 @@ table tbody tr:hover {
 }
 
 /* ----------------------------------------------------
-   LOGIN PAGE FIX (removes Bootstrap blue)
+   LOGIN PAGE FIX
 ---------------------------------------------------- */
-
 body.login-bg {
     background: linear-gradient(135deg, var(--pink-light), var(--lavender)) !important;
 }
@@ -222,9 +281,8 @@ body.login-bg {
     font-size: 1.7rem;
     color: var(--charcoal);
 }
-/* ----------------------------------------------------
-   LOGIN BACKGROUND — PINK ➜ LAVENDER GRADIENT
----------------------------------------------------- */
+
+/* Login background wrapper */
 .login-background {
     background: linear-gradient(135deg, var(--pink-light), var(--lavender)) !important;
     min-height: 100vh;
@@ -232,12 +290,14 @@ body.login-bg {
     align-items: center;
     justify-content: center;
 }
+
 .page-container {
     padding: 2rem;
     display: flex;
     justify-content: center;
 }
 
+/* Hero Card (Home Page) */
 .hero-card {
     max-width: 650px;
     background: white;
@@ -265,102 +325,9 @@ body.login-bg {
     color: var(--charcoal);
 }
 
-.nav-buttons {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 1rem;
-    justify-content: center;
-}
-
-.site-header {
-    background: var(--pink-light);
-    padding: 0.8rem 2rem;
-    border-bottom: 3px solid var(--pink-mid);
-}
-
-.logo-img {
-    height: 55px;
-}
-
 /* ----------------------------------------------------
-   NAVIGATION BAR
+   MODAL
 ---------------------------------------------------- */
-
-.navbar {
-    background-color: var(--pink-light);
-    padding: 0.8rem 2rem;
-    border-bottom: 3px solid var(--pink-mid);
-
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    flex-wrap: wrap;
-}
-
-/* Left section (logo + links) */
-.nav-left {
-    display: flex;
-    align-items: center;
-    gap: 1.2rem;
-}
-
-/* Navigation links */
-.nav-left a {
-    font-weight: 600;
-    color: var(--charcoal);
-    text-decoration: none;
-    transition: color 0.2s ease;
-}
-
-.nav-left a:hover {
-    color: var(--berry);
-}
-
-/* Logo */
-.logo {
-    height: 50px;
-    margin-right: 1rem;
-}
-
-/* Right side: welcome + logout */
-.nav-right {
-    display: flex;
-    align-items: center;
-    gap: 1rem;
-}
-
-.welcome {
-    font-weight: 600;
-    color: var(--charcoal);
-}
-
-/* Logout button (brand-styled) */
-.logout-btn {
-    background: var(--sage);
-    padding: 0.5rem 1.1rem;
-    border-radius: 8px;
-    color: white !important;
-    font-weight: 600;
-    text-decoration: none;
-    transition: background 0.2s ease;
-}
-
-.logout-btn:hover {
-    background: #829f84;
-}
-
-/* Responsive */
-@media (max-width: 900px) {
-    .navbar {
-        flex-direction: column;
-        align-items: flex-start;
-    }
-
-    .nav-left {
-        flex-wrap: wrap;
-    }
-}
-
 .modal-overlay {
     position: fixed;
     inset: 0;
@@ -378,4 +345,77 @@ body.login-bg {
     max-width: 90%;
     border-radius: 10px;
     box-shadow: 0 4px 30px rgba(0,0,0,0.3);
+}
+
+
+/* Allow wide tables inside cards */
+.card {
+    overflow-x: auto !important;
+}
+
+/* Fix button alignment inside table rows */
+.styled-table td {
+    vertical-align: middle !important;
+    white-space: nowrap;
+}
+
+.actions-column {
+    display: flex;
+    gap: 0.75rem;
+    align-items: center;
+}
+
+.card {
+    width: 100% !important;
+}
+
+table {
+    width: 100% !important;
+    
+}
+/* Keep full width without breaking long text */
+table {
+    width: 100% !important;
+}
+
+table th, table td {
+    vertical-align: middle !important;
+    padding: 0.75rem !important;
+    border-bottom: 1px solid #ddd !important;
+}
+
+/* Allow text to expand naturally */
+td {
+    white-space: normal !important;
+    word-break: break-word !important;
+}
+
+/* Keep only the Actions column from wrapping */
+.actions-column {
+    white-space: nowrap !important;
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+}
+
+/* =========================================
+   SURVEY TABLE LAYOUT (only this one table)
+   ========================================= */
+
+/* Make the survey table wide and let it scroll horizontally if needed */
+.survey-table {
+    width: 100%;
+    min-width: 1200px;  /* enough room for all columns on one line */
+}
+
+/* Keep every cell on a single line & vertically centered */
+.survey-table th,
+.survey-table td {
+    white-space: nowrap;
+    vertical-align: middle !important;
+}
+
+/* Keep the actions column tidy */
+.survey-table td:last-child {
+    white-space: nowrap;
 }

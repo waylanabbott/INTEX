@@ -24,21 +24,24 @@
                         <td><%= m["Milestone Title"] %></td>
                         <td><%= m["Milestone Date"] %></td>
 
-                        <td>
+                        <!-- FIXED SPACING FOR ACTIONS -->
+                        <td class="actions-column">
+
                             <a class="btn btn-secondary btn-small" 
-                               href="/milestones/edit/<%= m.ParticipantEmail %>/<%= encodeURIComponent(m["Milestone Date"]) %>">
+                               href="/milestones/edit/<%= m.ParticipantEmail %>/<%= encodeURIComponent(m['Milestone Date']) %>">
                                 Edit
                             </a>
 
                             <% if (user.level === "M") { %>
-                                <form action="/milestones/delete/<%= m.ParticipantEmail %>/<%= encodeURIComponent(m["Milestone Date"]) %>" 
-                                      method="POST" style="display:inline;">
+                                <form action="/milestones/delete/<%= m.ParticipantEmail %>/<%= encodeURIComponent(m['Milestone Date']) %>" 
+                                      method="POST">
                                     <button class="btn btn-danger btn-small"
                                             onclick="return confirm('Delete milestone?');">
                                         Delete
                                     </button>
                                 </form>
                             <% } %>
+
                         </td>
                     </tr>
                 <% }) %>
