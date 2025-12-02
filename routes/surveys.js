@@ -11,7 +11,7 @@ router.get("/", requireLogin, async (req, res) => {
         const surveys = await db("Surveys_3NF").select("*");
 
         res.render("surveys-list", {
-            user: req.session,
+            user: req.session.user,   // FIXED
             surveys
         });
     } catch (err) {
@@ -21,20 +21,20 @@ router.get("/", requireLogin, async (req, res) => {
 });
 
 // -----------------------------------------------------
-// ADD NEW
+// ADD NEW (Manager Only)
 // -----------------------------------------------------
-router.get("/edit", requireLogin, (req, res) => {
+router.get("/edit", requireManager, (req, res) => {
     res.render("surveys-edit", {
         mode: "create",
         survey: null,
-        user: req.session
+        user: req.session.user   // FIXED
     });
 });
 
 // -----------------------------------------------------
-// EDIT (by SurveyID)
+// EDIT (Manager Only)
 // -----------------------------------------------------
-router.get("/edit/:id", requireLogin, async (req, res) => {
+router.get("/edit/:id", requireManager, async (req, res) => {
     const { id } = req.params;
 
     try {
@@ -47,7 +47,7 @@ router.get("/edit/:id", requireLogin, async (req, res) => {
         res.render("surveys-edit", {
             mode: "edit",
             survey,
-            user: req.session
+            user: req.session.user   // FIXED
         });
 
     } catch (err) {
@@ -57,7 +57,7 @@ router.get("/edit/:id", requireLogin, async (req, res) => {
 });
 
 // -----------------------------------------------------
-// SAVE (CREATE OR UPDATE)
+// SAVE (CREATE OR UPDATE) — Manager Only
 // -----------------------------------------------------
 router.post("/save", requireManager, async (req, res) => {
     try {
@@ -107,7 +107,7 @@ router.post("/save", requireManager, async (req, res) => {
 });
 
 // -----------------------------------------------------
-// DELETE SURVEY
+// DELETE — Manager Only
 // -----------------------------------------------------
 router.post("/delete/:id", requireManager, async (req, res) => {
     const { id } = req.params;
