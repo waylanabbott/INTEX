@@ -14,9 +14,12 @@
     </div>
 
     <div class="nav-right">
-        <% if (user) { %>
+        <% if (user && user.username) { %>
             <span class="welcome">Hello, <%= user.username %></span>
-            <a class="logout-btn" href="/logout">Logout</a>
+            <a class="btn btn-secondary" href="/logout">Logout</a>
+        <% } else { %>
+            <a class="btn btn-primary" href="/login">Login</a>
         <% } %>
     </div>
-</nav>
+    
+    

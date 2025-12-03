@@ -3,7 +3,6 @@ const router = express.Router();
 const knex = require("../db");
 const bcrypt = require("bcryptjs");
 
-
 // ---------------------------------------------
 // LOGIN PAGE
 // ---------------------------------------------
@@ -22,7 +21,7 @@ router.post("/login", async (req, res) => {
         const user = await knex("users")
             .where({ username })
             .first();
-            console.log("DB USER LOOKUP:", user);
+        console.log("DB USER LOOKUP:", user);
 
         // If user not found
         if (!user) {
@@ -31,13 +30,10 @@ router.post("/login", async (req, res) => {
             });
         }
 
-        // Compare entered password to stored hash
-        console.log("Raw password entered:", password);
-console.log("Expected password: admin123");
-
+        // Compare password with stored hash
         const isValid = await bcrypt.compare(password, user.password_hash);
         console.log("Password valid?:", isValid);
-        
+
         if (!isValid) {
             return res.render("login", {
                 error_message: "Invalid username or password"
@@ -70,9 +66,8 @@ router.get("/register", (req, res) => {
     res.render("register", { error_message: "" });
 });
 
-
 // ---------------------------------------------
-// CREATE ACCOUNT - SECURE WITH BCRYPTJS
+// CREATE ACCOUNT - SECURE WITH BCRYPT
 // ---------------------------------------------
 router.post("/register", async (req, res) => {
     const { username, email, password, level } = req.body;
@@ -81,13 +76,15 @@ router.post("/register", async (req, res) => {
         // Check if username already exists
         const existing = await knex("users").where({ username }).first();
         if (existing) {
-            return res.render("register", { error_message: "Username already exists." });
+            return res.render("register", { 
+                error_message: "Username already exists."
+            });
         }
 
         // Hash password
         const hashedPassword = await bcrypt.hash(password, 10);
 
-        // Insert user
+        // Insert new user
         await knex("users").insert({
             username,
             email,
