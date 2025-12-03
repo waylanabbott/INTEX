@@ -64,6 +64,49 @@ console.log("Expected password: admin123");
 });
 
 // ---------------------------------------------
+// REGISTRATION PAGE
+// ---------------------------------------------
+router.get("/register", (req, res) => {
+    res.render("register", { error_message: "" });
+});
+
+
+// ---------------------------------------------
+// CREATE ACCOUNT - SECURE WITH BCRYPTJS
+// ---------------------------------------------
+router.post("/register", async (req, res) => {
+    const { username, email, password, level } = req.body;
+
+    try {
+        // Check if username already exists
+        const existing = await knex("users").where({ username }).first();
+        if (existing) {
+            return res.render("register", { error_message: "Username already exists." });
+        }
+
+        // Hash password
+        const hashedPassword = await bcrypt.hash(password, 10);
+
+        // Insert user
+        await knex("users").insert({
+            username,
+            email,
+            password_hash: hashedPassword,
+            level
+        });
+
+        // Redirect to login
+        res.redirect("/login");
+
+    } catch (err) {
+        console.error("Registration error:", err);
+        res.render("register", {
+            error_message: "Error creating account."
+        });
+    }
+});
+
+// ---------------------------------------------
 // LOGOUT
 // ---------------------------------------------
 router.get("/logout", (req, res) => {
