@@ -1,17 +1,66 @@
 
 
 <%- include("partials/header") %>
-
 <%- include("partials/nav") %>
 
 <div class="card" style="margin: 2rem;">
     <h1 class="section-header">Welcome to Ella Rises</h1>
 
-
+    <% if (user) { %>
     <p>
         Use the navigation bar above to access Participants, Events, Surveys,
         Milestones, Donations, and the Dashboard.
     </p>
-</div>
+    <% } %>
+    
+    <h2>Ella Rises: Empowering Young Women Through Culture and STEM</h2
+    <p>
+    Ella Rises is a nonprofit organization dedicated to empowering young women through innovative programs that blend cultural arts with science, technology, engineering, and mathematics (STEAM). We serve over 100 young women annually, creating a supportive community where participants can develop confidence, creativity, and critical thinking skills. Our mission is rooted in cultural celebration and educational advancement. Ella Rises provides accessible pathways for young women to explore their interests and build their futures.
+    </p>
+<p>
+    We offer three primary program areas that cater to interests and passions: Ballet Folklorico, Mariachi, and STEAM 
+</p>
+<p>
+As a nonprofit organization, Ella Rises relies on community support to sustain and expand its programs.  By fostering joy, cultural pride, and educational opportunity, Ella Rises plays a vital role in developing the next generation of confident, informed, and creatively empowered young women.
+</p>
+<br><br>
+<h2>Programs</h2>
+
+<section class="programs">
+
+  <article class="program">
+    <img src="/img/ballet.JPG" alt="Ella Rises Ballet Picture" class="program-image">
+    <div class="program-content">
+      <h3>Ballet Folklorico</h3>
+      <p>Our Ballet Folklorico program fosters joy and creative self-expression through Latin American folk dance, allowing participants to connect with cultural traditions while building confidence on stage.</p>
+    </div>
+  </article>
+
+  <article class="program">
+    <img src="/img/mariachi.jpeg" alt="Practicing Mariachi" class="program-image">
+    <div class="program-content">
+      <h3>Mariachi</h3>
+      <p>Our Mariachi program, which relaunched in spring 2025, offers a unique opportunity for young women to join an all-female mariachi band, welcoming musicians of all proficiency levels to participate and celebrate this rich musical tradition.</p>
+    </div>
+  </article>
+
+  <article class="program">
+    <img src="/img/summit.jpg" alt="STEAM Summit" class="program-image">
+    <div class="program-content">
+      <h3>Summit + Educational Pathways</h3>
+      <p>The Ella Rises Summit is a day camp full of activities to give a glimpse of the Ella Rises experience with art, STEM and focus on education. The day concludes with a tour of a local university campus.</p>
+    </div>
+  </article>
+
+  <article class="program">
+    <img src="/img/steam.jpeg" alt="STEAM tour of the U" class="program-image tall">
+    <div class="program-content">
+      <h3>STEAM</h3>
+      <p>Our STEM/STEAM initiatives facilitate both virtual and in-person workshops designed to spark participant inquiry and critical thinking about science and technology careers.</p>
+    </div>
+  </article>
+
+</section>
+
 
 <%- include("partials/footer") %>
