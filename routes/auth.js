@@ -1,6 +1,8 @@
 const express = require("express");
 const router = express.Router();
-const knex = require("../db"); // <-- Make sure this matches your folder structure
+const knex = require("../db");
+const bcrypt = require("bcryptjs");
+
 
 // ---------------------------------------------
 // LOGIN PAGE
@@ -10,7 +12,7 @@ router.get("/login", (req, res) => {
 });
 
 // ---------------------------------------------
-// LOGIN POST - DATABASE AUTH
+// LOGIN POST - SECURE WITH BCRYPT
 // ---------------------------------------------
 router.post("/login", async (req, res) => {
     const { username, password } = req.body;
@@ -20,29 +22,44 @@ router.post("/login", async (req, res) => {
         const user = await knex("users")
             .where({ username })
             .first();
+            console.log("DB USER LOOKUP:", user);
 
+        // If user not found
         if (!user) {
-            return res.render("login", { error_message: "Invalid username or password" });
+            return res.render("login", {
+                error_message: "Invalid username or password"
+            });
         }
 
-        // TEMP: Plain-text comparison (update to bcrypt later)
-        if (password !== user.password) {
-            return res.render("login", { error_message: "Invalid username or password" });
+        // Compare entered password to stored hash
+        console.log("Raw password entered:", password);
+console.log("Expected password: admin123");
+
+        const isValid = await bcrypt.compare(password, user.password_hash);
+        console.log("Password valid?:", isValid);
+        
+        if (!isValid) {
+            return res.render("login", {
+                error_message: "Invalid username or password"
+            });
         }
 
-        // Save session in a clean structure
+        // Save session
         req.session.isLoggedIn = true;
         req.session.user = {
+            user_id: user.user_id,
             username: user.username,
             level: user.level,
             email: user.email
         };
 
-        res.redirect("/");
+        res.redirect("/dashboard");
 
     } catch (err) {
         console.error("Login error:", err);
-        res.render("login", { error_message: "An error occurred logging in." });
+        res.render("login", {
+            error_message: "An error occurred during login."
+        });
     }
 });
 
@@ -50,7 +67,9 @@ router.post("/login", async (req, res) => {
 // LOGOUT
 // ---------------------------------------------
 router.get("/logout", (req, res) => {
-    req.session.destroy(() => res.redirect("/login"));
+    req.session.destroy(() => {
+        res.redirect("/login");
+    });
 });
 
 // ---------------------------------------------
@@ -64,7 +83,7 @@ function requireLogin(req, res, next) {
 }
 
 // ---------------------------------------------
-// MIDDLEWARE: REQUIRE MANAGER
+// MIDDLEWARE: REQUIRE MANAGER ("M")
 // ---------------------------------------------
 function requireManager(req, res, next) {
     if (!req.session.user || req.session.user.level !== "M") {
