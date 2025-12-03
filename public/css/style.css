@@ -466,3 +466,8 @@ td {
     align-items: center;
     gap: 0.6rem; /* tune this if needed */
 }
+
+.tableau-container {
+    padding: 1rem;
+    overflow-x: auto;
+}
