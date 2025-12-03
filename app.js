@@ -59,8 +59,10 @@ app.use("/dashboard", require("./routes/dashboard"));
 // HOME PAGE
 // -------------------------
 app.get("/", (req, res) => {
-    if (!req.session.isLoggedIn) return res.redirect("/login");
-    res.render("landing");
+    res.render("landing", {
+        user: req.session.user 
+    }
+    );
 });
 
 // -------------------------
