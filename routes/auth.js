@@ -1,5 +1,6 @@
 const express = require("express");
 const router = express.Router();
+const db = require("../db");
 const knex = require("../db");
 const bcrypt = require("bcryptjs");
 
@@ -64,6 +65,30 @@ router.post("/login", async (req, res) => {
 // ---------------------------------------------
 router.get("/register", (req, res) => {
     res.render("register", { error_message: "" });
+});
+router.post("/register", async (req, res) => {
+    try {
+        let { username, email, password, level } = req.body;
+
+        // Force level=U if user is not a manager
+        if (!req.session || req.session.level !== "M") {
+            level = "U";
+        }
+
+        const hashedPassword = await bcrypt.hash(password, 12);
+
+        await db("users").insert({
+            username,
+            email,
+            password_hash: hashedPassword,
+            level
+        });
+
+        res.redirect("/login");
+    } catch (err) {
+        console.error("Registration error:", err);
+        res.render("register", { error_message: "Error creating account." });
+    }
 });
 
 // ---------------------------------------------
