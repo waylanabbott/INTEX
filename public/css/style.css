@@ -329,20 +329,20 @@ table thead {
     text-align: center;
 }
 
-/* Prevent page titles + Add buttons from wrapping */
+/* Page title + Add button under logo, left aligned */
 .page-header {
     display: flex;
-    justify-content: space-between;
     align-items: center;
-    gap: 1rem;
-    flex-wrap: nowrap !important;
-    white-space: nowrap !important;
+    justify-content: flex-start;   /* keep title + button on the left */
+    gap: 1rem;                     /* space between title and button */
+    margin: 1rem 0;
+    flex-wrap: wrap;               /* if it gets too tight, button drops BELOW, still left */
 }
 
-/* Title and button should stay on the same line */
+/* Make sure title and button don’t break mid-word */
 .page-header h1,
 .page-header .add-btn {
-    white-space: nowrap !important;
+    white-space: nowrap;
 }
 
 /* ----------------------------------------------------
@@ -556,4 +556,20 @@ body.login-bg {
         width: 100%;
         max-width: 400px;
     }
+}
+
+/* UNIVERSAL FIX: Page title + Add button always under logo, left aligned */
+.page-header {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;   /* Keep both on the left */
+    gap: 1.5rem;                   /* Space between title and button */
+    margin: 1.5rem 0 1rem 0;       /* Space UNDER nav bar */
+    flex-wrap: nowrap;             /* Never wrap title/button */
+}
+
+.page-header h1,
+.page-header .add-btn {
+    white-space: nowrap;
 }

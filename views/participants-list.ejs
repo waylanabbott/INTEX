@@ -1,13 +1,15 @@
 <%- include("partials/header") %>
 <%- include("partials/nav") %>
 
-<h1 class="section-header">Participants</h1>
+<div class="page-header">
+    <h1 class="section-header">Participants</h1>
 
-<% if (user.level === "M") { %>
-    <div class="button-right"></div>
-    <a href="/participants/edit" class="btn btn-primary">Add Participant</a>
+    <% if (user && user.level === "M") { %>
+        <a href="/participants/edit" class="btn btn-primary add-btn">Add Participant</a>
+    <% } %>
 </div>
-  <% } %>
+
+
 
 
 <!-- SEARCH FORM -->
