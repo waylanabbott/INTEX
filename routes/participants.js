@@ -4,39 +4,39 @@ const db = require("../db");
 const { requireLogin, requireManager } = require("./auth");
 
 // -----------------------------------------------------
-// LIST PARTICIPANTS
-// -----------------------------------------------------
 // LIST PARTICIPANTS (with search)
+// -----------------------------------------------------
 router.get("/", requireLogin, async (req, res) => {
     try {
-      let query = db("Participants_3NF");
-      
-      // Filter by first name if provided
-      if (req.query.firstName) {
-        const firstNameTerm = `%${req.query.firstName}%`;
-        query = query.where("ParticipantFirstName", "like", firstNameTerm);
-      }
-      
-      // Filter by last name if provided
-      if (req.query.lastName) {
-        const lastNameTerm = `%${req.query.lastName}%`;
-        query = query.where("ParticipantLastName", "like", lastNameTerm);
-      }
-      
-      const participants = await query.select("*");
-      
-      res.render("participants-list", {
-        user: req.session,
-        participants,
-        firstName: req.query.firstName || "",
-        lastName: req.query.lastName || ""
-      });
+        let query = db("Participants_3NF");
+
+        // Filter by first name
+        if (req.query.firstName) {
+            const firstNameTerm = `%${req.query.firstName}%`;
+            query = query.where("ParticipantFirstName", "like", firstNameTerm);
+        }
+
+        // Filter by last name
+        if (req.query.lastName) {
+            const lastNameTerm = `%${req.query.lastName}%`;
+            query = query.where("ParticipantLastName", "like", lastNameTerm);
+        }
+
+        const participants = await query.select("*");
+
+        // IMPORTANT: Do NOT pass user here.
+        // res.locals.user (set in app.js middleware) handles that globally.
+        res.render("participants-list", {
+            participants,
+            firstName: req.query.firstName || "",
+            lastName: req.query.lastName || ""
+        });
+
     } catch (err) {
-      console.error("Error loading participants:", err);
-      res.status(500).send("Error loading participants");
+        console.error("Error loading participants:", err);
+        res.status(500).send("Error loading participants");
     }
-  });
-  
+});
 
 // -----------------------------------------------------
 // ADD PARTICIPANT (Manager Only)
@@ -44,10 +44,10 @@ router.get("/", requireLogin, async (req, res) => {
 router.get("/edit", requireManager, (req, res) => {
     res.render("participants-edit", {
         mode: "create",
-        participant: null,
-        user: req.session.user   // ✅ FIXED
+        participant: null
+        // user automatically available via res.locals.user
     });
-}); 
+});
 
 // -----------------------------------------------------
 // EDIT PARTICIPANT (Manager Only)
@@ -66,8 +66,8 @@ router.get("/edit/:email", requireManager, async (req, res) => {
 
         res.render("participants-edit", {
             mode: "edit",
-            participant,
-            user: req.session.user   // ✅ FIXED
+            participant
+            // user automatically available via res.locals.user
         });
 
     } catch (err) {
