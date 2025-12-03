@@ -329,6 +329,22 @@ table thead {
     text-align: center;
 }
 
+/* Prevent page titles + Add buttons from wrapping */
+.page-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 1rem;
+    flex-wrap: nowrap !important;
+    white-space: nowrap !important;
+}
+
+/* Title and button should stay on the same line */
+.page-header h1,
+.page-header .add-btn {
+    white-space: nowrap !important;
+}
+
 /* ----------------------------------------------------
    LOGIN PAGE
 ---------------------------------------------------- */
