@@ -549,4 +549,77 @@ td {
       max-width: 400px;
     }
   }
-  
+
+
+.btn-small {
+    line-height: 1 !important;
+    padding: 4px 10px !important;
+    height: auto !important;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.styled-table td,
+.styled-table th {
+    vertical-align: middle !important;
+}
+.actions-column {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+.btn-small {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    line-height: 1;
+    padding: 4px 10px;
+}
+
+/* FINAL FIX — Normalize row height for all tables */
+.styled-table td,
+.styled-table th {
+    padding-top: 0.6rem !important;
+    padding-bottom: 0.6rem !important;
+    vertical-align: middle !important;
+}
+
+/* Keep rows from expanding because of line breaks */
+.styled-table tr {
+    height: 1px;
+}
+
+/* Prevent multi-line date wrapping from blowing up row height */
+.styled-table td {
+    white-space: nowrap;
+}
+/* Make all table buttons the same height */
+.styled-table .btn,
+.styled-table .btn-small {
+    padding: 4px 10px !important;
+    font-size: 0.85rem !important;
+    height: 28px !important;
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    line-height: 1 !important;
+}
+
+/* Ensure Actions column cells stretch to full row height */
+.actions-column {
+    height: 100% !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: flex-start;
+}
+
+/* Force table rows to align cells uniformly */
+.styled-table tr {
+    height: auto !important;
+}
+
+/* Explicitly force Actions cells to align middle */
+.styled-table td.actions-column {
+    vertical-align: middle !important;
+}
