@@ -467,6 +467,16 @@ td {
     gap: 0.6rem; /* tune this if needed */
 }
 
+.tableau-container {
+    padding: 1rem;
+    overflow-x: auto;
+}
+
+.tableau-container {
+    padding: 1rem;
+    overflow-x: auto;
+}
+
 .programs {
     display: flex;
     flex-direction: column;

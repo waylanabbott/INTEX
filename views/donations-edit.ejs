@@ -40,12 +40,15 @@
                    value="<%= editAmt %>" required>
         </div>
 
-        <div class="form-actions">
-            <button class="btn btn-primary">
-                <%= mode === "edit" ? "Save Donation" : "Add Donation" %>
-            </button>
-            <a class="btn btn-secondary" href="/donations">Cancel</a>
-        </div>
+        <% if (user && user.level === "M") { %>
+            <div class="form-actions">
+                <button class="btn btn-primary">
+                    <%= mode === "edit" ? "Save Donation" : "Add Donation" %>
+                </button>
+                <a class="btn btn-secondary" href="/donations">Cancel</a>
+            </div>
+        <% } %>
+        
 
     </form>
 
