@@ -4,12 +4,12 @@ module.exports = {
   development: {
     client: 'pg',
     connection: {
-      host: process.env.RDS_HOSTNAME || 'localhost',
-      port: process.env.RDS_PORT || 5432,
-      user: process.env.RDS_USERNAME || 'postgres',
-      password: process.env.RDS_PASSWORD || 'admin',
-      database: process.env.RDS_DB_NAME || 'ellarises',
-      ssl: process.env.DB_SSL ? {rejectUnauthorized: false} : false 
+      host: process.env.DB_HOST,
+      port: process.env.DB_PORT,
+      user: process.env.DB_USER,
+      password: process.env.DB_PASSWORD,
+      database: process.env.DB_NAME,
+      ssl: false
     },
     migrations: { directory: './migrations' },
     seeds: { directory: './seeds' }
@@ -18,12 +18,12 @@ module.exports = {
   production: {
     client: 'pg',
     connection: {
-      host: process.env.RDS_HOSTNAME || 'localhost',
-      port: process.env.RDS_PORT || 5432,
-      user: process.env.RDS_USERNAME || 'postgres',
-      password: process.env.RDS_PASSWORD || 'admin',
-      database: process.env.RDS_DB_NAME || 'ellarises',
-      ssl: process.env.DB_SSL ? {rejectUnauthorized: false} : false 
+      host: process.env.DB_HOST,
+      port: process.env.DB_PORT,
+      user: process.env.DB_USER,
+      password: process.env.DB_PASSWORD,
+      database: process.env.DB_NAME,
+      ssl: { rejectUnauthorized: false }
     },
     pool: { min: 2, max: 10 },
     migrations: { directory: './migrations' }

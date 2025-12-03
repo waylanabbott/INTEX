@@ -2,7 +2,7 @@
    ELLA RISES — GLOBAL BRAND STYLING
 ---------------------------------------------------- */
 
-/* Load Google Fonts */
+/* Google Fonts */
 @import url('https://fonts.googleapis.com/css2?family=DM+Serif+Display&family=Montserrat:wght@300;400;500;600;700&display=swap');
 
 /* ----------------------------------------------------
@@ -39,7 +39,7 @@ h1, h2, h3, h4 {
     color: var(--charcoal);
 }
 
-/* Remove bootstrap primary color */
+/* Remove bootstrap primary color defaults */
 .text-primary,
 .bg-primary,
 .border-primary {
@@ -135,7 +135,7 @@ a:hover {
 }
 
 /* ----------------------------------------------------
-   BUTTONS — TOTAL BOOTSTRAP OVERRIDE
+   BUTTONS — BRAND OVERRIDES
 ---------------------------------------------------- */
 
 .btn,
@@ -144,6 +144,7 @@ button {
     border-radius: 8px !important;
     padding: 0.6rem 1.2rem !important;
     border: none !important;
+    font-family: var(--font-body);
 }
 
 /* Pink Primary Button */
@@ -168,6 +169,18 @@ button {
     color: var(--charcoal) !important;
 }
 
+/* Danger Button (for deletes, if used) */
+.btn-danger {
+    background: #f25c5c !important;
+    color: #ffffff !important;
+}
+
+/* Smaller button variant (used outside tables if needed) */
+.btn-small {
+    font-size: 0.9rem !important;
+    padding: 0.35rem 0.9rem !important;
+}
+
 /* ----------------------------------------------------
    FORMS
 ---------------------------------------------------- */
@@ -181,6 +194,7 @@ input, select, textarea {
     border-radius: 6px;
     border: 1px solid var(--blue) !important;
     background: white !important;
+    font-family: var(--font-body);
 }
 
 input:focus, select:focus, textarea:focus {
@@ -203,52 +217,105 @@ input:-webkit-autofill {
     padding: 1.5rem !important;
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08) !important;
     margin: 1rem 0 !important;
-
-    /* NEW: Fix surveys table overflow */
-    overflow-x: auto !important;
+    width: 100% !important;
+    overflow-x: auto !important; /* allows wide tables */
 }
 
 /* ----------------------------------------------------
-   TABLES
+   TABLES (GLOBAL)
 ---------------------------------------------------- */
 table {
     width: 100% !important;
     border-collapse: collapse !important;
 }
 
+/* Default table head */
 table thead {
     background-color: var(--pink-light) !important;
 }
 
-table th, table td {
-    padding: 0.75rem !important;
-    border-bottom: 1px solid #ddd !important;
+/* ----------------------------------------------------
+   STYLED TABLES (APP MAIN TABLES)
+---------------------------------------------------- */
+.styled-table {
+    width: 100%;
+    border-collapse: collapse;
 }
 
-table tbody tr:hover {
+.styled-table thead {
+    background-color: var(--pink-light);
+}
+
+.styled-table tbody tr:hover {
     background: var(--pink-light) !important;
 }
 
+/* Compact, single-line rows */
+.styled-table th,
+.styled-table td {
+    padding: 0.6rem 0.75rem !important;
+    border-bottom: 1px solid #ddd !important;
+    vertical-align: middle !important;
+    white-space: nowrap; /* single-line cells by default */
+    font-size: 0.95rem;
+}
+
+/* Allow wrapping in non-action, non-NPS cells when needed */
+.styled-table td.allow-wrap {
+    white-space: normal !important;
+    word-break: break-word;
+}
+
 /* ----------------------------------------------------
-   ACTION BUTTON COLUMN FIX
+   ACTIONS COLUMN
 ---------------------------------------------------- */
 .actions-column {
     display: flex !important;
-    gap: 0.8rem !important;
     align-items: center !important;
+    justify-content: flex-start;
+    gap: 0.5rem !important;
+    white-space: nowrap !important;
 }
+
 .actions-column form {
     margin: 0 !important;
 }
 
+/* Standardize all buttons inside tables */
+.styled-table .btn,
+.styled-table .btn-small {
+    height: 28px !important;
+    padding: 0 12px !important;
+    font-size: 0.85rem !important;
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    line-height: 1 !important;
+    white-space: nowrap !important;
+}
+
 /* ----------------------------------------------------
-   SECTION HEADERS
+   SECTION HEADERS & PAGE HEADER
 ---------------------------------------------------- */
 .section-header {
     font-family: var(--font-serif);
     font-size: 2rem;
     border-left: 6px solid var(--lavender);
     padding-left: 1rem;
+}
+
+.page-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1rem;
+    gap: 1rem;
+}
+
+.add-btn {
+    padding: 0.5rem 1rem;
+    font-size: 0.9rem;
+    border-radius: 8px;
 }
 
 /* ----------------------------------------------------
@@ -263,10 +330,18 @@ table tbody tr:hover {
 }
 
 /* ----------------------------------------------------
-   LOGIN PAGE FIX
+   LOGIN PAGE
 ---------------------------------------------------- */
 body.login-bg {
     background: linear-gradient(135deg, var(--pink-light), var(--lavender)) !important;
+}
+
+.login-background {
+    background: linear-gradient(135deg, var(--pink-light), var(--lavender)) !important;
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
 .login-card {
@@ -282,22 +357,22 @@ body.login-bg {
     color: var(--charcoal);
 }
 
-/* Login background wrapper */
-.login-background {
-    background: linear-gradient(135deg, var(--pink-light), var(--lavender)) !important;
-    min-height: 100vh;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-}
-
 .page-container {
     padding: 2rem;
     display: flex;
     justify-content: center;
 }
 
-/* Hero Card (Home Page) */
+.login-card form,
+.login-card .form-group,
+.login-card input {
+    width: 100%;
+    box-sizing: border-box;
+}
+
+/* ----------------------------------------------------
+   HERO CARD (HOME)
+---------------------------------------------------- */
 .hero-card {
     max-width: 650px;
     background: white;
@@ -324,19 +399,6 @@ body.login-bg {
     margin-bottom: 2rem;
     color: var(--charcoal);
 }
-.login-card form {
-    width: 100%;
-}
-
-.login-card .form-group {
-    width: 100%;
-}
-
-.login-card input {
-    width: 100%;
-    box-sizing: border-box; /* ensures padding does NOT change width */
-}
-
 
 /* ----------------------------------------------------
    MODAL
@@ -360,58 +422,9 @@ body.login-bg {
     box-shadow: 0 4px 30px rgba(0,0,0,0.3);
 }
 
-
-/* Allow wide tables inside cards */
-.card {
-    overflow-x: auto !important;
-}
-
-/* Fix button alignment inside table rows */
-.styled-table td {
-    vertical-align: middle !important;
-    white-space: nowrap;
-}
-
-.actions-column {
-    display: flex;
-    gap: 0.75rem;
-    align-items: center;
-}
-
-.card {
-    width: 100% !important;
-}
-
-table {
-    width: 100% !important;
-    
-}
-/* Keep full width without breaking long text */
-table {
-    width: 100% !important;
-}
-
-table th, table td {
-    vertical-align: middle !important;
-    padding: 0.75rem !important;
-    border-bottom: 1px solid #ddd !important;
-}
-
-/* Allow text to expand naturally */
-td {
-    white-space: normal !important;
-    word-break: break-word !important;
-}
-
-/* Keep only the Actions column from wrapping */
-.actions-column {
-    white-space: nowrap !important;
-    display: flex;
-    align-items: center;
-    gap: 0.75rem;
-}
-
-/* NPS dot styles just for the surveys table */
+/* ----------------------------------------------------
+   NPS DOTS (SURVEYS)
+---------------------------------------------------- */
 .nps-cell {
     text-align: center;
 }
@@ -423,7 +436,6 @@ td {
     border-radius: 50%;
 }
 
-/* Colors for NPS buckets */
 .nps-promoter {
     background-color: #4CAF50;  /* green */
 }
@@ -441,7 +453,6 @@ td {
     font-size: 0.9rem;
 }
 
-/* Legend styling */
 .nps-legend {
     margin-top: 0.75rem;
     display: flex;
@@ -455,171 +466,78 @@ td {
     gap: 0.4rem;
 }
 
+/* ----------------------------------------------------
+   MISC UTILS
+---------------------------------------------------- */
 .button-right {
     display: flex;
     justify-content: flex-end;
     margin-bottom: 1rem;
-  }
-
-  .action-buttons {
-    display: flex;
-    align-items: center;
-    gap: 0.6rem; /* tune this if needed */
 }
 
+.action-buttons {
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+}
+
+/* Tableau embeds */
 .tableau-container {
     padding: 1rem;
     overflow-x: auto;
 }
 
-.page-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 1rem;
-}
-
-.add-btn {
-    padding: 0.5rem 1rem;
-    font-size: 0.9rem;
-    border-radius: 8px;
-}
-
-.page-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 1rem;
-    gap: 1rem;              /* <-- This creates nice spacing */
-}
-
-.tableau-container {
-    padding: 1rem;
-    overflow-x: auto;
-}
-
+/* ----------------------------------------------------
+   PROGRAMS SECTION (HOME)
+---------------------------------------------------- */
 .programs {
     display: flex;
     flex-direction: column;
     gap: 2rem;
     margin-top: 1.5rem;
-  }
-  
-  .program {
+}
+
+.program {
     display: flex;
     gap: 1.5rem;
     align-items: flex-start;
-  }
-  
-  .program:nth-child(even) {
+}
+
+.program:nth-child(even) {
     flex-direction: row-reverse; /* alternate sides for variety */
-  }
-  
-  .program-image {
+}
+
+.program-image {
     width: 260px;
     height: auto;
     border-radius: 8px;
     object-fit: cover;
-  }
-  
-  .program-image.tall {
+}
+
+.program-image.tall {
     width: 220px;
-  }
-  
-  .program-content h3 {
+}
+
+.program-content h3 {
     margin-top: 0;
     margin-bottom: 0.5rem;
-  }
-  
-  .program-content p {
+}
+
+.program-content p {
     margin: 0;
     line-height: 1.5;
-  }
-  
-  /* Stack on small screens */
-  @media (max-width: 768px) {
+}
+
+/* Stack on small screens */
+@media (max-width: 768px) {
     .program {
-      flex-direction: column;
+        flex-direction: column;
     }
     .program:nth-child(even) {
-      flex-direction: column;
+        flex-direction: column;
     }
     .program-image {
-      width: 100%;
-      max-width: 400px;
+        width: 100%;
+        max-width: 400px;
     }
-  }
-
-
-.btn-small {
-    line-height: 1 !important;
-    padding: 4px 10px !important;
-    height: auto !important;
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-}
-
-.styled-table td,
-.styled-table th {
-    vertical-align: middle !important;
-}
-.actions-column {
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
-}
-.btn-small {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    line-height: 1;
-    padding: 4px 10px;
-}
-
-/* FINAL FIX — Normalize row height for all tables */
-.styled-table td,
-.styled-table th {
-    padding-top: 0.6rem !important;
-    padding-bottom: 0.6rem !important;
-    vertical-align: middle !important;
-}
-
-/* Keep rows from expanding because of line breaks */
-.styled-table tr {
-    height: 1px;
-}
-
-/* Prevent multi-line date wrapping from blowing up row height */
-.styled-table td {
-    white-space: nowrap;
-}
-/* Make all table buttons the same height */
-.styled-table .btn,
-.styled-table .btn-small {
-    padding: 4px 10px !important;
-    font-size: 0.85rem !important;
-    height: 28px !important;
-    display: inline-flex !important;
-    align-items: center !important;
-    justify-content: center !important;
-    line-height: 1 !important;
-}
-
-/* Ensure Actions column cells stretch to full row height */
-.actions-column {
-    height: 100% !important;
-    display: flex !important;
-    align-items: center !important;
-    justify-content: flex-start;
-}
-
-/* Force table rows to align cells uniformly */
-.styled-table tr {
-    height: auto !important;
-}
-
-/* Explicitly force Actions cells to align middle */
-.styled-table td.actions-column {
-    vertical-align: middle !important;
 }
