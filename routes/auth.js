@@ -21,7 +21,7 @@ router.post("/login", async (req, res) => {
         const user = await knex("users")
             .where({ username })
             .first();
-        console.log("DB USER LOOKUP:", user);
+        
 
         // If user not found
         if (!user) {
@@ -32,7 +32,7 @@ router.post("/login", async (req, res) => {
 
         // Compare password with stored hash
         const isValid = await bcrypt.compare(password, user.password_hash);
-        console.log("Password valid?:", isValid);
+    
 
         if (!isValid) {
             return res.render("login", {

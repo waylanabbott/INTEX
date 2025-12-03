@@ -1,7 +1,16 @@
 <%- include("partials/header") %>
 <%- include("partials/nav") %>
 
-<h1 class="section-header">Milestones</h1>
+<!-- PAGE HEADER WITH ADD BUTTON -->
+<div class="page-header">
+    <h1 class="section-header">Milestones</h1>
+
+    <% if (user && user.level === "M") { %>
+        <a class="btn btn-primary add-btn" href="/milestones/edit">
+            Add Milestone
+        </a>
+    <% } %>
+</div>
 
 <div class="card">
 
@@ -13,8 +22,8 @@
                     <th>Participant Email</th>
                     <th>Title</th>
                     <th>Date</th>
-                    <% if (user.level === 'M') { %>
-                    <th>Actions</th>
+                    <% if (user.level === "M") { %>
+                        <th>Actions</th>
                     <% } %>
                 </tr>
             </thead>
@@ -26,27 +35,26 @@
                         <td><%= m["Milestone Title"] %></td>
                         <td><%= m["Milestone Date"] %></td>
 
-                        <!-- FIXED SPACING FOR ACTIONS -->
-                        <% if (user.level === 'M') { %>
-                        <td class="actions-column">
-                        <% } %>
-                            <% if (user.level === 'M') { %>
-                            <a class="btn btn-secondary btn-small" 
-                               href="/milestones/edit/<%= m.ParticipantEmail %>/<%= encodeURIComponent(m['Milestone Date']) %>">
-                                Edit
-                            </a>
-                            <% } %>
-                            <% if (user.level === "M") { %>
-                                <form action="/milestones/delete/<%= m.ParticipantEmail %>/<%= encodeURIComponent(m['Milestone Date']) %>" 
-                                      method="POST">
+                        <% if (user.level === "M") { %>
+                            <td class="actions-column">
+
+                                <a class="btn btn-secondary btn-small"
+                                   href="/milestones/edit/<%= m.ParticipantEmail %>/<%= encodeURIComponent(m['Milestone Date']) %>">
+                                    Edit
+                                </a>
+
+                                <form action="/milestones/delete/<%= m.ParticipantEmail %>/<%= encodeURIComponent(m['Milestone Date']) %>"
+                                      method="POST"
+                                      style="display:inline;">
                                     <button class="btn btn-danger btn-small"
                                             onclick="return confirm('Delete milestone?');">
                                         Delete
                                     </button>
                                 </form>
-                            <% } %>
 
-                        </td>
+                            </td>
+                        <% } %>
+
                     </tr>
                 <% }) %>
             </tbody>
@@ -57,7 +65,5 @@
     <% } %>
 
 </div>
-
-<a class="btn btn-primary" href="/milestones/edit">Add Milestone</a>
 
 <%- include("partials/footer") %>

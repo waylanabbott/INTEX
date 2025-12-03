@@ -1,7 +1,14 @@
 <%- include("partials/header") %>
 <%- include("partials/nav") %>
 
-<h1 class="section-header">Surveys</h1>
+<!-- PAGE HEADER WITH ADD BUTTON -->
+<div class="page-header">
+    <h1 class="section-header">Surveys</h1>
+
+    <% if (user && user.level === "M") { %>
+        <a href="/surveys/edit" class="btn btn-primary add-btn">Add Survey</a>
+    <% } %>
+</div>
 
 <div class="card">
 
@@ -43,11 +50,9 @@
                     <td><%= s.SurveyRecommendationScore %></td>
                     <td><%= s.SurveyOverallScore %></td>
 
-                    <!-- NPS -->
+                    <!-- NPS DOT -->
                     <td class="nps-cell">
-                        <% 
-                            const bucket = (s.SurveyNPSBucket || "").trim();
-                        %>
+                        <% const bucket = (s.SurveyNPSBucket || "").trim(); %>
 
                         <% if (bucket === "Promoter") { %>
                             <span class="nps-dot nps-promoter" title="Promoter"></span>
@@ -60,7 +65,7 @@
                         <% } %>
                     </td>
 
-                    <!-- Comments -->
+                    <!-- COMMENTS -->
                     <td>
                         <% if (s.SurveyComments) { %>
                             <button class="btn btn-small btn-secondary"
@@ -76,12 +81,21 @@
                     <!-- ACTIONS (Managers Only) -->
                     <% if (user && user.level === "M") { %>
                         <td class="actions-column">
-                            <a class="btn btn-secondary btn-small" href="/surveys/edit/<%= s.SurveyID %>">Edit</a>
 
-                            <form action="/surveys/delete/<%= s.SurveyID %>" method="POST" style="display:inline;">
+                            <a class="btn btn-secondary btn-small" 
+                               href="/surveys/edit/<%= s.SurveyID %>">
+                                Edit
+                            </a>
+
+                            <form action="/surveys/delete/<%= s.SurveyID %>"
+                                  method="POST"
+                                  style="display:inline;">
                                 <button class="btn btn-danger btn-small"
-                                        onclick="return confirm('Delete survey?');">Delete</button>
+                                        onclick="return confirm('Delete survey?');">
+                                    Delete
+                                </button>
                             </form>
+
                         </td>
                     <% } %>
 
@@ -98,12 +112,7 @@
 
 </div>
 
-<!-- Add Survey (Managers Only) -->
-<% if (user && user.level === "M") { %>
-    <a href="/surveys/edit" class="btn btn-primary">Add Survey</a>
-<% } %>
-
-<!-- Comment Modal -->
+<!-- COMMENT MODAL -->
 <div id="commentModal" class="modal-overlay" style="display:none;">
     <div class="modal-content">
         <h2>Survey Comment</h2>
