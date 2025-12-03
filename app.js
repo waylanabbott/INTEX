@@ -78,3 +78,5 @@ app.get("/teapot", (req, res) => {
 app.listen(PORT, () => {
     console.log(`Ella Rises app running at http://localhost:${PORT}`);
 });
+
+app.use(express.static('public')); // or express.static(path.join(__dirname, 'public'))

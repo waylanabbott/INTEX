@@ -492,3 +492,61 @@ td {
     margin-bottom: 1rem;
     gap: 1rem;              /* <-- This creates nice spacing */
 }
+
+.tableau-container {
+    padding: 1rem;
+    overflow-x: auto;
+}
+
+.programs {
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+    margin-top: 1.5rem;
+  }
+  
+  .program {
+    display: flex;
+    gap: 1.5rem;
+    align-items: flex-start;
+  }
+  
+  .program:nth-child(even) {
+    flex-direction: row-reverse; /* alternate sides for variety */
+  }
+  
+  .program-image {
+    width: 260px;
+    height: auto;
+    border-radius: 8px;
+    object-fit: cover;
+  }
+  
+  .program-image.tall {
+    width: 220px;
+  }
+  
+  .program-content h3 {
+    margin-top: 0;
+    margin-bottom: 0.5rem;
+  }
+  
+  .program-content p {
+    margin: 0;
+    line-height: 1.5;
+  }
+  
+  /* Stack on small screens */
+  @media (max-width: 768px) {
+    .program {
+      flex-direction: column;
+    }
+    .program:nth-child(even) {
+      flex-direction: column;
+    }
+    .program-image {
+      width: 100%;
+      max-width: 400px;
+    }
+  }
+  
