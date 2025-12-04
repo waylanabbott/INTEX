@@ -37,19 +37,45 @@
             </thead>
 
             <tbody>
-                <% events.forEach(e => { %>
+                <% events.forEach(e => { 
+                
+                    // 1. HELPER: Format Date & Time (Removes the 'T' and adds AM/PM)
+                    // "2025-12-04T00:39" -> "12/4/2025, 12:39 AM"
+                    function formatDT(isoStr) {
+                        if (!isoStr) return "";
+                        return new Date(isoStr).toLocaleString("en-US", { 
+                            timeZone: "UTC",      // Prevents date shifting
+                            month: "numeric", 
+                            day: "numeric", 
+                            year: "numeric", 
+                            hour: "numeric", 
+                            minute: "2-digit"
+                        });
+                    }
+
+                    // 2. HELPER: Format Numbers (Ensures 5.0 or 100.0)
+                    function formatNum(num) {
+                         if (num === null || num === undefined) return "";
+                         return Number(num).toFixed(1);
+                    }
+                %>
                     <tr>
                         <td><%= e.EventOccurrenceID %></td>
                         <td><%= e.EventName %></td>
                         <td><%= e.EventType %></td>
                         <td><%= e.EventDescription %></td>
                         <td><%= e.EventRecurrencePattern %></td>
-                        <td><%= e.EventDefaultCapacity %></td>
-                        <td><%= e.EventDateTimeStart %></td>
-                        <td><%= e.EventDateTimeEnd %></td>
+                        
+                        <td><%= formatNum(e.EventDefaultCapacity) %></td>
+
+                        <td><%= formatDT(e.EventDateTimeStart) %></td>
+                        <td><%= formatDT(e.EventDateTimeEnd) %></td>
+                        
                         <td><%= e.EventLocation %></td>
-                        <td><%= e.EventCapacity %></td>
-                        <td><%= e.EventRegistrationDeadline %></td>
+                        
+                        <td><%= formatNum(e.EventCapacity) %></td>
+                        
+                        <td><%= formatDT(e.EventRegistrationDeadline) %></td>
 
                         <% if (user && user.level === "M") { %>
                             <td class="actions-column">

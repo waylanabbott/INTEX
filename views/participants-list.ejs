@@ -65,37 +65,56 @@
       </thead>
 
       <tbody>
-      <% participants.forEach(p => { %>
-        <tr>
-          <td><%= p.ParticipantEmail %></td>
-          <td><%= p.ParticipantFirstName %></td>
-          <td><%= p.ParticipantLastName %></td>
-          <td><%= p.ParticipantDOB %></td>
-          <td><%= p.ParticipantRole %></td>
-          <td><%= p.ParticipantPhone %></td>
-          <td><%= p.ParticipantCity %></td>
-          <td><%= p.ParticipantState %></td>
-          <td><%= p.ParticipantZip %></td>
-
-          <% if (user.level === "M") { %>
-            <td>
-              <div class="action-buttons">
-                <a class="btn btn-secondary btn-small" 
-                   href="/participants/edit/<%= p.ParticipantEmail %>">
-                  Edit
-                </a>
-          
-                <form action="/participants/delete/<%= p.ParticipantEmail %>" 
-                      method="POST">
-                  <button class="btn btn-danger btn-small">
-                    Delete
-                  </button>
-                </form>
-              </div>
-            </td>
-          <% } %>
-        </tr>
-      <% }) %>
+        <% participants.forEach(p => { 
+        
+            // 1. FORMAT DATE OF BIRTH (M/D/YYYY)
+            // We use timeZone: 'UTC' to ensure the date doesn't shift back by one day
+            let dobDisplay = "";
+            if (p.ParticipantDOB) {
+                dobDisplay = new Date(p.ParticipantDOB).toLocaleDateString("en-US", { timeZone: "UTC" });
+            }
+  
+            // 2. FORMAT PHONE NUMBER (###-###-####)
+            let phoneDisplay = p.ParticipantPhone || "";
+            // Remove any existing dashes or spaces first so we have clean numbers
+            const cleanPhone = phoneDisplay.replace(/\D/g, ""); 
+            
+            if (cleanPhone.length === 10) {
+                phoneDisplay = `${cleanPhone.slice(0,3)}-${cleanPhone.slice(3,6)}-${cleanPhone.slice(6)}`;
+            }
+        %>
+          <tr>
+            <td><%= p.ParticipantEmail %></td>
+            <td><%= p.ParticipantFirstName %></td>
+            <td><%= p.ParticipantLastName %></td>
+            
+            <td><%= dobDisplay %></td> 
+            <td><%= p.ParticipantRole %></td>
+            <td><%= phoneDisplay %></td> 
+            
+            <td><%= p.ParticipantCity %></td>
+            <td><%= p.ParticipantState %></td>
+            <td><%= p.ParticipantZip %></td>
+  
+            <% if (user.level === "M") { %>
+              <td>
+                <div class="action-buttons">
+                  <a class="btn btn-secondary btn-small" 
+                     href="/participants/edit/<%= p.ParticipantEmail %>">
+                    Edit
+                  </a>
+            
+                  <form action="/participants/delete/<%= p.ParticipantEmail %>" 
+                        method="POST">
+                    <button class="btn btn-danger btn-small" onclick="return confirm('Are you sure?');">
+                      Delete
+                    </button>
+                  </form>
+                </div>
+              </td>
+            <% } %>
+          </tr>
+        <% }) %>
       </tbody>
     </table>
 

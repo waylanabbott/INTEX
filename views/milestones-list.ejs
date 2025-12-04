@@ -29,11 +29,27 @@
             </thead>
 
             <tbody>
-                <% milestones.forEach(m => { %>
+                <% milestones.forEach(m => { 
+                
+                    // 1. FORMAT DATE & TIME
+                    // This turns "2025-12-04T00:44" into "12/4/2025, 12:44 AM"
+                    let dateDisplay = "";
+                    if (m["Milestone Date"]) {
+                        dateDisplay = new Date(m["Milestone Date"]).toLocaleString("en-US", { 
+                            timeZone: "UTC", 
+                            month: "numeric", 
+                            day: "numeric", 
+                            year: "numeric",
+                            hour: "numeric", 
+                            minute: "2-digit"
+                        });
+                    }
+                %>
                     <tr>
                         <td><%= m.ParticipantEmail %></td>
                         <td><%= m["Milestone Title"] %></td>
-                        <td><%= m["Milestone Date"] %></td>
+                        
+                        <td><%= dateDisplay %></td>
 
                         <% if (user.level === "M") { %>
                             <td class="actions-column">
