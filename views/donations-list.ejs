@@ -68,10 +68,14 @@
                             <a class="btn btn-secondary btn-small"
                                href="/donations/edit/<%= d.ParticipantEmail %>/<%= d['Donation Date'] %>">
                                 Edit
-                            </a>
-        </table>
-
-    <% } else { %>
+                                <a class="btn btn-secondary btn-small"
+                                href="/donations/edit/<%= d.ParticipantEmail %>/<%= d['Donation Date'] %>">
+                                 Edit
+                             </a>
+ 
+                         </td>  <% } %> </tr> <% }) %> </tbody> </table>
+ 
+     <% } else { %>
         <p>No donations recorded.</p>
     <% } %>
 
