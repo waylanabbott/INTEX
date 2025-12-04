@@ -61,8 +61,11 @@
 
         <div class="form-group">
             <label>NPS Bucket</label>
-            <input type="text" name="SurveyNPSBucket"
+            <select type="text" name="SurveyNPSBucket"
                    value="<%= survey ? survey.SurveyNPSBucket : '' %>">
+                   <option value = 'promoter'>Promoter</option>
+                   <option value = 'passive'>Passive</option>
+                   <option value = 'detractor'>Detractor</option>
         </div>
 
         <div class="form-group">
