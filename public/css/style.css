@@ -8,6 +8,12 @@
 /* ----------------------------------------------------
    ROOT VARIABLES (BRAND COLORS)
 ---------------------------------------------------- */
+body {
+    margin: 0;
+    padding: 0;
+    width: 100%;
+}
+
 :root {
     --blue: #99B7C6;
     --lavender: #978EC4;
@@ -322,6 +328,12 @@ table thead {
    FOOTER
 ---------------------------------------------------- */
 .footer {
+    /* The Breakout Code */
+    width: 100vw;                   /* Force width to be 100% of the Viewport Width */
+    margin-left: calc(50% - 50vw);  /* Pull the left side to the edge */
+    margin-right: calc(50% - 50vw); /* Pull the right side to the edge */
+    
+    /* Your existing styles */
     margin-top: 2rem;
     background: var(--charcoal) !important;
     color: white !important;
