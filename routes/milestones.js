@@ -40,7 +40,7 @@ router.get("/edit/:email/:date", requireManager, async (req, res) => {
     try {
         const milestone = await db("Milestones_3NF")
             .where("ParticipantEmail", email)
-            .andWhere("MilestoneDate", date)   // ✅ FIXED column name
+            .andWhere("Milestone Date", date)   // ✅ FIXED column name
             .first();
 
         if (!milestone) return res.status(404).send("Milestone not found");
@@ -57,6 +57,7 @@ router.get("/edit/:email/:date", requireManager, async (req, res) => {
     }
 });
 
+
 // -----------------------------------------------------
 // SAVE (CREATE OR UPDATE — Manager Only)
 // -----------------------------------------------------
@@ -70,23 +71,23 @@ router.post("/save", requireManager, async (req, res) => {
             MilestoneDate
         } = req.body;
 
+        // Create an object that maps DB Column Names to your Form Variables
+        const dbPayload = {
+            "ParticipantEmail": ParticipantEmail,
+            "Milestone Title": MilestoneTitle, // Fix: Maps 'MilestoneTitle' -> 'Milestone Title'
+            "Milestone Date": MilestoneDate    // Fix: Maps 'MilestoneDate'  -> 'Milestone Date'
+        };
+
         if (OriginalEmail) {
             // UPDATE
             await db("Milestones_3NF")
                 .where("ParticipantEmail", OriginalEmail)
-                .andWhere("MilestoneDate", OriginalDate)   // ✅ FIXED
-                .update({
-                    ParticipantEmail,
-                    MilestoneTitle,
-                    MilestoneDate
-                });
+                .andWhere("Milestone Date", OriginalDate) // Ensure this matches DB column too
+                .update(dbPayload); 
         } else {
             // INSERT
-            await db("Milestones_3NF").insert({
-                ParticipantEmail,
-                MilestoneTitle,
-                MilestoneDate
-            });
+            await db("Milestones_3NF")
+                .insert(dbPayload); 
         }
 
         res.redirect("/milestones");
@@ -106,7 +107,7 @@ router.post("/delete/:email/:date", requireManager, async (req, res) => {
     try {
         await db("Milestones_3NF")
             .where("ParticipantEmail", email)
-            .andWhere("MilestoneDate", date)  // ✅ FIXED
+            .andWhere("Milestone Date", date)  // ✅ FIXED
             .del();
 
         res.redirect("/milestones");

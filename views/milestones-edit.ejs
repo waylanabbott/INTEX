@@ -26,8 +26,8 @@
 
         <div class="form-group">
             <label>Milestone Date</label>
-            <input type="text" name="MilestoneDate"
-                   value="<%= milestone ? milestone.MilestoneDate : '' %>" required>
+            <input type="datetime-local" name="MilestoneDate"
+                   value="<%= milestone ? milestone['Milestone Date'] : '' %>" required>
         </div>
 
         <div class="form-actions">

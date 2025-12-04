@@ -25,37 +25,37 @@
 
         <div class="form-group">
             <label>Event Start (Date/Time)</label>
-            <input type="text" name="EventDateTimeStart"
+            <input type="datetime-local" name="EventDateTimeStart"
                    value="<%= survey ? survey.EventDateTimeStart : '' %>">
         </div>
 
         <div class="form-group">
             <label>Satisfaction Score</label>
-            <input type="number" name="SurveySatisfactionScore"
+            <input type="number" name="SurveySatisfactionScore" max = 5
                    value="<%= survey ? survey.SurveySatisfactionScore : '' %>">
         </div>
 
         <div class="form-group">
             <label>Usefulness Score</label>
-            <input type="number" name="SurveyUsefulnessScore"
+            <input type="number" name="SurveyUsefulnessScore" max = 5
                    value="<%= survey ? survey.SurveyUsefulnessScore : '' %>">
         </div>
 
         <div class="form-group">
             <label>Instructor Score</label>
-            <input type="number" name="SurveyInstructorScore"
+            <input type="number" name="SurveyInstructorScore" max = 5
                    value="<%= survey ? survey.SurveyInstructorScore : '' %>">
         </div>
 
         <div class="form-group">
             <label>Recommendation Score</label>
-            <input type="number" name="SurveyRecommendationScore"
+            <input type="number" name="SurveyRecommendationScore" max = 5
                    value="<%= survey ? survey.SurveyRecommendationScore : '' %>">
         </div>
 
         <div class="form-group">
             <label>Overall Score</label>
-            <input type="number" name="SurveyOverallScore"
+            <input type="number" name="SurveyOverallScore" max = 5
                    value="<%= survey ? survey.SurveyOverallScore : '' %>">
         </div>
 

@@ -26,13 +26,13 @@
 
         <div class="form-group">
             <label for="EventDateTimeStart">Start Date & Time</label>
-            <input type="text" id="EventDateTimeStart" name="EventDateTimeStart"
+            <input type="datetime-local" id="EventDateTimeStart" name="EventDateTimeStart"
                    value="<%= event ? event.EventDateTimeStart : '' %>" required>
         </div>
 
         <div class="form-group">
             <label for="EventDateTimeEnd">End Date & Time</label>
-            <input type="text" id="EventDateTimeEnd" name="EventDateTimeEnd"
+            <input type="datetime-local" id="EventDateTimeEnd" name="EventDateTimeEnd"
                    value="<%= event ? event.EventDateTimeEnd : '' %>">
         </div>
 
@@ -50,7 +50,7 @@
 
         <div class="form-group">
             <label for="EventRegistrationDeadline">Registration Deadline</label>
-            <input type="text" id="EventRegistrationDeadline" name="EventRegistrationDeadline"
+            <input type="datetime-local" id="EventRegistrationDeadline" name="EventRegistrationDeadline"
                    value="<%= event ? event.EventRegistrationDeadline : '' %>">
         </div>
 
