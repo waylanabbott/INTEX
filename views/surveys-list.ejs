@@ -44,11 +44,11 @@
                     <td><%= s.ParticipantEmail %></td>
                     <td><%= s.EventName %></td>
                     <td><%= s.EventDateTimeStart %></td>
-                    <td><%= s.SurveySatisfactionScore %></td>
-                    <td><%= s.SurveyUsefulnessScore %></td>
-                    <td><%= s.SurveyInstructorScore %></td>
-                    <td><%= s.SurveyRecommendationScore %></td>
-                    <td><%= s.SurveyOverallScore %></td>
+                    <td><%= Number(s.SurveySatisfactionScore).toFixed(1) %></td>
+                    <td><%= Number(s.SurveyUsefulnessScore).toFixed(1) %></td>
+                    <td><%= Number(s.SurveyInstructorScore).toFixed(1) %></td>
+                    <td><%= Number(s.SurveyRecommendationScore).toFixed(1) %></td>
+                    <td><%= Number(s.SurveyOverallScore).toFixed(1) %></td>
 
                     <!-- NPS DOT -->
                     <td class="nps-cell">

@@ -60,45 +60,48 @@ router.get("/edit/:email/:date", requireManager, async (req, res) => {
 // -----------------------------------------------------
 // SAVE DONATION (Manager Only)
 // -----------------------------------------------------
+// -----------------------------------------------------
+// SAVE DONATION (Manager Only)
+// -----------------------------------------------------
 router.post("/save", requireManager, async (req, res) => {
     try {
-        const {
-            OriginalEmail,
-            OriginalDate,
-            ParticipantEmail,
-            DonationDate,
-            DonationAmount
-        } = req.body;
-
-        // Remove $ if present
-        const cleanAmount = DonationAmount.replace("$", "").trim();
-
-        if (OriginalEmail) {
-            // UPDATE
-            await db("Donations_3NF")
-                .where("ParticipantEmail", OriginalEmail)
-                .andWhere("DonationDate", OriginalDate)  // ✅ FIXED
-                .update({
-                    ParticipantEmail,
-                    DonationDate,
-                    DonationAmount: cleanAmount   // ✅ FIXED
-                });
-        } else {
-            // INSERT
-            await db("Donations_3NF").insert({
-                ParticipantEmail,
-                DonationDate,
-                DonationAmount: cleanAmount   // ✅ FIXED
-            });
-        }
-
-        res.redirect("/donations");
-
+      const {
+        OriginalEmail,
+        OriginalDate,
+        ParticipantEmail,
+        DonationDate,
+        DonationAmount
+      } = req.body;
+  
+      // Remove $ if present
+      const cleanAmount = DonationAmount.replace("$", "").trim();
+  
+      if (OriginalEmail) {
+        // UPDATE
+        await db("Donations_3NF")
+          .where("ParticipantEmail", OriginalEmail)
+          .andWhere("Donation Date", OriginalDate)
+          .update({
+            "ParticipantEmail": ParticipantEmail,
+            "Donation Date": DonationDate,
+            "Donation Amount": cleanAmount  // ✅ FIXED: Double quotes + space
+          });
+      } else {
+        // INSERT
+        await db("Donations_3NF").insert({
+          "ParticipantEmail": ParticipantEmail,
+          "Donation Date": DonationDate,
+          "Donation Amount": cleanAmount   // ✅ FIXED: Double quotes + space
+        });
+      }
+  
+      res.redirect("/donations");
     } catch (err) {
-        console.error("Error saving donation:", err);
-        res.status(500).send("Error saving donation");
+      console.error("Error saving donation:", err);
+      res.status(500).send("Error saving donation");
     }
-});
+  });
+  
 
 // -----------------------------------------------------
 // DELETE DONATION (Manager Only)
@@ -109,7 +112,7 @@ router.post("/delete/:email/:date", requireManager, async (req, res) => {
     try {
         await db("Donations_3NF")
             .where("ParticipantEmail", email)
-            .andWhere("DonationDate", date)  // ✅ FIXED
+            .andWhere("Donation Date", date)  // ✅ FIXED
             .del();
 
         res.redirect("/donations");

@@ -25,48 +25,61 @@
 
         <div class="form-group">
             <label>Event Start (Date/Time)</label>
-            <input type="datetime-local" name="EventDateTimeStart"
-                   value="<%= survey ? survey.EventDateTimeStart : '' %>">
+            <input 
+  type="datetime-local" 
+  name="EventDateTimeStart"
+  value="<%= survey ? survey.EventDateTimeStart.replace(/[:T]/g, '').replace(/(\d{4}-\d{2}-\d{2})(\d{2})(\d{2})?/, '$1$2$3') : '' %>"
+  step="60"
+  required>
+
         </div>
+        
 
         <div class="form-group">
             <label>Satisfaction Score</label>
-            <input type="number" name="SurveySatisfactionScore" max = 5
-                   value="<%= survey ? survey.SurveySatisfactionScore : '' %>">
+            <input type="number" class="decimal-input" name="SurveySatisfactionScore" max="5" step="0.1"
+                   value="<%= survey ? Number(survey.SurveySatisfactionScore).toFixed(1) : '' %>"
+                   onchange="if(this.value) this.value = parseFloat(this.value).toFixed(1);">
         </div>
 
         <div class="form-group">
             <label>Usefulness Score</label>
-            <input type="number" name="SurveyUsefulnessScore" max = 5
-                   value="<%= survey ? survey.SurveyUsefulnessScore : '' %>">
+            <input type="number" class="decimal-input" name="SurveyUsefulnessScore" max="5" step="0.1"
+                   value="<%= survey ? Number(survey.SurveyUsefulnessScore).toFixed(1) : '' %>"
+                   onchange="if(this.value) this.value = parseFloat(this.value).toFixed(1);">
+                   
         </div>
 
         <div class="form-group">
             <label>Instructor Score</label>
-            <input type="number" name="SurveyInstructorScore" max = 5
-                   value="<%= survey ? survey.SurveyInstructorScore : '' %>">
+            <input type="number" class="decimal-input" name="SurveyInstructorScore" max="5" step="0.1"
+                   value="<%= survey ? Number(survey.SurveyInstructorScore).toFixed(1) : '' %>"
+                   onchange="if(this.value) this.value = parseFloat(this.value).toFixed(1);">
         </div>
 
         <div class="form-group">
             <label>Recommendation Score</label>
-            <input type="number" name="SurveyRecommendationScore" max = 5
-                   value="<%= survey ? survey.SurveyRecommendationScore : '' %>">
+            <input type="number" class="decimal-input" name="SurveyRecommendationScore" max="5" step="0.1"
+                   value="<%= survey ? Number(survey.SurveyRecommendationScore).toFixed(1) : '' %>"
+                   onchange="if(this.value) this.value = parseFloat(this.value).toFixed(1);">
         </div>
 
         <div class="form-group">
             <label>Overall Score</label>
-            <input type="number" name="SurveyOverallScore" max = 5
-                   value="<%= survey ? survey.SurveyOverallScore : '' %>">
+            <input type="number" class="decimal-input" name="SurveyOverallScore" max="5" step="0.1"
+                   value="<%= survey ? Number(survey.SurveyOverallScore).toFixed(1) : '' %>"
+                   onchange="if(this.value) this.value = parseFloat(this.value).toFixed(1);">
         </div>
 
         <div class="form-group">
             <label>NPS Bucket</label>
-            <select type="text" name="SurveyNPSBucket"
-                   value="<%= survey ? survey.SurveyNPSBucket : '' %>">
-                   <option value = 'promoter'>Promoter</option>
-                   <option value = 'passive'>Passive</option>
-                   <option value = 'detractor'>Detractor</option>
+            <select name="SurveyNPSBucket">
+                <option value="Promoter" <%= survey && survey.SurveyNPSBucket === 'Promoter' ? 'selected' : '' %>>Promoter</option>
+                <option value="Passive" <%= survey && survey.SurveyNPSBucket === 'Passive' ? 'selected' : '' %>>Passive</option>
+                <option value="Detractor" <%= survey && survey.SurveyNPSBucket === 'Detractor' ? 'selected' : '' %>>Detractor</option>
+            </select>
         </div>
+        
 
         <div class="form-group">
             <label>Comments</label>

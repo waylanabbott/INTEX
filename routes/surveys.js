@@ -76,15 +76,52 @@ router.post("/save", requireManager, async (req, res) => {
             SurveyComments
         } = req.body;
 
+        // ✅ FIXED FUNCTION
+        function fixDateTime(datetimeStr) {
+            if (!datetimeStr) return null;
+
+            console.log("Processing datetime:", datetimeStr); 
+
+            // 1. Split at T: "2024-06-23T10:00" -> ["2024-06-23", "10:00"]
+            const parts = datetimeStr.split('T');
+            if (parts.length < 2) return datetimeStr; 
+
+            const datePart = parts[0]; 
+            const timePart = parts[1]; 
+
+            // 2. Split Date: "2024", "06", "23"
+            const [year, month, day] = datePart.split('-');
+
+            // 3. Remove leading zero from Month using parseInt
+            // "06" becomes 6
+            // "12" stays 12
+            const cleanMonth = parseInt(month, 10);
+            
+            // OPTIONAL: If you also need to remove zero from the day (e.g., 05 -> 5)
+            // const cleanDay = parseInt(day, 10); 
+            // otherwise just use:
+            const cleanDay = day;
+
+            // 4. Reassemble: "6/23/2024 10:00"
+            const formatted = `${cleanMonth}/${cleanDay}/${year} ${timePart}`;
+
+            console.log("Fixed datetime:", formatted);
+            return formatted;
+        }
+
+        let fixedEventDateTimeStart = fixDateTime(EventDateTimeStart);
+
         const data = {
             ParticipantEmail,
             EventName,
-            EventDateTimeStart,
-            SurveySatisfactionScore,
-            SurveyUsefulnessScore,
-            SurveyInstructorScore,
-            SurveyRecommendationScore,
-            SurveyOverallScore,
+            EventDateTimeStart: fixedEventDateTimeStart,
+            // CHANGE: Convert strings to Floats (decimals)
+            // If the field is empty, store null to avoid "NaN" errors
+            SurveySatisfactionScore: SurveySatisfactionScore ? parseFloat(SurveySatisfactionScore) : null,
+            SurveyUsefulnessScore: SurveyUsefulnessScore ? parseFloat(SurveyUsefulnessScore) : null,
+            SurveyInstructorScore: SurveyInstructorScore ? parseFloat(SurveyInstructorScore) : null,
+            SurveyRecommendationScore: SurveyRecommendationScore ? parseFloat(SurveyRecommendationScore) : null,
+            SurveyOverallScore: SurveyOverallScore ? parseFloat(SurveyOverallScore) : null,
             SurveyNPSBucket,
             SurveyComments
         };
@@ -106,6 +143,8 @@ router.post("/save", requireManager, async (req, res) => {
         res.status(500).send("Error saving survey");
     }
 });
+
+
 
 // -----------------------------------------------------
 // DELETE — Manager Only
