@@ -65,10 +65,8 @@
             <label>Role</label>
             <select name="ParticipantRole">
                 <option value="">-- Select Role --</option>
-                <option value="Youth" <%= participant && participant.ParticipantRole === "Youth" ? "selected" : "" %>>Youth</option>
-                <option value="Parent" <%= participant && participant.ParticipantRole === "Parent" ? "selected" : "" %>>Parent</option>
-                <option value="Volunteer" <%= participant && participant.ParticipantRole === "Volunteer" ? "selected" : "" %>>Volunteer</option>
-                <option value="Other" <%= participant && participant.ParticipantRole === "Other" ? "selected" : "" %>>Other</option>
+                <option value="participant" <%= participant && participant.ParticipantRole === "participant" ? "selected" : "" %>>Participant</option>
+                <option value="admin" <%= participant && participant.ParticipantRole === "admin" ? "selected" : "" %>>admin</option>
             </select>
         </div>
 
