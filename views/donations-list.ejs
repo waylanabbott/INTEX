@@ -31,57 +31,44 @@
             </thead>
 
             <tbody>
-                <% donations.forEach(d => { %>
+                <% donations.forEach(d => { 
 
-                    <%
-                        // --- FORMAT DATE ---
-                        const dateVal =
-                            d["Donation Date"] && d["Donation Date"] !== "UNKNOWN_DATE"
-                                ? d["Donation Date"]
-                                : "";
+                    // 1. FORMAT DATE
+                    // If date exists and isn't "UNKNOWN", format it nicely
+                    let dateDisplay = "";
+                    if (d["Donation Date"] && d["Donation Date"] !== "UNKNOWN_DATE") {
+                        dateDisplay = new Date(d["Donation Date"]).toLocaleString("en-US", { 
+                            timeZone: "UTC", 
+                            month: "numeric", 
+                            day: "numeric", 
+                            year: "numeric",
+                            hour: "numeric", 
+                            minute: "2-digit"
+                        });
+                    }
 
-                        // --- FORMAT AMOUNT (remove $ , and spaces)
-                        let rawAmt = (d["Donation Amount"] || "")
-                            .replace("$", "")
-                            .replace(/,/g, "")
-                            .trim();
-
-                        const amtNum = Number(rawAmt);
-                        const displayAmt = isNaN(amtNum) ? "" : "$" + amtNum.toFixed(2);
-                    %>
+                    // 2. FORMAT AMOUNT
+                    // Remove $ and commas, then force 2 decimal places (e.g. $5.00)
+                    let rawAmt = (d["Donation Amount"] || "").toString().replace("$", "").replace(/,/g, "").trim();
+                    let amtNum = parseFloat(rawAmt);
+                    let displayAmt = isNaN(amtNum) ? "" : "$" + amtNum.toFixed(2);
+                %>
 
                     <tr>
                         <td><%= d.DonationID %></td>
                         <td><%= d.ParticipantEmail %></td>
-                        <td><%= dateVal %></td>
+                        
+                        <td><%= dateDisplay %></td>
+                        
                         <td><%= displayAmt %></td>
 
                         <% if (locals.user && locals.user.level === "M") { %>
                         <td class="actions-column">
 
-                            <!-- EDIT BUTTON -->
                             <a class="btn btn-secondary btn-small"
                                href="/donations/edit/<%= d.ParticipantEmail %>/<%= d['Donation Date'] %>">
                                 Edit
                             </a>
-
-                            <!-- DELETE BUTTON -->
-                            <form action="/donations/delete/<%= d.ParticipantEmail %>/<%= d['Donation Date'] %>" 
-                                  method="POST"
-                                  style="display:inline;">
-                                <button class="btn btn-danger btn-small"
-                                        onclick="return confirm('Delete donation?');">
-                                    Delete
-                                </button>
-                            </form>
-
-                        </td>
-                        <% } %>
-
-                    </tr>
-
-                <% }) %>
-            </tbody>
         </table>
 
     <% } else { %>
