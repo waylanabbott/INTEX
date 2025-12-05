@@ -1,7 +1,31 @@
-
-
 <%- include("partials/header") %>
 <%- include("partials/nav") %>
+
+<!-- ✅ DONATE BUTTON — FORCED UNDER NAV, NOT INSIDE IT -->
+<div style="
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  margin-top: 2rem;
+  margin-bottom: 1rem;
+">
+  <a 
+    href="https://givebutter.com/EllaRises"
+    target="_blank"
+    rel="noopener noreferrer"
+    class="btn btn-primary"
+    style="
+      font-size: 1.2rem;
+      padding: 14px 36px;
+      border-radius: 999px;
+      background-color: #c24660;
+      color: white;
+      text-decoration: none;
+    "
+  >
+    Donate to Ella Rises
+  </a>
+</div>
 
 <div class="card" style="margin: 2rem;">
     <h1 class="section-header">Welcome to Ella Rises</h1>
@@ -17,12 +41,15 @@
     <p>
     Ella Rises is a nonprofit organization dedicated to empowering young women through innovative programs that blend cultural arts with science, technology, engineering, and mathematics (STEAM). We serve over 100 young women annually, creating a supportive community where participants can develop confidence, creativity, and critical thinking skills. Our mission is rooted in cultural celebration and educational advancement. Ella Rises provides accessible pathways for young women to explore their interests and build their futures.
     </p>
+
 <p>
     We offer three primary program areas that cater to interests and passions: Ballet Folklorico, Mariachi, and STEAM events.
 </p>
+
 <p>
-As a nonprofit organization, Ella Rises relies on community support to sustain and expand its programs.  By fostering joy, cultural pride, and educational opportunity, Ella Rises plays a vital role in developing the next generation of confident, informed, and creatively empowered young women.
+As a nonprofit organization, Ella Rises relies on community support to sustain and expand its programs. By fostering joy, cultural pride, and educational opportunity, Ella Rises plays a vital role in developing the next generation of confident, informed, and creatively empowered young women.
 </p>
+
 <br><br>
 <h2>Programs</h2>
 
@@ -59,13 +86,10 @@ As a nonprofit organization, Ella Rises relies on community support to sustain a
       <p>Our STEM/STEAM initiatives facilitate both virtual and in-person workshops designed to spark participant inquiry and critical thinking about science and technology careers.</p>
     </div>
   </article>
+
   <br><br>
   <a href="/teapot">Teapot</a>
 
-
-
 </section>
-
-
 
 <%- include("partials/footer") %>

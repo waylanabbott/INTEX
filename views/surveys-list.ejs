@@ -9,8 +9,9 @@
     <% } %>
 </div>
 
+<!-- ✅ SEARCH BAR -->
 <div class="search-bar">
-    <form method="GET" action="/donations" class="search-bar">
+    <form method="GET" action="/surveys" class="search-bar">
         <input type="text" name="search" placeholder="Search..." value="<%= search %>">
         <button class="btn btn-primary" type="submit">Search</button>
         <a class="btn btn-secondary" href="<%= clearPath %>">Clear</a>
@@ -18,18 +19,19 @@
 </div>
 
 <div class="card">
-    <table class="styled-table">
+    <table class="styled-table survey-table">
         <thead>
             <tr>
                 <th>Email</th>
-                <th>Event</th>
+                <th>Event Name</th>
                 <th>Start</th>
+                <th>Satisfaction</th>
+                <th>Usefulness</th>
+                <th>Instructor</th>
+                <th>Recommend</th>
+                <th>Overall</th>
                 <th>NPS</th>
                 <th>Comments</th>
-
-                <% if (user && user.level === "M") { %>
-                    <th class="actions-header">Actions</th>
-                <% } %>
             </tr>
         </thead>
 
@@ -39,20 +41,82 @@
                     <td><%= s.ParticipantEmail %></td>
                     <td><%= s.EventName %></td>
                     <td><%= s.EventDateTimeStart %></td>
-                    <td><%= s.SurveyNPSBucket %></td>
-                    <td><%= s.SurveyComments %></td>
+                    <td><%= s.SurveySatisfactionScore %></td>
+                    <td><%= s.SurveyUsefulnessScore %></td>
+                    <td><%= s.SurveyInstructorScore %></td>
+                    <td><%= s.SurveyRecommendationScore %></td>
+                    <td><%= s.SurveyOverallScore %></td>
 
-                    <% if (user && user.level === "M") { %>
-                        <td class="action-buttons">
-                            <a class="btn btn-secondary btn-sm" href="/surveys/edit/<%= s.SurveyID %>">Edit</a>
+                    <!-- ✅ NPS (supports BOTH numbers + text buckets) -->
+                    <td class="nps-cell">
+                        <%
+                            let bucket = null;
+                    
+                            // ✅ 1. If DB already has a bucket, use it
+                            if (s.SurveyNPSBucket && isNaN(s.SurveyNPSBucket)) {
+                                bucket = s.SurveyNPSBucket.toString().toLowerCase();
+                            }
+                    
+                            // ✅ 2. Otherwise auto-calculate from Recommend (1–5 → 0–10 → bucket)
+                            else if (s.SurveyRecommendationScore !== null && s.SurveyRecommendationScore !== "") {
+                                const rec = parseFloat(s.SurveyRecommendationScore);
+                                const autoNps = Math.round((rec / 5) * 10);
+                    
+                                if (autoNps >= 9) bucket = "promoter";
+                                else if (autoNps >= 7) bucket = "passive";
+                                else bucket = "detractor";
+                            }
+                    
+                            // ✅ 3. Render correct dot
+                            if (bucket === "promoter") {
+                        %>
+                            <span class="nps-dot nps-promoter"></span>
+                        <% } else if (bucket === "passive") { %>
+                            <span class="nps-dot nps-passive"></span>
+                        <% } else if (bucket === "detractor") { %>
+                            <span class="nps-dot nps-detractor"></span>
+                        <% } else { %>
+                            <span class="nps-none">—</span>
+                        <% } %>
+                    </td>
+                    
+                    
 
-                            <form method="POST" action="/surveys/delete/<%= s.SurveyID %>" class="inline-form">
-                                <button class="btn btn-danger btn-sm">Delete</button>
-                            </form>
-                        </td>
-                    <% } %>
+                    <!-- ✅ COMMENTS (MODAL VIEW) -->
+                    <td>
+                        <% if (s.SurveyComments && s.SurveyComments.trim() !== "") { %>
+                            <button 
+                                class="btn btn-secondary btn-small"
+                                onclick="openCommentModal(`<%= s.SurveyComments.replace(/`/g, '\\`') %>`)"
+                            >
+                                View
+                            </button>
+                        <% } else { %>
+                            <span class="nps-none">—</span>
+                        <% } %>
+                    </td>
                 </tr>
             <% }) %>
         </tbody>
     </table>
 </div>
+
+<!-- ✅ COMMENTS MODAL (MUST BE OUTSIDE TABLE) -->
+<div id="commentModal" class="modal-overlay" style="display:none;">
+    <div class="modal-content">
+        <h3>Survey Comment</h3>
+        <p id="commentText"></p>
+        <button class="btn btn-primary" onclick="closeCommentModal()">Close</button>
+    </div>
+</div>
+
+<script>
+    function openCommentModal(text) {
+        document.getElementById("commentText").innerText = text;
+        document.getElementById("commentModal").style.display = "flex";
+    }
+
+    function closeCommentModal() {
+        document.getElementById("commentModal").style.display = "none";
+    }
+</script>
