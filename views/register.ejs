@@ -33,29 +33,20 @@
 
             <div class="mb-3">
                 <label class="form-label">Role</label>
-            
-                <% if (user && user.level === "M") { %>
-                    <!-- Managers can choose role -->
-                    <select name="level" class="form-control" required>
-                        <option value="U">User</option>
-                        <option value="M">Manager</option>
-                    </select>
-                <% } else { %>
-                    <!-- Regular person registering = forced User -->
-                    <select name="level" class="form-control" required>
-                        <option value="U">User</option>
-                    </select>
-            
-                    <p class="form-note">
-                        Need a manager account? Ask a current manager to create one.
-                    </p>
-                <% } %>
+                <!-- Manager chooses role -->
+                <select name="level" class="form-control" required>
+                    <option value="U">User</option>
+                    <option value="M">Manager</option>
+                </select>
             </div>
-            
 
-            <button type="submit" class="btn btn-primary w-100">Create Account</button>
+            <button type="submit" class="btn btn-primary w-100">
+                Create Account
+            </button>
 
-            <div class="error-message"><%= error_message %></div>
+            <div class="error-message">
+                <%= error_message %>
+            </div>
 
         </form>
     </div>

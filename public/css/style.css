@@ -598,3 +598,14 @@ body.login-bg {
     border: 1px solid #ccc;
     width: 220px;
 }
+
+.nav-stack {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: 0.6rem;
+}
+
+.btn-create-account {
+    opacity: 0.95;
+}

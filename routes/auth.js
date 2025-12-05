@@ -64,36 +64,49 @@ router.post("/login", async (req, res) => {
 });
 
 // ---------------------------------------------
-// REGISTRATION PAGE
+// REGISTRATION PAGE (MANAGER ONLY)
 // ---------------------------------------------
-//this renders the registration page
-router.get("/register", (req, res) => {
+router.get("/register", requireManager, (req, res) => {
     res.render("register", { error_message: "" });
 });
-router.post("/register", async (req, res) => {
-    try {
-        let { username, email, password, level } = req.body;
 
-        // Force level=U if user is not a manager
-        if (!req.session || req.session.level !== "M") {
-            level = "U";
+// ---------------------------------------------
+// CREATE ACCOUNT - MANAGER ONLY
+// ---------------------------------------------
+router.post("/register", requireManager, async (req, res) => {
+    const { username, email, password, level } = req.body;
+
+    try {
+        // Check if username already exists
+        const existing = await knex("users").where({ username }).first();
+        if (existing) {
+            return res.render("register", { 
+                error_message: "Username already exists."
+            });
         }
-//this checks if the username already exists in the database
+
+        // Hash password
         const hashedPassword = await bcrypt.hash(password, 12);
 
-        await db("users").insert({
+        // Insert new user
+        await knex("users").insert({
             username,
             email,
             password_hash: hashedPassword,
-            level
+            level // Manager chooses role
         });
-//this redirects to the login page after successful registration
-        res.redirect("/login");
+
+        // Redirect to dashboard after creation
+        res.redirect("/dashboard");
+
     } catch (err) {
         console.error("Registration error:", err);
-        res.render("register", { error_message: "Error creating account." });
+        res.render("register", {
+            error_message: "Error creating account."
+        });
     }
 });
+
 
 // ---------------------------------------------
 // CREATE ACCOUNT - SECURE WITH BCRYPT

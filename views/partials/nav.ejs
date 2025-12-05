@@ -13,13 +13,23 @@
         <a href="/donations">Donations</a>
     </div>
 
-    <div class="nav-right">
+    <div class="nav-right nav-stack">
         <% if (user && user.username) { %>
+    
             <span class="welcome">Hello, <%= user.username %></span>
+    
             <a class="btn btn-secondary" href="/logout">Logout</a>
+    
+            <% if (user.level === "M") { %>
+                <a class="btn btn-secondary btn-create-account" href="/register">
+                    Create Account
+                </a>
+            <% } %>
+    
         <% } else { %>
             <a class="btn btn-primary" href="/login">Login</a>
         <% } %>
     </div>
+    
     
     

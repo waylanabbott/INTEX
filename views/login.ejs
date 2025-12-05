@@ -86,7 +86,16 @@
                         autofocus
                     >
                 </div>
-
+                <style>.btn-login {
+                    margin-top: 1.25rem;   /* pushes it away from password box */
+                    margin-bottom: 0.75rem;
+                    padding-top: 0.75rem;
+                    padding-bottom: 0.75rem;
+                    font-size: 1rem;
+                }
+                </style>
+                
+                
                 <div class="mb-3">
                     <label for="password" class="form-label">Password</label>
                     <input
@@ -101,9 +110,7 @@
                 <button type="submit" class="btn btn-primary w-100 btn-login">
                     Login
                 </button>
-                <div style="margin-top: 1rem; text-align: center;">
-                    <a href="/register" class="btn btn-secondary">Create Account</a>
-                </div>
+                
                 
                 <div class="error-message">
                     <%= error_message %>
