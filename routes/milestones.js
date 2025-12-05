@@ -3,6 +3,34 @@ const router = express.Router();
 const db = require("../db");
 const { requireLogin, requireManager } = require("./auth");
 
+router.get("/", requireLogin, async (req, res) => {
+    try {
+        let query = db("Milestones_3NF");
+
+        if (req.query.search) {
+            const term = `%${req.query.search}%`;
+
+            query.whereRaw('CAST("MilestoneID" AS TEXT) ILIKE ?', [term])
+                 .orWhere("ParticipantEmail", "ilike", term)
+                 .orWhere("Milestone Title", "ilike", term)
+                 .orWhereRaw('CAST("Milestone Date" AS TEXT) ILIKE ?', [term]);
+        }
+
+        const milestones = await query.select("*");
+
+        res.render("milestones-list", {
+            user: req.session,
+            milestones,
+            search: req.query.search || "",
+            clearPath: "/milestones"
+        });
+
+    } catch (err) {
+        console.error("Milestones search error:", err);
+        res.status(500).send("Error loading milestones");
+    }
+});
+
 // -----------------------------------------------------
 // LIST MILESTONES
 // -----------------------------------------------------

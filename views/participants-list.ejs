@@ -9,38 +9,27 @@
     <% } %>
 </div>
 
-
-
-
 <!-- SEARCH FORM -->
 <br><br><br>
 
 <form method="GET" action="/participants" style="margin-bottom: 1.5rem; display: flex; gap: 0.5rem;">
     <input 
       type="text" 
-      name="firstName" 
-      placeholder="First name..." 
-      value="<%= firstName %>"
+      name="search" 
+      placeholder="Search name, email, phone, DOB, city, state..." 
+      value="<%= search %>"
       class="form-control"
     >
-    <input 
-      type="text" 
-      name="lastName" 
-      placeholder="Last name..." 
-      value="<%= lastName %>"
-      class="form-control"
-    >
+
     <button type="submit" class="btn btn-primary">Search</button>
     <a href="/participants" class="btn btn-secondary">Clear</a>
-  </form>
-  
-  <!-- RESULTS INFO (Optional) -->
-  <% if (firstName || lastName) { %>
-    <p style="margin-bottom: 1rem; font-size: 0.95rem; color: #666;">
-      Found <%= participants.length %> result(s)
-    </p>
-  <% } %>
-  
+</form>
+
+<% if (search) { %>
+  <p style="margin-bottom: 1rem; font-size: 0.95rem; color: #666;">
+    Found <%= participants.length %> result(s)
+  </p>
+<% } %>
 
 <div class="card">
   <% if (participants && participants.length > 0) { %>
@@ -121,9 +110,6 @@
   <% } else { %>
     <p>No participants found.</p>
   <% } %>
-
-
 </div>
-
 
 <%- include("partials/footer") %>

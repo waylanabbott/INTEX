@@ -3,6 +3,34 @@ const router = express.Router();
 const db = require("../db");
 const { requireLogin, requireManager } = require("./auth");
 
+router.get("/", requireLogin, async (req, res) => {
+  try {
+      let query = db("Donations_3NF");
+
+      if (req.query.search) {
+          const term = `%${req.query.search}%`;
+
+          query.whereRaw('CAST("DonationID" AS TEXT) ILIKE ?', [term])
+               .orWhere("ParticipantEmail", "ilike", term)
+               .orWhereRaw('CAST("Donation Date" AS TEXT) ILIKE ?', [term])
+               .orWhereRaw('CAST("Donation Amount" AS TEXT) ILIKE ?', [term]);
+      }
+
+      const donations = await query.select("*");
+
+      res.render("donations-list", {
+          user: req.session,
+          donations,
+          search: req.query.search || "",
+          clearPath: "/donations"
+      });
+
+  } catch (err) {
+      console.error("Donations search error:", err);
+      res.status(500).send("Error loading donations");
+  }
+});
+
 // -----------------------------------------------------
 // LIST DONATIONS
 // -----------------------------------------------------

@@ -585,3 +585,16 @@ body.login-bg {
 .page-header .add-btn {
     white-space: nowrap;
 }
+
+.search-bar {
+    display: flex;
+    gap: 12px;
+    margin-bottom: 20px;
+}
+
+.search-bar input {
+    padding: 10px 14px;
+    border-radius: 8px;
+    border: 1px solid #ccc;
+    width: 220px;
+}

@@ -4,32 +4,34 @@ const db = require("../db");
 const { requireLogin, requireManager } = require("./auth");
 
 // -----------------------------------------------------
-// LIST PARTICIPANTS (with search)
+// LIST PARTICIPANTS (universal search - schema safe)
 // -----------------------------------------------------
 router.get("/", requireLogin, async (req, res) => {
     try {
+        const search = req.query.search;
         let query = db("Participants_3NF");
 
-        // Filter by first name
-        if (req.query.firstName) {
-            const firstNameTerm = `%${req.query.firstName}%`;
-            query = query.where("ParticipantFirstName", "like", firstNameTerm);
-        }
+        if (search) {
+            const term = `%${search}%`;
 
-        // Filter by last name
-        if (req.query.lastName) {
-            const lastNameTerm = `%${req.query.lastName}%`;
-            query = query.where("ParticipantLastName", "like", lastNameTerm);
+            query = query.where(function () {
+                this.whereRaw(`CAST("ParticipantEmail" AS TEXT) ILIKE ?`, [term])
+                    .orWhereRaw(`CAST("ParticipantFirstName" AS TEXT) ILIKE ?`, [term])
+                    .orWhereRaw(`CAST("ParticipantLastName" AS TEXT) ILIKE ?`, [term])
+                    .orWhereRaw(`CAST("ParticipantPhone" AS TEXT) ILIKE ?`, [term])
+                    .orWhereRaw(`CAST("ParticipantDOB" AS TEXT) ILIKE ?`, [term])
+                    .orWhereRaw(`CAST("ParticipantRole" AS TEXT) ILIKE ?`, [term])
+                    .orWhereRaw(`CAST("ParticipantCity" AS TEXT) ILIKE ?`, [term])
+                    .orWhereRaw(`CAST("ParticipantState" AS TEXT) ILIKE ?`, [term])
+                    .orWhereRaw(`CAST("ParticipantZip" AS TEXT) ILIKE ?`, [term]);
+            });
         }
 
         const participants = await query.select("*");
 
-        // IMPORTANT: Do NOT pass user here.
-        // res.locals.user (set in app.js middleware) handles that globally.
         res.render("participants-list", {
             participants,
-            firstName: req.query.firstName || "",
-            lastName: req.query.lastName || ""
+            search: req.query.search || ""
         });
 
     } catch (err) {
@@ -37,6 +39,7 @@ router.get("/", requireLogin, async (req, res) => {
         res.status(500).send("Error loading participants");
     }
 });
+
 
 // -----------------------------------------------------
 // ADD PARTICIPANT (Manager Only)

@@ -4,6 +4,20 @@
 <div class="page-header">
     <h1 class="section-header">Donations</h1>
 
+    <form method="GET" action="" class="search-bar">
+
+        <input 
+            type="text" 
+            name="search"
+            placeholder="Search..."
+            value="<%= search || '' %>">
+    
+        <button type="submit" class="btn btn-primary">Search</button>
+    
+        <a href="<%= clearPath %>" class="btn btn-secondary">Clear</a>
+    
+    </form>
+    
     <% if (locals.user && locals.user.level === "M") { %>
         <a class="btn btn-primary add-btn" href="/donations/edit">Add Donation</a>
     <% } %>

@@ -3,6 +3,35 @@ const router = express.Router();
 const db = require("../db");
 const { requireLogin, requireManager } = require("./auth");
 
+router.get("/", requireLogin, async (req, res) => {
+  try {
+      let query = db("EventOccurrences_3NF");
+
+      if (req.query.search) {
+          const term = `%${req.query.search}%`;
+
+          query.whereRaw('CAST("EventOccurrenceID" AS TEXT) ILIKE ?', [term])
+               .orWhere("EventName", "ilike", term)
+               .orWhereRaw('CAST("EventDateTimeStart" AS TEXT) ILIKE ?', [term])
+               .orWhere("EventLocation", "ilike", term)
+               .orWhereRaw('CAST("EventCapacity" AS TEXT) ILIKE ?', [term]);
+      }
+
+      const events = await query.select("*");
+
+      res.render("events-list", {
+          user: req.session,
+          events,
+          search: req.query.search || "",
+          clearPath: "/events"
+      });
+
+  } catch (err) {
+      console.error("Events search error:", err);
+      res.status(500).send("Error loading events");
+  }
+});
+
 // -----------------------------------------------------
 // LIST EVENTS (merged view: templates + occurrences)
 // -----------------------------------------------------

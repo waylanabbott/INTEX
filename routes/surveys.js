@@ -3,6 +3,43 @@ const router = express.Router();
 const db = require("../db");
 const { requireLogin, requireManager } = require("./auth");
 
+router.get("/", requireLogin, async (req, res) => {
+    try {
+        let query = db("Surveys_3NF");
+
+        if (req.query.search) {
+            const term = `%${req.query.search}%`;
+
+            query.whereRaw('CAST("SurveyID" AS TEXT) ILIKE ?', [term])
+                 .orWhere("ParticipantEmail", "ilike", term)
+                 .orWhere("EventName", "ilike", term)
+                 .orWhereRaw('CAST("EventDateTimeStart" AS TEXT) ILIKE ?', [term])
+                 .orWhereRaw('CAST("SurveySubmissionDate" AS TEXT) ILIKE ?', [term])
+                 .orWhere("SurveyNPSBucket", "ilike", term)
+                 .orWhere("SurveyComments", "ilike", term)
+                 .orWhereRaw('CAST("SurveySatisfactionScore" AS TEXT) ILIKE ?', [term])
+                 .orWhereRaw('CAST("SurveyUsefulnessScore" AS TEXT) ILIKE ?', [term])
+                 .orWhereRaw('CAST("SurveyInstructorScore" AS TEXT) ILIKE ?', [term])
+                 .orWhereRaw('CAST("SurveyRecommendationScore" AS TEXT) ILIKE ?', [term])
+                 .orWhereRaw('CAST("SurveyOverallScore" AS TEXT) ILIKE ?', [term]);
+        }
+
+        const surveys = await query.select("*");
+
+        res.render("surveys-list", {
+            user: req.session,
+            surveys,
+            search: req.query.search || "",
+            clearPath: "/surveys"
+        });
+
+    } catch (err) {
+        console.error("Survey search error:", err);
+        res.status(500).send("Error loading surveys");
+    }
+});
+
+
 // -----------------------------------------------------
 // LIST SURVEYS
 // -----------------------------------------------------
