@@ -2,7 +2,7 @@ const express = require("express");
 const router = express.Router();
 const db = require("../db");
 const { requireLogin, requireManager } = require("./auth");
-
+//this is for searching milestones in a schema-safe way
 router.get("/", requireLogin, async (req, res) => {
     try {
         let query = db("Milestones_3NF");
@@ -15,7 +15,7 @@ router.get("/", requireLogin, async (req, res) => {
                  .orWhere("Milestone Title", "ilike", term)
                  .orWhereRaw('CAST("Milestone Date" AS TEXT) ILIKE ?', [term]);
         }
-
+//this retrieves the milestones based on the constructed query
         const milestones = await query.select("*");
 
         res.render("milestones-list", {
@@ -34,6 +34,7 @@ router.get("/", requireLogin, async (req, res) => {
 // -----------------------------------------------------
 // LIST MILESTONES
 // -----------------------------------------------------
+//this lists all milestones
 router.get("/", requireLogin, async (req, res) => {
     try {
         const milestones = await db("Milestones_3NF").select("*");
@@ -51,6 +52,7 @@ router.get("/", requireLogin, async (req, res) => {
 // -----------------------------------------------------
 // ADD MILESTONE (Manager Only)
 // -----------------------------------------------------
+//this renders the page to add a new milestone
 router.get("/edit", requireManager, (req, res) => {
     res.render("milestones-edit", {
         mode: "create",
@@ -62,6 +64,7 @@ router.get("/edit", requireManager, (req, res) => {
 // -----------------------------------------------------
 // EDIT (Manager Only)
 // -----------------------------------------------------
+//this renders the edit page for a specific milestone
 router.get("/edit/:email/:date", requireManager, async (req, res) => {
     const { email, date } = req.params;
 
@@ -72,7 +75,7 @@ router.get("/edit/:email/:date", requireManager, async (req, res) => {
             .first();
 
         if (!milestone) return res.status(404).send("Milestone not found");
-
+//this renders the edit form with the milestone data
         res.render("milestones-edit", {
             mode: "edit",
             milestone,

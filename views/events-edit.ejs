@@ -1,16 +1,20 @@
 <%- include("partials/header") %>
 <%- include("partials/nav") %>
 
+<!-- Page Header -->
 <h1 class="section-header"><%= mode === "edit" ? "Edit Event Occurrence" : "Add Event Occurrence" %></h1>
 
 <div class="card">
 
+    <!-- Form for Adding/Editing Event Occurrence -->
     <form action="/events/save" method="POST" class="form-layout">
 
+        <!-- Hidden Input for EventOccurrenceID (Only in Edit Mode) -->
         <% if (mode === "edit") { %>
             <input type="hidden" name="EventOccurrenceID" value="<%= event.EventOccurrenceID %>">
         <% } %>
 
+        <!-- Dropdown for Selecting Event Template -->
         <div class="form-group">
             <label for="EventName">Event Template</label>
             <select id="EventName" name="EventName" required>
@@ -24,36 +28,42 @@
             </select>
         </div>
 
+        <!-- Input for Start Date & Time -->
         <div class="form-group">
             <label for="EventDateTimeStart">Start Date & Time</label>
             <input type="datetime-local" id="EventDateTimeStart" name="EventDateTimeStart"
                    value="<%= event ? event.EventDateTimeStart : '' %>" required>
         </div>
 
+        <!-- Input for End Date & Time -->
         <div class="form-group">
             <label for="EventDateTimeEnd">End Date & Time</label>
             <input type="datetime-local" id="EventDateTimeEnd" name="EventDateTimeEnd"
                    value="<%= event ? event.EventDateTimeEnd : '' %>">
         </div>
 
+        <!-- Input for Event Location -->
         <div class="form-group">
             <label for="EventLocation">Location</label>
             <input type="text" id="EventLocation" name="EventLocation"
                    value="<%= event ? event.EventLocation : '' %>">
         </div>
 
+        <!-- Input for Event Capacity -->
         <div class="form-group">
             <label for="EventCapacity">Capacity</label>
             <input type="number" id="EventCapacity" name="EventCapacity"
                    value="<%= event ? event.EventCapacity : '' %>">
         </div>
 
+        <!-- Input for Registration Deadline -->
         <div class="form-group">
             <label for="EventRegistrationDeadline">Registration Deadline</label>
             <input type="datetime-local" id="EventRegistrationDeadline" name="EventRegistrationDeadline"
                    value="<%= event ? event.EventRegistrationDeadline : '' %>">
         </div>
 
+        <!-- Form Actions: Submit and Cancel Buttons -->
         <div class="form-actions">
             <button type="submit" class="btn btn-primary">
                 <%= mode === "edit" ? "Save Changes" : "Create Event Occurrence" %>

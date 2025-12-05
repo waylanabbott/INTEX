@@ -6,6 +6,7 @@ const { requireLogin } = require("./auth");
 // -----------------------------------------------------
 // DASHBOARD HOME
 // -----------------------------------------------------
+//this renders the dashboard home page
 router.get("/", requireLogin, async (req, res) => {
     
     // Optional stats (example)

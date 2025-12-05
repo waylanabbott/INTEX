@@ -9,14 +9,14 @@ router.get("/", requireLogin, async (req, res) => {
 
       if (req.query.search) {
           const term = `%${req.query.search}%`;
-
+//this is to make sure that the search works even if the schema changes, by casting all fields to text
           query.whereRaw('CAST("EventOccurrenceID" AS TEXT) ILIKE ?', [term])
                .orWhere("EventName", "ilike", term)
                .orWhereRaw('CAST("EventDateTimeStart" AS TEXT) ILIKE ?', [term])
                .orWhere("EventLocation", "ilike", term)
                .orWhereRaw('CAST("EventCapacity" AS TEXT) ILIKE ?', [term]);
       }
-
+//this retrieves the events based on the constructed query
       const events = await query.select("*");
 
       res.render("events-list", {
@@ -35,6 +35,7 @@ router.get("/", requireLogin, async (req, res) => {
 // -----------------------------------------------------
 // LIST EVENTS (merged view: templates + occurrences)
 // -----------------------------------------------------
+//this lists all event occurrences along with their template details
 router.get("/", requireLogin, async (req, res) => {
   try {
     const events = await db("EventOccurrences_3NF as eo")
@@ -53,7 +54,7 @@ router.get("/", requireLogin, async (req, res) => {
         "eo.EventRegistrationDeadline"
       )
       .orderBy("eo.EventDateTimeStart", "asc");
-
+//this renders the events list with user session data
     res.render("events-list", {
       user: req.session.user,   // ✅ FIXED
       events
@@ -72,7 +73,7 @@ router.get("/edit", requireManager, async (req, res) => {
     const templates = await db("EventTemplates_3NF")
       .select("*")
       .orderBy("EventName", "asc");
-
+//this renders the event creation form with available templates
     res.render("events-edit", {
       user: req.session.user,   // ✅ FIXED
       mode: "create",
@@ -99,7 +100,7 @@ router.get("/edit/:id", requireManager, async (req, res) => {
     if (!event) {
       return res.status(404).send("Event occurrence not found");
     }
-
+//this retrieves event templates for selection in the edit form
     const templates = await db("EventTemplates_3NF")
       .select("*")
       .orderBy("EventName", "asc");
@@ -119,6 +120,7 @@ router.get("/edit/:id", requireManager, async (req, res) => {
 // -----------------------------------------------------
 // SAVE (CREATE OR UPDATE) EVENT OCCURRENCE
 // -----------------------------------------------------
+//this saves or updates an event occurrence based on presence of EventOccurrenceID
 router.post("/save", requireManager, async (req, res) => {
   const {
     EventOccurrenceID,
@@ -129,7 +131,7 @@ router.post("/save", requireManager, async (req, res) => {
     EventCapacity,
     EventRegistrationDeadline
   } = req.body;
-
+//this saves or updates an event occurrence based on presence of EventOccurrenceID
   try {
     if (EventOccurrenceID && EventOccurrenceID.trim() !== "") {
       // UPDATE existing occurrence
@@ -154,7 +156,7 @@ router.post("/save", requireManager, async (req, res) => {
         EventRegistrationDeadline
       });
     }
-
+//this redirects to the events list after saving
     res.redirect("/events");
   } catch (err) {
     console.error("Error saving event occurrence:", err);
@@ -167,7 +169,7 @@ router.post("/save", requireManager, async (req, res) => {
 // -----------------------------------------------------
 router.post("/delete/:id", requireManager, async (req, res) => {
   const id = req.params.id;
-
+//this deletes the specified event occurrence
   try {
     await db("EventOccurrences_3NF")
       .where("EventOccurrenceID", id)

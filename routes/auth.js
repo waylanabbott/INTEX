@@ -7,6 +7,7 @@ const bcrypt = require("bcryptjs");
 // ---------------------------------------------
 // LOGIN PAGE
 // ---------------------------------------------
+//this renders the login page
 router.get("/login", (req, res) => {
     res.render("login", { error_message: "" });
 });
@@ -14,6 +15,7 @@ router.get("/login", (req, res) => {
 // ---------------------------------------------
 // LOGIN POST - SECURE WITH BCRYPT
 // ---------------------------------------------
+//this handles the login form submission
 router.post("/login", async (req, res) => {
     const { username, password } = req.body;
 
@@ -51,6 +53,7 @@ router.post("/login", async (req, res) => {
         };
 
         res.redirect("/dashboard");
+    //this catches any errors that occur during the login process
 
     } catch (err) {
         console.error("Login error:", err);
@@ -63,6 +66,7 @@ router.post("/login", async (req, res) => {
 // ---------------------------------------------
 // REGISTRATION PAGE
 // ---------------------------------------------
+//this renders the registration page
 router.get("/register", (req, res) => {
     res.render("register", { error_message: "" });
 });
@@ -74,7 +78,7 @@ router.post("/register", async (req, res) => {
         if (!req.session || req.session.level !== "M") {
             level = "U";
         }
-
+//this checks if the username already exists in the database
         const hashedPassword = await bcrypt.hash(password, 12);
 
         await db("users").insert({
@@ -83,7 +87,7 @@ router.post("/register", async (req, res) => {
             password_hash: hashedPassword,
             level
         });
-
+//this redirects to the login page after successful registration
         res.redirect("/login");
     } catch (err) {
         console.error("Registration error:", err);
@@ -140,6 +144,7 @@ router.get("/logout", (req, res) => {
 // ---------------------------------------------
 // MIDDLEWARE: REQUIRE LOGIN
 // ---------------------------------------------
+//this middleware ensures the user is logged in
 function requireLogin(req, res, next) {
     if (!req.session.isLoggedIn) {
         return res.redirect("/login");
@@ -150,6 +155,7 @@ function requireLogin(req, res, next) {
 // ---------------------------------------------
 // MIDDLEWARE: REQUIRE MANAGER ("M")
 // ---------------------------------------------
+//this middleware ensures the user is a manager
 function requireManager(req, res, next) {
     if (!req.session.user || req.session.user.level !== "M") {
         return res.status(403).send("Forbidden: Managers only");

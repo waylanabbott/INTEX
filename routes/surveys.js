@@ -3,13 +3,16 @@ const router = express.Router();
 const db = require("../db");
 const { requireLogin, requireManager } = require("./auth");
 
+
+//this is for searching surveys in a schema-safe way
+
 router.get("/", requireLogin, async (req, res) => {
     try {
         let query = db("Surveys_3NF");
 
         if (req.query.search) {
             const term = `%${req.query.search}%`;
-
+//this constructs the search query by casting all fields to text to ensure schema safety
             query.whereRaw('CAST("SurveyID" AS TEXT) ILIKE ?', [term])
                  .orWhere("ParticipantEmail", "ilike", term)
                  .orWhere("EventName", "ilike", term)
@@ -23,7 +26,7 @@ router.get("/", requireLogin, async (req, res) => {
                  .orWhereRaw('CAST("SurveyRecommendationScore" AS TEXT) ILIKE ?', [term])
                  .orWhereRaw('CAST("SurveyOverallScore" AS TEXT) ILIKE ?', [term]);
         }
-
+//this retrieves the surveys based on the constructed query
         const surveys = await query.select("*");
 
         res.render("surveys-list", {
@@ -43,10 +46,11 @@ router.get("/", requireLogin, async (req, res) => {
 // -----------------------------------------------------
 // LIST SURVEYS
 // -----------------------------------------------------
+//this lists all surveys
 router.get("/", requireLogin, async (req, res) => {
     try {
         const surveys = await db("Surveys_3NF").select("*");
-
+//this renders the surveys list with user session data
         res.render("surveys-list", {
             user: req.session.user,   // ✅ FIXED
             surveys
@@ -60,6 +64,7 @@ router.get("/", requireLogin, async (req, res) => {
 // -----------------------------------------------------
 // ADD NEW (Manager Only)
 // -----------------------------------------------------
+//this renders the page to add a new survey
 router.get("/edit", requireManager, (req, res) => {
     res.render("surveys-edit", {
         mode: "create",
@@ -71,6 +76,7 @@ router.get("/edit", requireManager, (req, res) => {
 // -----------------------------------------------------
 // EDIT (Manager Only)
 // -----------------------------------------------------
+//this renders the edit page for the survey
 router.get("/edit/:id", requireManager, async (req, res) => {
     const { id } = req.params;
 
@@ -80,7 +86,7 @@ router.get("/edit/:id", requireManager, async (req, res) => {
             .first();
 
         if (!survey) return res.status(404).send("Survey not found");
-
+//this renders the edit form with the survey data
         res.render("surveys-edit", {
             mode: "edit",
             survey,
@@ -97,6 +103,7 @@ router.get("/edit/:id", requireManager, async (req, res) => {
 // -----------------------------------------------------
 // SAVE (CREATE OR UPDATE) — Manager Only
 // -----------------------------------------------------
+//this saves the survey data, either creating a new record or updating an existing one
 router.post("/save", requireManager, async (req, res) => {
     try {
         const {

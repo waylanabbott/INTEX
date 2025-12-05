@@ -14,7 +14,7 @@ require("dotenv").config();
 const express = require("express");
 const session = require("express-session");
 const path = require("path");
-
+//this is the main application file for the Ella Rises web app
 const app = express();
 const PORT = process.env.PORT || 3300;
 
@@ -39,7 +39,7 @@ function requireLogin(req, res, next) {
     if (!req.session.isLoggedIn) return res.redirect("/login");
     next();
 }
-
+//this middleware ensures that only managers can access certain routes
 function requireManager(req, res, next) {
     if (!req.session.user || req.session.user.level !== "M") {
         return res.status(403).send("Forbidden: Managers only");
@@ -50,6 +50,7 @@ function requireManager(req, res, next) {
 // -------------------------
 // MAKE USER AVAILABLE IN ALL EJS FILES
 // -------------------------
+//this middleware makes user session data available in all EJS templates
 app.use((req, res, next) => {
     res.locals.user = req.session.user || null;
     res.locals.isLoggedIn = req.session.isLoggedIn || false;
@@ -59,6 +60,7 @@ app.use((req, res, next) => {
 // -------------------------
 // ROUTES
 // -------------------------
+//this sets up routes for different parts of the application
 app.use("/", require("./routes/auth"));
 app.use("/participants", require("./routes/participants"));
 app.use("/events", require("./routes/events"));

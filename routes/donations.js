@@ -2,7 +2,7 @@ const express = require("express");
 const router = express.Router();
 const db = require("../db");
 const { requireLogin, requireManager } = require("./auth");
-
+//this is for searching donations in a schema-safe way
 router.get("/", requireLogin, async (req, res) => {
   try {
       let query = db("Donations_3NF");
@@ -15,7 +15,7 @@ router.get("/", requireLogin, async (req, res) => {
                .orWhereRaw('CAST("Donation Date" AS TEXT) ILIKE ?', [term])
                .orWhereRaw('CAST("Donation Amount" AS TEXT) ILIKE ?', [term]);
       }
-
+//this retrieves the donations based on the constructed query
       const donations = await query.select("*");
 
       res.render("donations-list", {
@@ -34,6 +34,7 @@ router.get("/", requireLogin, async (req, res) => {
 // -----------------------------------------------------
 // LIST DONATIONS
 // -----------------------------------------------------
+//this lists all donations
 router.get("/", requireLogin, async (req, res) => {
     try {
         const donations = await db("Donations_3NF").select("*");
@@ -51,6 +52,7 @@ router.get("/", requireLogin, async (req, res) => {
 // -----------------------------------------------------
 // ADD DONATION (Manager Only)
 // -----------------------------------------------------
+//this renders the page to add a new donation
 router.get("/edit", requireManager, (req, res) => {
     res.render("donations-edit", {
         mode: "create",
@@ -62,6 +64,7 @@ router.get("/edit", requireManager, (req, res) => {
 // -----------------------------------------------------
 // EDIT DONATION (Manager Only)
 // -----------------------------------------------------
+//this renders the edit page for the donation
 router.get("/edit/:email/:date", requireManager, async (req, res) => {
     const { email, date } = req.params;
 
@@ -72,7 +75,7 @@ router.get("/edit/:email/:date", requireManager, async (req, res) => {
             .first();
 
         if (!donation) return res.status(404).send("Donation not found");
-
+//this renders the edit form with the donation data
         res.render("donations-edit", {
             mode: "edit",
             donation,
@@ -85,12 +88,11 @@ router.get("/edit/:email/:date", requireManager, async (req, res) => {
     }
 });
 
+
 // -----------------------------------------------------
 // SAVE DONATION (Manager Only)
 // -----------------------------------------------------
-// -----------------------------------------------------
-// SAVE DONATION (Manager Only)
-// -----------------------------------------------------
+//this saves a new or edited donation
 router.post("/save", requireManager, async (req, res) => {
     try {
       const {
@@ -144,7 +146,7 @@ router.post("/delete/:email/:date", requireManager, async (req, res) => {
             .del();
 
         res.redirect("/donations");
-
+//this handles errors during deletion
     } catch (err) {
         console.error("Error deleting donation:", err);
         res.status(500).send("Error deleting donation");

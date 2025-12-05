@@ -13,7 +13,7 @@ router.get("/", requireLogin, async (req, res) => {
 
         if (search) {
             const term = `%${search}%`;
-
+//this is to make sure that the search works even if the schema changes, by casting all fields to text
             query = query.where(function () {
                 this.whereRaw(`CAST("ParticipantEmail" AS TEXT) ILIKE ?`, [term])
                     .orWhereRaw(`CAST("ParticipantFirstName" AS TEXT) ILIKE ?`, [term])
@@ -26,7 +26,7 @@ router.get("/", requireLogin, async (req, res) => {
                     .orWhereRaw(`CAST("ParticipantZip" AS TEXT) ILIKE ?`, [term]);
             });
         }
-
+//this retrieves the participants based on the constructed query
         const participants = await query.select("*");
 
         res.render("participants-list", {
@@ -66,7 +66,7 @@ router.get("/edit/:email", requireManager, async (req, res) => {
         if (!participant) {
             return res.status(404).send("Participant not found.");
         }
-
+//this renders the edit page for the participant
         res.render("participants-edit", {
             mode: "edit",
             participant
