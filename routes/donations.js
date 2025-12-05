@@ -83,50 +83,56 @@ router.get("/edit/:email/:date", requireManager, async (req, res) => {
     }
 });
 
-
 // -----------------------------------------------------
 // SAVE DONATION (Manager Only)
 // -----------------------------------------------------
-// this saves a new or edited donation
 router.post("/save", requireManager, async (req, res) => {
-    try {
-      const {
-        OriginalEmail,
-        OriginalDate,
-        ParticipantEmail,
-        DonationDate,
-        DonationAmount
-      } = req.body;
+  try {
+    const {
+      OriginalEmail,
+      OriginalDate,
+      ParticipantEmail,
+      DonationDate,
+      DonationAmount
+    } = req.body;
 
-      // Remove $ if present so the database only stores numeric values
-      const cleanAmount = DonationAmount.replace("$", "").trim();
+    // ✅ Force proper NULL instead of empty string or UNKNOWN_DATE
+    const cleanDate = DonationDate && DonationDate.trim() !== ""
+      ? DonationDate
+      : null;
 
-      if (OriginalEmail) {
-        // UPDATE existing donation
-        await db("Donations_3NF")
-          .where("ParticipantEmail", OriginalEmail)
-          .andWhere("Donation Date", OriginalDate)
-          .update({
-            "ParticipantEmail": ParticipantEmail,
-            "Donation Date": DonationDate,
-            "Donation Amount": cleanAmount
-          });
-      } else {
-        // INSERT new donation
-        await db("Donations_3NF").insert({
+    // ✅ Strip ALL dollar signs safely
+    const cleanAmount = DonationAmount
+      ? DonationAmount.replace(/\$/g, "").trim()
+      : null;
+
+    if (OriginalEmail) {
+      // UPDATE existing donation
+      await db("Donations_3NF")
+        .where("ParticipantEmail", OriginalEmail)
+        .andWhere("Donation Date", OriginalDate)
+        .update({
           "ParticipantEmail": ParticipantEmail,
-          "Donation Date": DonationDate,
+          "Donation Date": cleanDate,
           "Donation Amount": cleanAmount
         });
-      }
-
-      res.redirect("/donations");
-
-    } catch (err) {
-      console.error("Error saving donation:", err);
-      res.status(500).send("Error saving donation");
+    } else {
+      // INSERT new donation
+      await db("Donations_3NF").insert({
+        "ParticipantEmail": ParticipantEmail,
+        "Donation Date": cleanDate,
+        "Donation Amount": cleanAmount
+      });
     }
+
+    res.redirect("/donations");
+
+  } catch (err) {
+    console.error("Error saving donation:", err);
+    res.status(500).send("Error saving donation");
+  }
 });
+
 
 // -----------------------------------------------------
 // DELETE DONATION (Manager Only)

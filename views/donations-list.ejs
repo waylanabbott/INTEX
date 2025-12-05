@@ -17,7 +17,6 @@
     </form>
 </div>
 
-
 <div class="card">
     <table class="styled-table">
         <thead>
@@ -34,20 +33,35 @@
 
         <tbody>
             <% donations.forEach(d => { %>
+
+                <% 
+                    const cleanDate = (d["Donation Date"] && d["Donation Date"] !== "UNKNOWN_DATE")
+                        ? d["Donation Date"]
+                        : "";
+
+                    const cleanAmount = d["Donation Amount"]
+                        ? String(d["Donation Amount"]).replace(/\$/g, "").trim()
+                        : "";
+                %>
+
                 <tr>
                     <td><%= d.ParticipantEmail %></td>
-                    <td><%= d["Donation Date"] %></td>
-                    <td>$<%= d["Donation Amount"] %></td>
+
+                    <!-- ✅ Hides UNKNOWN_DATE -->
+                    <td><%= cleanDate %></td>
+
+                    <!-- ✅ Forces ONE clean $ -->
+                    <td>$<%= cleanAmount %></td>
 
                     <% if (user && user.level === "M") { %>
                         <td class="action-buttons">
                             <a class="btn btn-secondary btn-sm"
-                               href="/donations/edit/<%= d.ParticipantEmail %>/<%= d["Donation Date"] %>">
+                               href="/donations/edit/<%= d.ParticipantEmail %>/<%= encodeURIComponent(d["Donation Date"]) %>">
                                Edit
                             </a>
 
                             <form method="POST"
-                                  action="/donations/delete/<%= d.ParticipantEmail %>/<%= d["Donation Date"] %>"
+                                  action="/donations/delete/<%= d.ParticipantEmail %>/<%= encodeURIComponent(d["Donation Date"]) %>"
                                   class="inline-form">
                                 <button class="btn btn-danger btn-sm">Delete</button>
                             </form>
