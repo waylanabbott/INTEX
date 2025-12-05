@@ -1,3 +1,15 @@
+/* 
+Waylan Abbott
+William Gifford
+Sam Jenson 
+Luke Hoop
+
+Description:
+Ella Rises Web Application
+This app powers the Ella Rises platform, allowing managers to manage participants, events, surveys, milestones, and donations,
+while common users can securely view data and dashboards. Built with Node.js, Express, PostgreSQL, EJS, and Knex.
+*/
+
 require("dotenv").config();
 const express = require("express");
 const session = require("express-session");
