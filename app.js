@@ -60,6 +60,8 @@ app.use((req, res, next) => {
 // -------------------------
 // ROUTES
 // -------------------------
+
+
 //this sets up routes for different parts of the application
 app.use("/", require("./routes/auth"));
 app.use("/participants", require("./routes/participants"));
@@ -73,11 +75,9 @@ app.use("/dashboard", require("./routes/dashboard"));
 // HOME PAGE
 // -------------------------
 app.get("/", (req, res) => {
-    res.render("landing", {
-        user: req.session.user 
-    }
-    );
+    res.render("landing");
 });
+
 
 // -------------------------
 // 418 Teapot route

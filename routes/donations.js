@@ -2,7 +2,12 @@ const express = require("express");
 const router = express.Router();
 const db = require("../db");
 const { requireLogin, requireManager } = require("./auth");
-//this is for searching donations in a schema-safe way
+
+// -----------------------------------------------------
+// LIST + SEARCH DONATIONS (Schema Safe)
+// -----------------------------------------------------
+// this route allows users to view and search donations
+// requireLogin ensures only logged-in users can access it
 router.get("/", requireLogin, async (req, res) => {
   try {
       let query = db("Donations_3NF");
@@ -10,16 +15,21 @@ router.get("/", requireLogin, async (req, res) => {
       if (req.query.search) {
           const term = `%${req.query.search}%`;
 
+          // schema-safe universal search across donation fields
           query.whereRaw('CAST("DonationID" AS TEXT) ILIKE ?', [term])
                .orWhere("ParticipantEmail", "ilike", term)
                .orWhereRaw('CAST("Donation Date" AS TEXT) ILIKE ?', [term])
                .orWhereRaw('CAST("Donation Amount" AS TEXT) ILIKE ?', [term]);
       }
-//this retrieves the donations based on the constructed query
+
+      // this retrieves the donations based on the constructed query
       const donations = await query.select("*");
 
+      // IMPORTANT:
+      // We do NOT pass `user` here anymore
+      // The logged-in user is automatically available via res.locals.user
+      // This prevents navbar login issues across pages
       res.render("donations-list", {
-          user: req.session,
           donations,
           search: req.query.search || "",
           clearPath: "/donations"
@@ -31,55 +41,40 @@ router.get("/", requireLogin, async (req, res) => {
   }
 });
 
-// -----------------------------------------------------
-// LIST DONATIONS
-// -----------------------------------------------------
-//this lists all donations
-router.get("/", requireLogin, async (req, res) => {
-    try {
-        const donations = await db("Donations_3NF").select("*");
-
-        res.render("donations-list", {
-            user: req.session.user,   // ✅ FIXED
-            donations
-        });
-    } catch (err) {
-        console.error("Error loading donations:", err);
-        res.status(500).send("Error loading donations");
-    }
-});
 
 // -----------------------------------------------------
 // ADD DONATION (Manager Only)
 // -----------------------------------------------------
-//this renders the page to add a new donation
+// this renders the page to add a new donation
+// requireManager ensures only managers can access this page
 router.get("/edit", requireManager, (req, res) => {
     res.render("donations-edit", {
         mode: "create",
-        donation: null,
-        user: req.session.user   // ✅ FIXED
+        donation: null
+        // user is automatically available via res.locals.user
     });
 });
 
 // -----------------------------------------------------
 // EDIT DONATION (Manager Only)
 // -----------------------------------------------------
-//this renders the edit page for the donation
+// this renders the edit page for the donation
 router.get("/edit/:email/:date", requireManager, async (req, res) => {
     const { email, date } = req.params;
 
     try {
         const donation = await db("Donations_3NF")
             .where("ParticipantEmail", email)
-            .andWhere("DonationDate", date)  // ✅ FIXED column name
+            .andWhere("Donation Date", date)
             .first();
 
         if (!donation) return res.status(404).send("Donation not found");
-//this renders the edit form with the donation data
+
+        // this renders the edit form with the donation data
         res.render("donations-edit", {
             mode: "edit",
-            donation,
-            user: req.session.user   // ✅ FIXED
+            donation
+            // user is automatically available via res.locals.user
         });
 
     } catch (err) {
@@ -92,7 +87,7 @@ router.get("/edit/:email/:date", requireManager, async (req, res) => {
 // -----------------------------------------------------
 // SAVE DONATION (Manager Only)
 // -----------------------------------------------------
-//this saves a new or edited donation
+// this saves a new or edited donation
 router.post("/save", requireManager, async (req, res) => {
     try {
       const {
@@ -102,36 +97,36 @@ router.post("/save", requireManager, async (req, res) => {
         DonationDate,
         DonationAmount
       } = req.body;
-  
-      // Remove $ if present
+
+      // Remove $ if present so the database only stores numeric values
       const cleanAmount = DonationAmount.replace("$", "").trim();
-  
+
       if (OriginalEmail) {
-        // UPDATE
+        // UPDATE existing donation
         await db("Donations_3NF")
           .where("ParticipantEmail", OriginalEmail)
           .andWhere("Donation Date", OriginalDate)
           .update({
             "ParticipantEmail": ParticipantEmail,
             "Donation Date": DonationDate,
-            "Donation Amount": cleanAmount  // ✅ FIXED: Double quotes + space
+            "Donation Amount": cleanAmount
           });
       } else {
-        // INSERT
+        // INSERT new donation
         await db("Donations_3NF").insert({
           "ParticipantEmail": ParticipantEmail,
           "Donation Date": DonationDate,
-          "Donation Amount": cleanAmount   // ✅ FIXED: Double quotes + space
+          "Donation Amount": cleanAmount
         });
       }
-  
+
       res.redirect("/donations");
+
     } catch (err) {
       console.error("Error saving donation:", err);
       res.status(500).send("Error saving donation");
     }
-  });
-  
+});
 
 // -----------------------------------------------------
 // DELETE DONATION (Manager Only)
@@ -142,12 +137,13 @@ router.post("/delete/:email/:date", requireManager, async (req, res) => {
     try {
         await db("Donations_3NF")
             .where("ParticipantEmail", email)
-            .andWhere("Donation Date", date)  // ✅ FIXED
+            .andWhere("Donation Date", date)
             .del();
 
         res.redirect("/donations");
-//this handles errors during deletion
+
     } catch (err) {
+        // this handles errors during deletion
         console.error("Error deleting donation:", err);
         res.status(500).send("Error deleting donation");
     }

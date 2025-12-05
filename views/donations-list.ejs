@@ -1,103 +1,60 @@
 <%- include("partials/header") %>
 <%- include("partials/nav") %>
-<!-- PAGE HEADER WITH ADD BUTTON -->
+
 <div class="page-header">
     <h1 class="section-header">Donations</h1>
 
-    <form method="GET" action="" class="search-bar">
-
-        <input 
-            type="text" 
-            name="search"
-            placeholder="Search..."
-            value="<%= search || '' %>">
-    
-        <button type="submit" class="btn btn-primary">Search</button>
-    
-        <a href="<%= clearPath %>" class="btn btn-secondary">Clear</a>
-    
-    </form>
-    
-    <% if (locals.user && locals.user.level === "M") { %>
+    <% if (user && user.level === "M") { %>
         <a class="btn btn-primary add-btn" href="/donations/edit">Add Donation</a>
     <% } %>
 </div>
 
-
+<div class="search-bar">
+    <form method="GET" action="/donations" class="search-bar">
+        <input type="text" name="search" placeholder="Search..." value="<%= search %>">
+        <button class="btn btn-primary" type="submit">Search</button>
+        <a class="btn btn-secondary" href="<%= clearPath %>">Clear</a>
+    </form>
+</div>
 
 
 <div class="card">
+    <table class="styled-table">
+        <thead>
+            <tr>
+                <th>Email</th>
+                <th>Date</th>
+                <th>Amount</th>
 
-    <% if (donations.length > 0) { %>
+                <% if (user && user.level === "M") { %>
+                    <th class="actions-header">Actions</th>
+                <% } %>
+            </tr>
+        </thead>
 
-        <table class="styled-table">
-            <thead>
+        <tbody>
+            <% donations.forEach(d => { %>
                 <tr>
-                    <th>ID</th>
-                    <th>Participant Email</th>
-                    <th>Donation Date</th>
-                    <th>Amount</th>
+                    <td><%= d.ParticipantEmail %></td>
+                    <td><%= d["Donation Date"] %></td>
+                    <td>$<%= d["Donation Amount"] %></td>
 
-                    <% if (locals.user && locals.user.level === "M") { %>
-                        <th class="actions-header">Actions</th>
+                    <% if (user && user.level === "M") { %>
+                        <td class="action-buttons">
+                            <a class="btn btn-secondary btn-sm"
+                               href="/donations/edit/<%= d.ParticipantEmail %>/<%= d["Donation Date"] %>">
+                               Edit
+                            </a>
+
+                            <form method="POST"
+                                  action="/donations/delete/<%= d.ParticipantEmail %>/<%= d["Donation Date"] %>"
+                                  class="inline-form">
+                                <button class="btn btn-danger btn-sm">Delete</button>
+                            </form>
+                        </td>
                     <% } %>
                 </tr>
-            </thead>
-
-            <tbody>
-                <% donations.forEach(d => { 
-
-                    // 1. FORMAT DATE
-                    // If date exists and isn't "UNKNOWN", format it nicely
-                    let dateDisplay = "";
-                    if (d["Donation Date"] && d["Donation Date"] !== "UNKNOWN_DATE") {
-                        dateDisplay = new Date(d["Donation Date"]).toLocaleString("en-US", { 
-                            timeZone: "UTC", 
-                            month: "numeric", 
-                            day: "numeric", 
-                            year: "numeric",
-                            hour: "numeric", 
-                            minute: "2-digit"
-                        });
-                    }
-
-                    // 2. FORMAT AMOUNT
-                    // Remove $ and commas, then force 2 decimal places (e.g. $5.00)
-                    let rawAmt = (d["Donation Amount"] || "").toString().replace("$", "").replace(/,/g, "").trim();
-                    let amtNum = parseFloat(rawAmt);
-                    let displayAmt = isNaN(amtNum) ? "" : "$" + amtNum.toFixed(2);
-                %>
-
-                    <tr>
-                        <td><%= d.DonationID %></td>
-                        <td><%= d.ParticipantEmail %></td>
-                        
-                        <td><%= dateDisplay %></td>
-                        
-                        <td><%= displayAmt %></td>
-
-                        <% if (locals.user && locals.user.level === "M") { %>
-                        <td class="actions-column">
-
-                            <a class="btn btn-secondary btn-small"
-                               href="/donations/edit/<%= d.ParticipantEmail %>/<%= d['Donation Date'] %>">
-                                Edit
-                                </a>
-                                <form action="/donations/delete/<%= d.ParticipantEmail %>/<%= d['Donation Date'] %>" 
-                                    method="POST"
-                                    style="display:inline;">
-                                  <button class="btn btn-danger btn-small"
-                                          onclick="return confirm('Delete donation?');">
-                                      Delete
-                                  </button>
-                              </form>
- 
-                         </td>  <% } %> </tr> <% }) %> </tbody> </table>
- 
-     <% } else { %>
-        <p>No donations recorded.</p>
-    <% } %>
-
+            <% }) %>
+        </tbody>
+    </table>
 </div>
-
-<%- include("partials/footer") %>

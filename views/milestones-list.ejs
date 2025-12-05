@@ -1,9 +1,15 @@
 <%- include("partials/header") %>
 <%- include("partials/nav") %>
 
-<!-- PAGE HEADER WITH ADD BUTTON -->
 <div class="page-header">
-    <h1 class="section-header">Milestones</h1>
+  <h1 class="section-header">Milestones</h1>
+
+  <% if (user && user.level === "M") { %>
+    <a class="btn btn-primary add-btn" href="/milestones/edit">
+      Add Milestone
+    </a>
+  <% } %>
+</div>
 
     <form method="GET" action="" class="search-bar">
 
@@ -19,11 +25,7 @@
     
     </form>
     
-    <% if (user && user.level === "M") { %>
-        <a class="btn btn-primary add-btn" href="/milestones/edit">
-            Add Milestone
-        </a>
-    <% } %>
+ 
 </div>
 
 <div class="card">

@@ -2,7 +2,11 @@ const express = require("express");
 const router = express.Router();
 const db = require("../db");
 const { requireLogin, requireManager } = require("./auth");
-//this is for searching milestones in a schema-safe way
+
+// -----------------------------------------------------
+// LIST + SEARCH MILESTONES (Schema Safe)
+// -----------------------------------------------------
+// this is for searching milestones in a schema-safe way
 router.get("/", requireLogin, async (req, res) => {
     try {
         let query = db("Milestones_3NF");
@@ -15,11 +19,15 @@ router.get("/", requireLogin, async (req, res) => {
                  .orWhere("Milestone Title", "ilike", term)
                  .orWhereRaw('CAST("Milestone Date" AS TEXT) ILIKE ?', [term]);
         }
-//this retrieves the milestones based on the constructed query
+
+        // this retrieves the milestones based on the constructed query
         const milestones = await query.select("*");
 
+        // IMPORTANT:
+        // We do NOT pass `user` here anymore.
+        // The logged-in user is automatically available via res.locals.user.
+        // This prevents navbar login issues across pages.
         res.render("milestones-list", {
-            user: req.session,
             milestones,
             search: req.query.search || "",
             clearPath: "/milestones"
@@ -31,55 +39,39 @@ router.get("/", requireLogin, async (req, res) => {
     }
 });
 
-// -----------------------------------------------------
-// LIST MILESTONES
-// -----------------------------------------------------
-//this lists all milestones
-router.get("/", requireLogin, async (req, res) => {
-    try {
-        const milestones = await db("Milestones_3NF").select("*");
-
-        res.render("milestones-list", {
-            user: req.session.user,   // ✅ FIXED
-            milestones
-        });
-    } catch (err) {
-        console.error("Error loading milestones:", err);
-        res.status(500).send("Error loading milestones");
-    }
-});
 
 // -----------------------------------------------------
 // ADD MILESTONE (Manager Only)
 // -----------------------------------------------------
-//this renders the page to add a new milestone
+// this renders the page to add a new milestone
 router.get("/edit", requireManager, (req, res) => {
     res.render("milestones-edit", {
         mode: "create",
-        milestone: null,
-        user: req.session.user   // ✅ FIXED
+        milestone: null
+        // user is automatically available via res.locals.user
     });
 });
 
 // -----------------------------------------------------
 // EDIT (Manager Only)
 // -----------------------------------------------------
-//this renders the edit page for a specific milestone
+// this renders the edit page for a specific milestone
 router.get("/edit/:email/:date", requireManager, async (req, res) => {
     const { email, date } = req.params;
 
     try {
         const milestone = await db("Milestones_3NF")
             .where("ParticipantEmail", email)
-            .andWhere("Milestone Date", date)   // ✅ FIXED column name
+            .andWhere("Milestone Date", date)
             .first();
 
         if (!milestone) return res.status(404).send("Milestone not found");
-//this renders the edit form with the milestone data
+
+        // this renders the edit form with the milestone data
         res.render("milestones-edit", {
             mode: "edit",
-            milestone,
-            user: req.session.user   // ✅ FIXED
+            milestone
+            // user is automatically available via res.locals.user
         });
 
     } catch (err) {
@@ -105,20 +97,20 @@ router.post("/save", requireManager, async (req, res) => {
         // Create an object that maps DB Column Names to your Form Variables
         const dbPayload = {
             "ParticipantEmail": ParticipantEmail,
-            "Milestone Title": MilestoneTitle, // Fix: Maps 'MilestoneTitle' -> 'Milestone Title'
-            "Milestone Date": MilestoneDate    // Fix: Maps 'MilestoneDate'  -> 'Milestone Date'
+            "Milestone Title": MilestoneTitle,
+            "Milestone Date": MilestoneDate
         };
 
         if (OriginalEmail) {
             // UPDATE
             await db("Milestones_3NF")
                 .where("ParticipantEmail", OriginalEmail)
-                .andWhere("Milestone Date", OriginalDate) // Ensure this matches DB column too
-                .update(dbPayload); 
+                .andWhere("Milestone Date", OriginalDate)
+                .update(dbPayload);
         } else {
             // INSERT
             await db("Milestones_3NF")
-                .insert(dbPayload); 
+                .insert(dbPayload);
         }
 
         res.redirect("/milestones");
@@ -138,7 +130,7 @@ router.post("/delete/:email/:date", requireManager, async (req, res) => {
     try {
         await db("Milestones_3NF")
             .where("ParticipantEmail", email)
-            .andWhere("Milestone Date", date)  // ✅ FIXED
+            .andWhere("Milestone Date", date)
             .del();
 
         res.redirect("/milestones");

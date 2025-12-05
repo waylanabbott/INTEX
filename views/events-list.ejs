@@ -1,124 +1,57 @@
 <%- include("partials/header") %>
 <%- include("partials/nav") %>
 
-<!-- PAGE HEADER WITH ADD BUTTON -->
 <div class="page-header">
     <h1 class="section-header">Events</h1>
-    <form method="GET" action="" class="search-bar">
 
-        <input 
-            type="text" 
-            name="search"
-            placeholder="Search..."
-            value="<%= search || '' %>">
-    
-        <button type="submit" class="btn btn-primary">Search</button>
-    
-        <a href="<%= clearPath %>" class="btn btn-secondary">Clear</a>
-    
-    </form>
-    
     <% if (user && user.level === "M") { %>
-        <a class="btn btn-primary add-btn" href="/events/edit">
-            Add Event 
-        </a>
+        <a class="btn btn-primary add-btn" href="/events/edit">Add Event</a>
     <% } %>
 </div>
+
+<div class="search-bar">
+    <form method="GET" action="/donations" class="search-bar">
+        <input type="text" name="search" placeholder="Search..." value="<%= search %>">
+        <button class="btn btn-primary" type="submit">Search</button>
+        <a class="btn btn-secondary" href="<%= clearPath %>">Clear</a>
+    </form>
+</div>
+
 
 <div class="card">
+    <table class="styled-table">
+        <thead>
+            <tr>
+                <th>Name</th>
+                <th>Start</th>
+                <th>Location</th>
+                <th>Capacity</th>
 
-    <% if (events && events.length > 0) { %>
+                <% if (user && user.level === "M") { %>
+                    <th class="actions-header">Actions</th>
+                <% } %>
+            </tr>
+        </thead>
 
-        <table class="styled-table">
-            <thead>
+        <tbody>
+            <% events.forEach(e => { %>
                 <tr>
-                    <th>Occurrence ID</th>
-                    <th>Event Name</th>
-                    <th>Event Type</th>
-                    <th>Description</th>
-                    <th>Recurrence</th>
-                    <th>Default Capacity</th>
-                    <th>Start</th>
-                    <th>End</th>
-                    <th>Location</th>
-                    <th>Capacity</th>
-                    <th>Deadline</th>
+                    <td><%= e.EventName %></td>
+                    <td><%= e.EventDateTimeStart %></td>
+                    <td><%= e.EventLocation %></td>
+                    <td><%= e.EventCapacity %></td>
+
                     <% if (user && user.level === "M") { %>
-                        <th>Actions</th>
+                        <td class="action-buttons">
+                            <a class="btn btn-secondary btn-sm" href="/events/edit/<%= e.EventOccurrenceID %>">Edit</a>
+
+                            <form method="POST" action="/events/delete/<%= e.EventOccurrenceID %>" class="inline-form">
+                                <button class="btn btn-danger btn-sm">Delete</button>
+                            </form>
+                        </td>
                     <% } %>
                 </tr>
-            </thead>
-
-            <tbody>
-                <% events.forEach(e => { 
-                
-                    // 1. HELPER: Format Date & Time (Removes the 'T' and adds AM/PM)
-                    // "2025-12-04T00:39" -> "12/4/2025, 12:39 AM"
-                    function formatDT(isoStr) {
-                        if (!isoStr) return "";
-                        return new Date(isoStr).toLocaleString("en-US", { 
-                            timeZone: "UTC",      // Prevents date shifting
-                            month: "numeric", 
-                            day: "numeric", 
-                            year: "numeric", 
-                            hour: "numeric", 
-                            minute: "2-digit"
-                        });
-                    }
-
-                    // 2. HELPER: Format Numbers (Ensures 5.0 or 100.0)
-                    function formatNum(num) {
-                         if (num === null || num === undefined) return "";
-                         return Number(num).toFixed(1);
-                    }
-                %>
-                    <tr>
-                        <td><%= e.EventOccurrenceID %></td>
-                        <td><%= e.EventName %></td>
-                        <td><%= e.EventType %></td>
-                        <td><%= e.EventDescription %></td>
-                        <td><%= e.EventRecurrencePattern %></td>
-                        
-                        <td><%= formatNum(e.EventDefaultCapacity) %></td>
-
-                        <td><%= formatDT(e.EventDateTimeStart) %></td>
-                        <td><%= formatDT(e.EventDateTimeEnd) %></td>
-                        
-                        <td><%= e.EventLocation %></td>
-                        
-                        <td><%= formatNum(e.EventCapacity) %></td>
-                        
-                        <td><%= formatDT(e.EventRegistrationDeadline) %></td>
-
-                        <% if (user && user.level === "M") { %>
-                            <td class="actions-column">
-
-                                <a class="btn btn-secondary btn-small" 
-                                   href="/events/edit/<%= e.EventOccurrenceID %>">
-                                    Edit
-                                </a>
-
-                                <form action="/events/delete/<%= e.EventOccurrenceID %>" 
-                                      method="POST" style="display:inline;">
-                                    <button type="submit" 
-                                            class="btn btn-danger btn-small"
-                                            onclick="return confirm('Delete this event occurrence?');">
-                                        Delete
-                                    </button>
-                                </form>
-
-                            </td>
-                        <% } %>
-
-                    </tr>
-                <% }) %>
-            </tbody>
-        </table>
-
-    <% } else { %>
-        <p>No events have been added yet.</p>
-    <% } %>
-
+            <% }) %>
+        </tbody>
+    </table>
 </div>
-
-<%- include("partials/footer") %>

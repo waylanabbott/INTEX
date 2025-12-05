@@ -1,148 +1,58 @@
 <%- include("partials/header") %>
 <%- include("partials/nav") %>
 
-<!-- PAGE HEADER WITH ADD BUTTON -->
 <div class="page-header">
     <h1 class="section-header">Surveys</h1>
 
-    <form method="GET" action="" class="search-bar">
-
-        <input 
-            type="text" 
-            name="search"
-            placeholder="Search..."
-            value="<%= search || '' %>">
-    
-        <button type="submit" class="btn btn-primary">Search</button>
-    
-        <a href="<%= clearPath %>" class="btn btn-secondary">Clear</a>
-    
-    </form>
-    
     <% if (user && user.level === "M") { %>
-        <a href="/surveys/edit" class="btn btn-primary add-btn">Add Survey</a>
+        <a class="btn btn-primary add-btn" href="/surveys/edit">Add Survey</a>
     <% } %>
 </div>
 
+<div class="search-bar">
+    <form method="GET" action="/donations" class="search-bar">
+        <input type="text" name="search" placeholder="Search..." value="<%= search %>">
+        <button class="btn btn-primary" type="submit">Search</button>
+        <a class="btn btn-secondary" href="<%= clearPath %>">Clear</a>
+    </form>
+</div>
+
 <div class="card">
+    <table class="styled-table">
+        <thead>
+            <tr>
+                <th>Email</th>
+                <th>Event</th>
+                <th>Start</th>
+                <th>NPS</th>
+                <th>Comments</th>
 
-    <% if (surveys && surveys.length > 0) { %>
+                <% if (user && user.level === "M") { %>
+                    <th class="actions-header">Actions</th>
+                <% } %>
+            </tr>
+        </thead>
 
-        <table class="styled-table survey-table">
-            <thead>
-                <tr>
-                    <th>Email</th>
-                    <th>Event Name</th>
-                    <th>Start</th>
-                    <th>Satisfaction</th>
-                    <th>Usefulness</th>
-                    <th>Instructor</th>
-                    <th>Recommend</th>
-                    <th>Overall</th>
-                    <th>NPS</th>
-                    <th>Comments</th>
-
-                    <% if (user && user.level === "M") { %>
-                        <th>Actions</th>
-                    <% } %>
-                </tr>
-            </thead>
-
-            <tbody>
-
-            <% surveys.forEach(s => { 
-                 if (!s.SurveySatisfactionScore) return;
-            %>
-
+        <tbody>
+            <% surveys.forEach(s => { %>
                 <tr>
                     <td><%= s.ParticipantEmail %></td>
                     <td><%= s.EventName %></td>
                     <td><%= s.EventDateTimeStart %></td>
-                    <td><%= Number(s.SurveySatisfactionScore).toFixed(1) %></td>
-                    <td><%= Number(s.SurveyUsefulnessScore).toFixed(1) %></td>
-                    <td><%= Number(s.SurveyInstructorScore).toFixed(1) %></td>
-                    <td><%= Number(s.SurveyRecommendationScore).toFixed(1) %></td>
-                    <td><%= Number(s.SurveyOverallScore).toFixed(1) %></td>
+                    <td><%= s.SurveyNPSBucket %></td>
+                    <td><%= s.SurveyComments %></td>
 
-                    <!-- NPS DOT -->
-                    <td class="nps-cell">
-                        <% const bucket = (s.SurveyNPSBucket || "").trim(); %>
-
-                        <% if (bucket === "Promoter") { %>
-                            <span class="nps-dot nps-promoter" title="Promoter"></span>
-                        <% } else if (bucket === "Passive") { %>
-                            <span class="nps-dot nps-passive" title="Passive"></span>
-                        <% } else if (bucket === "Detractor") { %>
-                            <span class="nps-dot nps-detractor" title="Detractor"></span>
-                        <% } else { %>
-                            <span class="nps-none">–</span>
-                        <% } %>
-                    </td>
-
-                    <!-- COMMENTS -->
-                    <td>
-                        <% if (s.SurveyComments) { %>
-                            <button class="btn btn-small btn-secondary"
-                                    data-comment="<%= s.SurveyComments.replace(/"/g, '&quot;') %>"
-                                    onclick="showComment(this.dataset.comment)">
-                                View
-                            </button>
-                        <% } else { %>
-                            <span>No comments</span>
-                        <% } %>
-                    </td>
-
-                    <!-- ACTIONS (Managers Only) -->
                     <% if (user && user.level === "M") { %>
-                        <td class="actions-column">
+                        <td class="action-buttons">
+                            <a class="btn btn-secondary btn-sm" href="/surveys/edit/<%= s.SurveyID %>">Edit</a>
 
-                            <a class="btn btn-secondary btn-small" 
-                               href="/surveys/edit/<%= s.SurveyID %>">
-                                Edit
-                            </a>
-
-                            <form action="/surveys/delete/<%= s.SurveyID %>"
-                                  method="POST"
-                                  style="display:inline;">
-                                <button class="btn btn-danger btn-small"
-                                        onclick="return confirm('Delete survey?');">
-                                    Delete
-                                </button>
+                            <form method="POST" action="/surveys/delete/<%= s.SurveyID %>" class="inline-form">
+                                <button class="btn btn-danger btn-sm">Delete</button>
                             </form>
-
                         </td>
                     <% } %>
-
                 </tr>
-
             <% }) %>
-
-            </tbody>
-        </table>
-
-    <% } else { %>
-        <p>No surveys recorded.</p>
-    <% } %>
-
+        </tbody>
+    </table>
 </div>
-
-<!-- COMMENT MODAL -->
-<div id="commentModal" class="modal-overlay" style="display:none;">
-    <div class="modal-content">
-        <h2>Survey Comment</h2>
-        <p id="commentText"></p>
-        <button class="btn btn-primary" onclick="closeComment()">Close</button>
-    </div>
-</div>
-
-<script>
-    function showComment(text) {
-        document.getElementById("commentText").innerText = text;
-        document.getElementById("commentModal").style.display = "flex";
-    }
-    function closeComment() {
-        document.getElementById("commentModal").style.display = "none";
-    }
-</script>
-
-<%- include("partials/footer") %>

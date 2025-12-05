@@ -310,13 +310,7 @@ table thead {
     padding-left: 1rem;
 }
 
-.page-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 1rem;
-    gap: 1rem;
-}
+
 
 .add-btn {
     padding: 0.5rem 1rem;
@@ -341,21 +335,7 @@ table thead {
     text-align: center;
 }
 
-/* Page title + Add button under logo, left aligned */
-.page-header {
-    display: flex;
-    align-items: center;
-    justify-content: flex-start;   /* keep title + button on the left */
-    gap: 1rem;                     /* space between title and button */
-    margin: 1rem 0;
-    flex-wrap: wrap;               /* if it gets too tight, button drops BELOW, still left */
-}
 
-/* Make sure title and button don’t break mid-word */
-.page-header h1,
-.page-header .add-btn {
-    white-space: nowrap;
-}
 
 /* ----------------------------------------------------
    LOGIN PAGE
@@ -608,4 +588,19 @@ body.login-bg {
 
 .btn-create-account {
     opacity: 0.95;
+}
+
+
+
+/* Make sure add buttons aren’t squished */
+.add-btn {
+    /* keep any existing styles you already had */
+    white-space: nowrap;
+}
+
+.search-row {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    flex-wrap: nowrap;   /* 👈 prevents the buttons from dropping to the next line */
 }
